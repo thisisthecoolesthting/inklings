@@ -1,0 +1,49 @@
+{
+  "dispatch_id": "INKLINGS-IMAGE-PIPELINE-004",
+  "branch": "feat/image-pipeline-004",
+  "shipped_at": "2026-05-07",
+  "executor": "Cowork-Claude direct (operator unblocked with TOGETHER_API_KEY)",
+  "summary": "Staged Flux rendering: 512x512 schnell preview during Sparky beats (kid sees illustration alongside text); 1024x1024 schnell HD on parent approve (background, fire-and-forget). VPS filesystem storage at /var/www/inklings/public/uploads/, served by Caddy. No Supabase or S3 dependency.",
+  "model_in_use": "black-forest-labs/FLUX.1-schnell (FLUX.1-dev not on serverless tier; schnell is fast + cheap; HD uses same model at 1024x1024)",
+  "files": {
+    "added": [
+      "src/lib/image-gen.ts (TogetherAI client + storage helper + seedFromImageSeed)"
+    ],
+    "modified": [
+      "src/app/api/sparky/beat/route.ts (calls generatePreview after Sparky text; quota-gated; logs UsageEvent kind='image_generated')",
+      "src/lib/sparky.ts (SparkyContext.characters now includes optional imageSeed)",
+      "src/app/studio/story/page.tsx (threads c.imageSeed into ctx)",
+      "src/app/studio/story/client.tsx (renders <img> for each page that has imageUrl)",
+      "src/app/studio/story/actions.ts (persists imageUrlLowres on BookPage during submit)",
+      "src/app/portal/approvals/page.tsx (renders preview thumbnails for each page in awaiting-parent books)",
+      "src/app/portal/approvals/actions.ts (approveBook fires HD generation in background; uses Promise.all for parallel page rendering)"
+    ]
+  },
+  "storage": {
+    "preview_path": "/var/www/inklings/public/uploads/preview/<random12hex>.jpg",
+    "hd_path": "/var/www/inklings/public/uploads/hd/<random12hex>.jpg",
+    "public_url_pattern": "/uploads/<bucket>/<id>.jpg",
+    "served_by": "Caddy + Next.js public/ static serve",
+    "bucket_creation": "mkdir -p done at first use via fs/promises mkdir({ recursive: true })"
+  },
+  "quota_guard": {
+    "free_tier": "60 image_generated UsageEvents per 30d (covers ~3 stories × 7 beats + regenerations)",
+    "premium_tier": "1500 per 30d (effectively unlimited)",
+    "blocked_response": "kid still sees prose; imageUrl=null; imageGenSource='quota_blocked' on response"
+  },
+  "consistency": {
+    "seed_strategy": "seedFromImageSeed() hashes Character.imageSeed (deterministic from name+species at character-create time)",
+    "result": "same character renders consistently across all beats in a single story; if Character.imageSeed changes (regen), seed changes"
+  },
+  "fallback_chain": [
+    "TOGETHER_API_KEY missing → imageUrl=null, imageGenSource='skipped'",
+    "TogetherAI API error / non-2xx → imageUrl=null, imageGenSource='error'",
+    "Download failure when storing locally → imageUrl=null, imageGenSource='error'",
+    "Quota exceeded → imageUrl=null, imageGenSource='quota_blocked'"
+  ],
+  "verified": {
+    "tsc_noEmit": "exit 0",
+    "next_build": "passed",
+    "togetherai_smoke": "POST to FLUX.1-schnell returns image URL within 3s (operator host smoke prior to env wire)"
+  }
+}

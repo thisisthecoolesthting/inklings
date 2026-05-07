@@ -42,6 +42,20 @@ Per-dispatch machine-readable proofs live in `build/proof/<DISPATCH_ID>.json`.
 - **Richer demo seed** (`INKLINGS-RICHER-SEED-015`)
   Seed now creates: 2 children, 1 world, 2 approved + 1 sandbox character, 1 series, 1 approved book (7 pages) + 1 awaiting-parent book (5 pages), 1 fulfilled order. /portal/* shows real data on first run.
 
+## 2026-05-07 — Image pipeline (004)
+
+### Added
+- **TogetherAI Flux preview + HD pipeline** (`INKLINGS-IMAGE-PIPELINE-004`)
+  src/lib/image-gen.ts wraps TogetherAI’s /v1/images/generations. `generatePreview` (512x512 schnell, ~3s, ~$0.0027/image) called from /api/sparky/beat after Sparky text. `generateHd` (1024x1024) fired in the background when parent approves a book.
+  Storage: VPS filesystem at /var/www/inklings/public/uploads/{preview,hd}/<id>.jpg, served via Caddy. No Supabase or S3 needed.
+  Character consistency: seedFromImageSeed() hashes Character.imageSeed for deterministic renders across beats.
+  Quota guard: 60 image_generated UsageEvents per 30d (free), 1500 (premium). Kid never sees an error — imageUrl=null on every failure mode.
+
+### What it looks like to the user
+- Kid in /studio/story: each beat now renders an illustration above the text as Sparky writes the prose.
+- Parent in /portal/approvals: pending stories show preview thumbnails in a 3-col grid.
+- Parent clicks Approve: HD renders in the background, page.imageUrlHd populated, ready for KDP export.
+
 ## [Unreleased]
 
 ### Pending dispatches in `cursor-dispatch/outbox/`
