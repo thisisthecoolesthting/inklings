@@ -1,0 +1,55 @@
+{
+  "dispatch_id": "INKLINGS-DEPLOY-001",
+  "branch": "main",
+  "shipped_at": "2026-05-07",
+  "live_url": "https://inklings.shop",
+  "verified": {
+    "https_inklings_shop": "HTTP 200",
+    "localhost_3400": "HTTP 200",
+    "dns_a_record": "inklings.shop -> 187.124.246.154 (TTL 600, record id 545160247)",
+    "tls": "Let's Encrypt cert issued on first request via Caddy auto-https"
+  },
+  "vps": {
+    "host": "187.124.246.154 (Hostinger)",
+    "path": "/var/www/inklings",
+    "port": 3400,
+    "pm2": { "id": 16, "name": "inklings", "mode": "fork", "status": "online", "memory_mb": 53 }
+  },
+  "dns_changes": [
+    "DELETE 544886161 (ALIAS inklings.shop -> pixie.porkbun.com — Porkbun parking)",
+    "DELETE 544886163 (CNAME *.inklings.shop -> pixie.porkbun.com — Porkbun parking)",
+    "CREATE 545159689 (CNAME www.inklings.shop -> inklings.shop, TTL 600)",
+    "CREATE 545160247 (A inklings.shop -> 187.124.246.154, TTL 600)"
+  ],
+  "caddy_block": "inklings.shop, www.inklings.shop {\n  reverse_proxy localhost:3400\n  encode zstd gzip\n}",
+  "postgres": {
+    "role": "inklings",
+    "database": "inklings",
+    "password_backup": "/root/.inklings-pgpass",
+    "schema_pushed": "prisma db push --skip-generate (User + MagicLink + Session + ChildProfile + Character + World + Series + Book + BookPage + Order + UsageEvent)"
+  },
+  "env_file": {
+    "path": "/var/www/inklings/.env",
+    "perms": "600",
+    "keys": ["DATABASE_URL", "INK_SESSION_SECRET", "NEXT_PUBLIC_APP_URL", "APP_DOMAIN", "ANTHROPIC_API_KEY (sourced from /opt/factory/.env)", "ANTHROPIC_MODEL=claude-sonnet-4-6", "RESEND_API_KEY (sourced from /opt/factory/.env)", "RESEND_FROM_EMAIL", "SESSION_COOKIE_NAME", "NODE_ENV=production", "PORT=3400"]
+  },
+  "auto_deploy": {
+    "cron_path": "/etc/cron.d/inklings-deploy",
+    "frequency": "every 2 minutes",
+    "log": "/var/log/inklings-deploy.log",
+    "pattern": "git fetch && git reset --hard origin/main && pm2 stop inklings; npm ci && npx prisma generate && npm run build && pm2 start inklings --update-env"
+  },
+  "what_now_works_live": [
+    "Marketing site (home, pricing, faq, how-it-works, about, security, contact, trial, login, legal/{privacy,terms})",
+    "Magic-link auth (Resend will send real emails since RESEND_API_KEY is wired)",
+    "Parent portal (gated by ink_session middleware)",
+    "Kid Studio (Sparky stub responses; live Claude path requires un-comment in lib/sparky.ts — dispatch 003)",
+    "KDP sample export at /api/book/export — once books are created",
+    "Auto-deploy: every 2 min cron pulls from origin/main"
+  ],
+  "next_dispatches_unblocked_by_this_one": [
+    "003 sparky live (ANTHROPIC_API_KEY already in env — just needs code flip)",
+    "008 walkthrough video (now have a real live URL to record against)",
+    "009-followup SEO smoke (BreadcrumbList + FaqPage + Organization JSON-LD now reachable for Google to crawl)"
+  ]
+}

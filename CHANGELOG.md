@@ -10,6 +10,16 @@ Per-dispatch machine-readable proofs live in `build/proof/<DISPATCH_ID>.json`.
 
 ---
 
+## 2026-05-07 — DEPLOY-001 ship: inklings.shop is LIVE
+
+### Added
+- **Production deploy** (`INKLINGS-DEPLOY-001`)
+  Hostinger VPS (`187.124.246.154`), `/var/www/inklings/`, port 3400, pm2 process `inklings`, Caddy reverse-proxy with auto-LE TLS, cron auto-pull every 2 minutes (`/etc/cron.d/inklings-deploy`).
+  DNS programmed via Porkbun API (deleted parking ALIAS + wildcard CNAME, created A record `inklings.shop` → `187.124.246.154`, kept `www.inklings.shop` CNAME).
+  Postgres role + DB provisioned on shared PG 17 instance. Schema pushed via `prisma db push`.
+  `/var/www/inklings/.env` written with DATABASE_URL + INK_SESSION_SECRET + ANTHROPIC_API_KEY (sourced from `/opt/factory/.env`) + Resend key.
+- **Verified**: `https://inklings.shop` returns HTTP 200 with valid TLS cert.
+
 ## [Unreleased]
 
 ### Pending dispatches in `cursor-dispatch/outbox/`
