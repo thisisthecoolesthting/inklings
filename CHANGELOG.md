@@ -63,6 +63,12 @@ Per-dispatch machine-readable proofs live in `build/proof/<DISPATCH_ID>.json`.
   src/lib/kdp/page-template.ts inserts a sharp.toColorspace('cmyk') step before pdf-lib embedJpg(). Required for KDP PDF/X-1a strict spec. Sharp is dynamically imported so text-only sample renders don't trigger the native binding.
   Also adds fetchPageImage(localUrl) helper that reads /uploads/<bucket>/<file> off VPS disk into bytes — used by the future /api/book/[id]/export route.
 
+## 2026-05-07 — Niche-spec extraction (010)
+
+### Added
+- **Spine spawn recipe generalized** (`INKLINGS-NICHE-SPEC-010`)
+  niche_specs/inklings.json proves the schema. niche_specs/SCHEMA.md documents required + optional fields. scripts/spawn_from_niche_spec.sh clones this repo as a template, applies brand find/replace + palette swap + port swap + initial commit. docs/SPAWN_RECIPE.md walks through 4 phases (local scaffold, GitHub push, VPS deploy with Inklings-hardened cron, DNS via Porkbun API). Total spawn-to-live time: ~15 min (vs ~2 hr manual).
+
 ## [Unreleased]
 
 ### Pending dispatches in `cursor-dispatch/outbox/`
