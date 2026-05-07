@@ -56,6 +56,13 @@ Per-dispatch machine-readable proofs live in `build/proof/<DISPATCH_ID>.json`.
 - Parent in /portal/approvals: pending stories show preview thumbnails in a 3-col grid.
 - Parent clicks Approve: HD renders in the background, page.imageUrlHd populated, ready for KDP export.
 
+## 2026-05-07 — CMYK export (007)
+
+### Changed
+- **KDP page template now outputs CMYK** (`INKLINGS-CMYK-EXPORT-007`)
+  src/lib/kdp/page-template.ts inserts a sharp.toColorspace('cmyk') step before pdf-lib embedJpg(). Required for KDP PDF/X-1a strict spec. Sharp is dynamically imported so text-only sample renders don't trigger the native binding.
+  Also adds fetchPageImage(localUrl) helper that reads /uploads/<bucket>/<file> off VPS disk into bytes — used by the future /api/book/[id]/export route.
+
 ## [Unreleased]
 
 ### Pending dispatches in `cursor-dispatch/outbox/`

@@ -1,0 +1,20 @@
+{
+  "dispatch_id": "INKLINGS-CMYK-EXPORT-007",
+  "branch": "feat/cmyk-007",
+  "shipped_at": "2026-05-07",
+  "summary": "src/lib/kdp/page-template.ts now converts each page's input image bytes to CMYK JPEG via sharp.toColorspace('cmyk') before pdf-lib embedJpg(). Required for KDP PDF/X-1a strict spec.",
+  "implementation": {
+    "lib": "sharp@0.34 (already a dep from bootstrap)",
+    "color_space": "DeviceCMYK (sharp's toColorspace('cmyk'))",
+    "jpeg_quality": 92,
+    "jpeg_encoder": "mozjpeg (smaller files, sharper detail)",
+    "lazy_load": "sharp is dynamically imported inside toCmykJpeg() so text-only sample renders (e.g. scripts/generate_sample_kdp.ts) don't trigger the native binding."
+  },
+  "added_helper": "fetchPageImage(localUrl) — reads /uploads/<bucket>/<file> from VPS public/ disk into bytes for the future export route",
+  "verified": {
+    "tsc_noEmit": "exit 0",
+    "next_build": "passed",
+    "kdp_sample": "build/proof/kdp-sample.pdf rebuilt (3697 bytes, PDF 1.7) — text-only path bypasses CMYK step (no images to convert)"
+  },
+  "operator_verify_step": "When the first real story exports (after dispatch 008 walkthrough or a manual /api/book/[id]/export), open the PDF in Adobe Acrobat → File → Properties → Description → Color Space should read DeviceCMYK. Cross-check with `pdfinfo -box <file>` if pdfinfo is installed."
+}
