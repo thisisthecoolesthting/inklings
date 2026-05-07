@@ -7,6 +7,7 @@ import { brand } from "@/lib/brand";
 
 const NAV = [
   { href: "/features", label: "Features" },
+  { href: "/watch", label: "Watch" },
   { href: "/how-it-works", label: "How it works" },
   { href: "/pricing", label: "Pricing" },
   { href: "/faq", label: "FAQ" },

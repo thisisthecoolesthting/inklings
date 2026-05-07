@@ -43,6 +43,20 @@ export default function HowPage() {
             ))}
           </ol>
 
+          <div className="card-base mt-12 overflow-hidden p-0">
+            <video
+              controls
+              autoPlay
+              muted
+              playsInline
+              poster="/images/site/og-default.svg"
+              className="w-full rounded-card border-t-0 border border-ink-100"
+            >
+              <source src="/videos/walkthrough.webm" type="video/webm" />
+            </video>
+            <div className="p-6 text-sm text-ink-500">A 10-second tour of Inklings.</div>
+          </div>
+
           <div id="printed" className="card-base mt-12">
             <h2 className="text-xl font-bold text-ink">About the printed books</h2>
             <p className="mt-3 text-ink-700">
