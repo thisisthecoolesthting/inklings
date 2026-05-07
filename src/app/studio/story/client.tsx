@@ -22,7 +22,7 @@ export function StudioStoryClient({ ctx, flow }: { ctx: SparkyContext; flow: Spa
     });
     if (res.ok) {
       const data = (await res.json()) as { paragraph: string; imagePrompt: string };
-      setPages((p) => [...p, data]);
+      setPages((p) => [...p, { text: data.paragraph, imagePrompt: data.imagePrompt }]);
     }
     setBeatIdx((i) => i + 1);
     setThinking(false);
