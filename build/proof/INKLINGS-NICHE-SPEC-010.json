@@ -1,0 +1,25 @@
+{
+  "dispatch_id": "INKLINGS-NICHE-SPEC-010",
+  "branch": "feat/template-extraction-010",
+  "shipped_at": "2026-05-07",
+  "summary": "Generalizes the spine spawn recipe so the next site spawns in ~15 minutes instead of ~2 hours. Inklings itself is the reference implementation — its niche_specs/inklings.json proves the schema works end-to-end.",
+  "files": {
+    "added": [
+      "niche_specs/inklings.json (validated reference spec — 2592 bytes)",
+      "niche_specs/SCHEMA.md (field-by-field documentation — 2734 bytes)",
+      "scripts/spawn_from_niche_spec.sh (executable bash spawn — 4100 bytes)",
+      "docs/SPAWN_RECIPE.md (4-phase manual + scripted deploy guide — 4334 bytes)"
+    ]
+  },
+  "schema_fields": {
+    "required": ["slug", "name", "domain", "github_repo", "vps_path", "vps_port", "audience", "value_props", "tiers", "brand.palette", "stack", "spawned_from"],
+    "optional": ["ai_integrations", "deploy", "spine_deviations", "tagline"]
+  },
+  "spawn_pipeline": [
+    "Phase 1 — local scaffold (~5 min): scripts/spawn_from_niche_spec.sh clones template, applies brand find/replace, swaps palette via node, drops in saas_spec.json + README, initial commit",
+    "Phase 2 — push (~30s): gh repo create thisisthecoolesthting/<slug> --public --source . --push",
+    "Phase 3 — VPS (~10 min): clone /var/www/<slug>, provision Postgres, write .env, build, Caddy vhost, pm2 start, auto-pull cron with Inklings-hardened pattern",
+    "Phase 4 — DNS (~30s): Porkbun API to delete parking ALIAS + wildcard CNAME and create A record + www CNAME"
+  ],
+  "validated_against": "Inklings (this repo) — the niche_specs/inklings.json describes exactly the brand swap that produced this codebase from PriceScout"
+}

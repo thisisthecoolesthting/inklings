@@ -1,0 +1,64 @@
+{
+  "$schema": "./SCHEMA.md",
+  "slug": "inklings",
+  "name": "Inklings",
+  "tagline": "A storybook your child stars in.",
+  "domain": "inklings.shop",
+  "github_repo": "thisisthecoolesthting/inklings",
+  "vps_path": "/var/www/inklings",
+  "vps_port": 3400,
+  "audience": {
+    "primary": "parents and grandparents of children ages 4-8",
+    "also": ["homeschool families", "consignment & gift shoppers"],
+    "never": "marketed to kids directly"
+  },
+  "value_props": [
+    "Voice-first kid Studio (no reading required)",
+    "Persistent character family with Character Bible",
+    "Parent approval gate before anything publishes",
+    "Real printed hardcover books via KDP POD"
+  ],
+  "tiers": [
+    { "name": "Free", "price_cents": 0, "interval": "month", "limits": { "stories_per_month": 3, "watermark": true } },
+    { "name": "Premium", "price_cents": 999, "interval": "month", "limits": { "stories_per_month": -1, "watermark": false, "hd_export": true } },
+    { "name": "Printed Book", "price_cents": 1999, "interval": "one-time", "limits": { "physical_book": true } }
+  ],
+  "brand": {
+    "palette": {
+      "cream": "#FFF6E5",
+      "ink": "#4A2545",
+      "coral": "#F4815C",
+      "mint": "#A8DDB5",
+      "gold": "#D4A574"
+    },
+    "voice": "warm, gentle, magical, parent-trustworthy, never sales-y",
+    "section_padding_desktop_px": 80,
+    "section_padding_mobile_px": 56,
+    "button_radius_px": 12,
+    "card_radius_px": 20,
+    "font_strategy": "system stack (no Google Fonts)"
+  },
+  "stack": "Next 15 + React 18 + Tailwind 3 + Prisma 6 + Postgres 17 + magic-link auth + Stripe 17 + pdf-lib + sharp",
+  "ai_integrations": {
+    "narrative": { "provider": "Anthropic", "model": "claude-sonnet-4-6", "env": "ANTHROPIC_API_KEY" },
+    "images": { "provider": "TogetherAI", "model": "black-forest-labs/FLUX.1-schnell", "env": "TOGETHER_API_KEY" }
+  },
+  "deploy": {
+    "vps": "Hostinger 187.124.246.154",
+    "process_manager": "pm2",
+    "reverse_proxy": "Caddy with auto-https",
+    "auto_pull_cron": "*/2 * * * * (only rebuild on commit changes)",
+    "log_path": "/var/log/inklings-deploy.log"
+  },
+  "spawned_from": {
+    "spine_doc": "PriceScout repo: docs/SOLUTIONSTORE_SAAS_SPINE.md",
+    "spine_version": "1.0",
+    "swap_recipe_section": "§19"
+  },
+  "spine_deviations": [
+    "Button radius 12px (vs spine 6px) — softer for consumer audience",
+    "Section padding 80/56 — matches PriceScout deviation",
+    "No /admin shell — split into /studio (kid) + /portal (parent)",
+    "Marketing palette cream/plum (vs spine teal/blue) — storybook tone"
+  ]
+}
