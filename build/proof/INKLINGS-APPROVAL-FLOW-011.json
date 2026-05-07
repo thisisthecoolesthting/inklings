@@ -1,0 +1,21 @@
+{
+  "dispatch_id": "INKLINGS-APPROVAL-FLOW-011",
+  "files_touched": [
+    "src/app/portal/approvals/actions.ts",
+    "src/app/portal/approvals/submit-button.tsx",
+    "src/app/portal/approvals/page.tsx"
+  ],
+  "summary": "Implemented parent approval flow with server actions for approving/rejecting characters and books",
+  "actions_implemented": [
+    "approveCharacter: sets sandboxMode=false + parentApprovedAt",
+    "rejectCharacter: deletes sandbox character",
+    "approveBook: sets status='approved' + parentApprovedAt",
+    "rejectBook: sets status='draft'"
+  ],
+  "safety_properties": [
+    "All actions verify ownership via child.parentId == session.userId",
+    "Silent no-op on ownership mismatch (no data leak)",
+    "Session-gated with redirect to /login",
+    "Revalidates /portal, /portal/approvals, /portal/children, /studio"
+  ]
+}
