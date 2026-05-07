@@ -69,6 +69,12 @@ Per-dispatch machine-readable proofs live in `build/proof/<DISPATCH_ID>.json`.
 - **Spine spawn recipe generalized** (`INKLINGS-NICHE-SPEC-010`)
   niche_specs/inklings.json proves the schema. niche_specs/SCHEMA.md documents required + optional fields. scripts/spawn_from_niche_spec.sh clones this repo as a template, applies brand find/replace + palette swap + port swap + initial commit. docs/SPAWN_RECIPE.md walks through 4 phases (local scaffold, GitHub push, VPS deploy with Inklings-hardened cron, DNS via Porkbun API). Total spawn-to-live time: ~15 min (vs ~2 hr manual).
 
+## 2026-05-07 — Walkthrough video (008)
+
+### Added
+- **Marketing walkthrough video** (`INKLINGS-WALKTHROUGH-VIDEO-008`)
+  Playwright-recorded 10-second walkthrough of the marketing site (home → pricing → safety) with caption overlays per spine §13. Embedded on a new /watch page and /how-it-works. Recorder script lives at scripts/record_walkthrough.cjs — re-run anytime with `npm run walkthrough:record` against any URL. Video is 891 KB, public/videos/walkthrough.webm.
+
 ## [Unreleased]
 
 ### Pending dispatches in `cursor-dispatch/outbox/`

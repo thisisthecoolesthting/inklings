@@ -1,0 +1,31 @@
+{
+  "dispatch_id": "INKLINGS-WALKTHROUGH-VIDEO-008",
+  "branch": "feat/walkthrough-008",
+  "shipped_at": "2026-05-07",
+  "summary": "Recorded a 10-second walkthrough of the marketing site (hero → pricing → safety) with caption overlays and embedded it on a new /watch page + /how-it-works.",
+  "video": {
+    "path": "public/videos/walkthrough.webm",
+    "size_kb": 891,
+    "duration_seconds_approx": 10,
+    "scenes": [
+      "Home hero — caption: 'Inklings — a storybook your child stars in'",
+      "Pricing page — caption: 'Free to start. $9.99 Premium. $19.99 per printed book.'",
+      "Safety page — caption: 'Safety is the first feature. Parent approval gate. COPPA-compliant.'"
+    ],
+    "caption_styling_per_spine": "rgba(74,37,69,0.92) bg, cream text, 22px font, mint border, z-index 2147483647"
+  },
+  "files": {
+    "added": [
+      "scripts/record_walkthrough.cjs (Playwright recorder, runs against any Inklings URL via npm run walkthrough:record)",
+      "public/videos/walkthrough.webm (the recording itself)",
+      "src/app/watch/page.tsx (dedicated /watch page)"
+    ],
+    "modified": [
+      "src/app/how-it-works/page.tsx (embedded video block)",
+      "src/components/Header.tsx (added Watch nav)",
+      "src/app/sitemap.ts (added /watch)"
+    ]
+  },
+  "scope_note": "Marketing-only walkthrough (no portal/studio). Studio + portal recordings need authenticated sessions on prod data — defer to a future dispatch when there's seeded prod data the parent has explicitly approved.",
+  "rerun_command": "npm run walkthrough:record (defaults to https://inklings.shop) or node scripts/record_walkthrough.cjs http://localhost:3400 for local"
+}

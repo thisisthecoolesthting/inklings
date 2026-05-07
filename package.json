@@ -2,7 +2,7 @@
   "name": "inklings",
   "version": "0.1.0",
   "private": true,
-  "description": "Inklings — AI-guided storybook studio for kids ages 4-8. Spawned from the SolutionStore SaaS spine.",
+  "description": "Inklings \u2014 AI-guided storybook studio for kids ages 4-8. Spawned from the SolutionStore SaaS spine.",
   "scripts": {
     "dev": "next dev -p 3400",
     "build": "npx prisma generate && next build",
@@ -15,9 +15,12 @@
     "e2e": "playwright test",
     "kdp:sample": "tsx scripts/generate_sample_kdp.ts",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:seed": "npx tsx prisma/seed.ts"
+    "prisma:seed": "npx tsx prisma/seed.ts",
+    "walkthrough:record": "node scripts/record_walkthrough.cjs"
   },
-  "prisma": { "seed": "npx tsx prisma/seed.ts" },
+  "prisma": {
+    "seed": "npx tsx prisma/seed.ts"
+  },
   "dependencies": {
     "@prisma/client": "^6.8.2",
     "bcryptjs": "^2.4.3",
