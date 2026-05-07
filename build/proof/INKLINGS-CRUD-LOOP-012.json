@@ -1,0 +1,38 @@
+{
+  "dispatch_id": "INKLINGS-CRUD-LOOP-012",
+  "branch": "feat/crud-loop-012",
+  "shipped_at": "2026-05-07",
+  "executor": "Cowork-Claude direct (small enough to skip Mikaela handoff)",
+  "scope": "Close the CRUD loop: children + characters + stories all persist now.",
+  "files": {
+    "added": [
+      "src/app/portal/children/actions.ts (addChild + deleteChild)",
+      "src/app/studio/character/actions.ts (createCharacter)",
+      "src/app/studio/story/actions.ts (submitStoryForApproval)"
+    ],
+    "modified": [
+      "src/app/portal/children/page.tsx (real form replacing 'Add a child' button stub)",
+      "src/app/studio/character/page.tsx (real form replacing intent picker; ownership-verified; sandbox default)",
+      "src/app/studio/story/page.tsx (threads childId to client)",
+      "src/app/studio/story/client.tsx (handleSubmit calls submitStoryForApproval at end of 5-act flow)"
+    ]
+  },
+  "ownership_verification": "All three server actions verify session.userId == child.parentId before any write. Silent no-op for non-owner.",
+  "sanitization": "All child-facing strings (character name, species, role, personality traits, story title, page text) pass through lib/safety.ts sanitizeChildInput before persisting.",
+  "sandbox_default": "Characters created by the kid Studio land with sandboxMode=true. They are private to the child until parent approves via /portal/approvals (dispatch 011).",
+  "story_persist": "Book row created with status='awaiting_parent', BookPages with imageApproved=false. Parent must approve in /portal/approvals before status flips to 'approved'.",
+  "image_seed": "createCharacter generates a deterministic base64 seed from name+species so future renders (dispatch 004) stay character-consistent.",
+  "verified": {
+    "tsc_noEmit": "exit 0",
+    "next_build": "passed"
+  },
+  "what_user_can_do_now_end_to_end": [
+    "Parent: signup → email magic link → /portal/children → 'Add child' (Eli, 5)",
+    "Parent: launch Studio for Eli → /studio?child=...",
+    "Kid: 'Make a character' → /studio/character → name + species + traits → save (sandbox)",
+    "Parent: /portal/approvals → approve the character",
+    "Kid: 'Start a story' → 7 branching beats with live Sparky → 'Show grown-up'",
+    "Parent: /portal/approvals → review the story → approve",
+    "Pending dispatch 004: parent orders printed book once illustrations exist"
+  ]
+}
