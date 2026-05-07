@@ -1,0 +1,89 @@
+{
+  "dispatch_id": "INKLINGS-BOOTSTRAP-001",
+  "branch": "main (initial commit)",
+  "commit": "f35af52",
+  "spawned_from": "thisisthecoolesthting/pricescout @ 617b3c8",
+  "spine_version": "1.0",
+  "spine_recipe": "§19 brand-swap from canonical SOLUTIONSTORE_SAAS_SPINE.md",
+  "phase_1_foundation": {
+    "next_version": "15.0.3",
+    "tailwind_tokens_swapped": "mint/teal -> cream/ink/coral/mint/gold (warm storybook)",
+    "prisma_schema_replaced": "User + MagicLink + Session + ChildProfile + Character + World + Series + Book + BookPage + Order + UsageEvent",
+    "env_template_written": ".env.example",
+    "saas_spec_written": "saas_spec.json"
+  },
+  "phase_2_marketing": {
+    "spine_section_6_recipe": "applied to home page (cream hero, problem+who, capabilities+how, FAQ, dark final CTA)",
+    "routes_shipped": ["/", "/pricing", "/faq", "/how-it-works", "/about", "/security", "/contact", "/trial", "/login", "/forgot-password", "/legal/privacy", "/legal/terms"],
+    "header_footer_rewritten": true,
+    "pricing_tiers": ["Free", "Premium $9.99/mo", "Printed Book $19.99 each"],
+    "faq_data_authored": "src/content/faq-data.ts (7 questions)",
+    "feature_blocks_authored": "src/content/feature-pages.ts (6 blocks)",
+    "sitemap_robots_regenerated": true
+  },
+  "phase_3_auth": {
+    "session_cookie": "ink_session (httpOnly, sameSite=lax, 30d)",
+    "magic_link_ttl_minutes": 30,
+    "email_provider": "Resend (with dev console fallback)",
+    "api_routes": ["/api/auth/login", "/api/auth/verify", "/api/auth/logout"],
+    "middleware_gates": ["/portal/*", "/studio/*"]
+  },
+  "phase_4_portal": {
+    "layout_with_sidebar": true,
+    "pages": ["/portal", "/portal/children", "/portal/approvals", "/portal/orders", "/portal/settings"],
+    "approval_queue_query": "Character.sandboxMode=true OR Book.status=awaiting_parent — joined to parent via child.parentId",
+    "pending_badge_in_nav": true
+  },
+  "phase_5_studio": {
+    "entry": "/studio (who's-making picker)",
+    "story_flow_state_machine": "5 acts, 7 branching beats, choices = tap-buttons only (no freeform input)",
+    "sparky_lib": "lib/sparky.ts (currently stubbed deterministic; live Claude API path commented and ready to flip)",
+    "safety": "lib/safety.ts (input sanitize + AI moderation)",
+    "components": ["SparkyChat", "BigButton", "StylizationSlider", "StoryActProgress"]
+  },
+  "phase_6_kdp": {
+    "page_template": "src/lib/kdp/page-template.ts",
+    "trim_inches": 8.5,
+    "bleed_inches": 0.125,
+    "page_size_points": 630,
+    "dpi_target": 300,
+    "format": "PDF/X-1a (pdf-lib output)",
+    "fonts_embedded": true,
+    "sample_generator": "scripts/generate_sample_kdp.ts (npm run kdp:sample)"
+  },
+  "stripped_from_pricescout": [
+    "Scanner / PriceVerdict / /scan / /watch",
+    "/api/identify, /api/lookup",
+    "lib/identify.ts, lib/lookup.ts, lib/score.ts",
+    "/admin route renamed to /portal",
+    "WPBS partner flow + magic-login route",
+    "/api/auth/forgot, /api/auth/wpbs-grant, /api/auth/magic-login",
+    "/industries, /compare, /blog, /resources, /support, /features hub",
+    "mobile/ Expo app",
+    "scripts/{fire_marketing_images.py,sync-mikaela-spine-prompt.ps1,dispatch_watcher.py}",
+    "src/lib/api-schemas.ts, src/lib/roles.ts, src/instrumentation.ts",
+    "tests/demo-walkthrough.spec.ts (replaced with smoke.spec.ts)",
+    "PriceScout-specific Prisma migrations"
+  ],
+  "deferred_to_next_dispatches": {
+    "002_sparky_live_claude": "wire ANTHROPIC_API_KEY through askSparky()",
+    "003_image_pipeline": "TogetherAI Flux client + staged rendering (low-res preview -> HD on parent approve)",
+    "004_voice_stt": "Web Speech API with tap-button fallback inside SparkyChat",
+    "005_face_detection": "face-api.js client-side blur before upload",
+    "006_stripe_live": "mint Price IDs, wire /api/billing/* for real, founders cap if any",
+    "007_cmyk_export": "sRGB -> CMYK on KDP export",
+    "008_walkthrough_video": "Playwright recording per spine §13 once Studio is populated",
+    "009_seo_scaffold": "Add /features/[slug], /resources/guides/[slug], BreadcrumbList JSON-LD"
+  },
+  "operator_blocked": [
+    "Mint Stripe Price IDs (STRIPE_PRICE_PREMIUM_MONTHLY, STRIPE_PRICE_PRINT_BOOK)",
+    "Provision Postgres on the VPS at /var/www/inklings",
+    "Set up Caddy vhost for inklings.shop -> localhost:3400",
+    "DNS A/AAAA records for inklings.shop on Porkbun"
+  ],
+  "smoke_tests_pending_npm_install": [
+    "npm run typecheck",
+    "npm run build",
+    "npm run kdp:sample (writes build/proof/kdp-sample.pdf)"
+  ]
+}
