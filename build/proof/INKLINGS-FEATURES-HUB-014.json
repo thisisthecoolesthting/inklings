@@ -1,0 +1,18 @@
+{
+  "dispatch_id": "INKLINGS-FEATURES-HUB-014",
+  "branch": "feat/scaffold-batch",
+  "shipped_at": "2026-05-07",
+  "added": [
+    "src/app/features/page.tsx (hub linking 6 features)",
+    "src/app/features/voice-first-studio/page.tsx (deep dive)",
+    "src/app/features/character-bible/page.tsx (deep dive)",
+    "src/app/features/parent-approval/page.tsx (deep dive)",
+    "src/app/features/[slug]/page.tsx (dynamic catch-all with generateStaticParams)"
+  ],
+  "modified": [
+    "src/app/sitemap.ts (added 4 routes)",
+    "src/components/Header.tsx (added Features nav item)"
+  ],
+  "json_ld": "BreadcrumbList on every feature page (hub + 3 deep dives + catch-all)",
+  "static_generation": "generateStaticParams pre-renders all FEATURES.slug entries; 3 catch by hand-written pages, 3 fall through to dynamic"
+}

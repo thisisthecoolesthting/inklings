@@ -1,0 +1,18 @@
+{
+  "dispatch_id": "INKLINGS-RICHER-SEED-015",
+  "branch": "feat/scaffold-batch",
+  "shipped_at": "2026-05-07",
+  "files": ["prisma/seed.ts (rewrite)"],
+  "creates": {
+    "parent": "demo@inklings.shop (premium tier)",
+    "children": ["Eli (5)", "Nora (7)"],
+    "worlds": ["The Meadowlands (Eli)"],
+    "characters_approved": ["Biscuit (golden retriever puppy)", "Saffron (magical fox)"],
+    "characters_sandbox": ["Mira the Mapmaker (owl) — awaiting parent approval"],
+    "series": ["Biscuit and Saffron"],
+    "books_approved": ["Biscuit and the Lost Bell — 7 pages"],
+    "books_awaiting_parent": ["Mira and the Map of Maybe — 5 pages"],
+    "orders_fulfilled": ["1× Biscuit and the Lost Bell @ $19.99"]
+  },
+  "why": "Lets /portal dashboard, /portal/approvals, /portal/orders all show real content on first run. Required for dispatch 008 (walkthrough video) which Playwright-records the portal."
+}
