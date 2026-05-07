@@ -31,6 +31,7 @@ export default async function StoryPage({
       </header>
       <StoryActProgress currentAct="beginning" />
       <StudioStoryClient
+        childId={child.id}
         ctx={{
           childName: child.name,
           childAge: child.age,

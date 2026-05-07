@@ -1,5 +1,8 @@
+import Link from "next/link";
+import { Trash2 } from "lucide-react";
 import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
+import { addChild, deleteChild } from "./actions";
 
 export default async function ChildrenPage() {
   const session = await getSession();
@@ -11,26 +14,63 @@ export default async function ChildrenPage() {
   });
   return (
     <>
-      <header className="mb-10 flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-ink">Children</h1>
-          <p className="mt-1 text-ink-700">Each profile is private to your account.</p>
-        </div>
-        <button className="btn-primary" type="button">Add a child</button>
+      <header className="mb-10">
+        <h1 className="text-3xl font-bold text-ink">Children</h1>
+        <p className="mt-1 text-ink-700">Each profile is private to your account. Stories, characters, and worlds are scoped per child.</p>
       </header>
+
+      <section className="card-base mb-10">
+        <h2 className="text-xl font-bold text-ink">Add a child</h2>
+        <p className="mt-1 text-sm text-ink-700">First name and age. We collect the bare minimum for COPPA.</p>
+        <form action={addChild} className="mt-4 flex flex-wrap gap-3">
+          <div className="flex-1 min-w-[160px]">
+            <label htmlFor="name" className="block text-xs font-semibold text-ink-700">Name</label>
+            <input
+              id="name" name="name" type="text" required maxLength={40}
+              className="mt-1 w-full rounded-button border-2 border-ink-100 bg-white px-3 py-2 text-base focus:border-coral focus:outline-none"
+              placeholder="Eli"
+            />
+          </div>
+          <div className="w-24">
+            <label htmlFor="age" className="block text-xs font-semibold text-ink-700">Age</label>
+            <input
+              id="age" name="age" type="number" required min={2} max={14}
+              className="mt-1 w-full rounded-button border-2 border-ink-100 bg-white px-3 py-2 text-base focus:border-coral focus:outline-none"
+              placeholder="5"
+            />
+          </div>
+          <div className="self-end">
+            <button type="submit" className="btn-primary">Add child</button>
+          </div>
+        </form>
+      </section>
+
       {children.length === 0 ? (
         <div className="card-base text-center">
-          <p className="text-ink-700">You haven&apos;t added a child yet. Add one to start a story.</p>
+          <p className="text-ink-700">You haven&apos;t added a child yet.</p>
         </div>
       ) : (
         <ul className="grid gap-4 sm:grid-cols-2">
           {children.map((c) => (
             <li key={c.id} className="card-base">
-              <h2 className="text-xl font-bold text-ink">{c.name}</h2>
-              <p className="text-sm text-ink-500">Age {c.age}</p>
-              <p className="mt-3 text-sm text-ink-700">
-                {c._count.characters} characters &middot; {c._count.books} stories
-              </p>
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <h2 className="text-xl font-bold text-ink">{c.name}</h2>
+                  <p className="text-sm text-ink-500">Age {c.age}</p>
+                  <p className="mt-3 text-sm text-ink-700">
+                    {c._count.characters} characters &middot; {c._count.books} stories
+                  </p>
+                </div>
+                <form action={deleteChild}>
+                  <input type="hidden" name="id" value={c.id} />
+                  <button type="submit" aria-label={`Remove ${c.name}`} className="text-ink-500 hover:text-coral">
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </form>
+              </div>
+              <div className="mt-4 flex gap-2">
+                <Link href={`/studio?child=${c.id}`} className="btn-secondary text-sm">Open Studio</Link>
+              </div>
             </li>
           ))}
         </ul>
