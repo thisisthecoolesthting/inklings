@@ -1,0 +1,214 @@
+// Inklings — Prisma schema
+// Adapted from the Inklings handoff doc and the spine §11 baseline.
+// Tenancy model: each parent (User) is their own tenant. Children belong to one parent.
+// All child-facing rows scope by parent_id via cascade.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// === Parents (the actual users) ===
+model User {
+  id                 String         @id @default(cuid())
+  email              String         @unique
+  name               String?
+  stripeCustomerId   String?        @unique
+  subscriptionTier   String         @default("free") // free | premium
+  subscriptionStatus String?
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  children           ChildProfile[]
+  sessions           Session[]
+  magicLinks         MagicLink[]
+  orders             Order[]
+}
+
+// === Magic-link auth ===
+model MagicLink {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String   @unique
+  expiresAt DateTime
+  consumed  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// === Child profiles ===
+model ChildProfile {
+  id        String      @id @default(cuid())
+  parentId  String
+  parent    User        @relation(fields: [parentId], references: [id], onDelete: Cascade)
+  name      String
+  age       Int
+  avatarUrl String?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  characters Character[]
+  worlds     World[]
+  series     Series[]
+  books      Book[]
+
+  @@index([parentId])
+}
+
+// === Character Bible ===
+model Character {
+  id                 String   @id @default(cuid())
+  childId            String
+  child              ChildProfile @relation(fields: [childId], references: [id], onDelete: Cascade)
+  name               String
+  nickname           String?
+  pronouns           String?
+  role               String?
+  species            String?
+  colorsJson         Json?
+  outfit             String?
+  bodyShape          String?
+  accessoriesJson    Json?
+  expressionStyle    String?
+  personalityTraits  Json?
+  relationshipsJson  Json?
+  favoriteActivities Json?
+  recurringPhrases   Json?
+  storyArcs          Json?
+  imageSeed          String?
+  loraRef            String?
+  approvedImagesJson Json?
+  sandboxMode        Boolean  @default(true)
+  parentApprovedAt   DateTime?
+  firstAppearance    DateTime @default(now())
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([childId])
+}
+
+// === Worlds ===
+model World {
+  id              String   @id @default(cuid())
+  childId         String
+  child           ChildProfile @relation(fields: [childId], references: [id], onDelete: Cascade)
+  name            String
+  description     String?
+  locationsJson   Json?
+  visualTheme     String?
+  recurringObjectsJson Json?
+  weather         String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  series Series[]
+
+  @@index([childId])
+}
+
+// === Series ===
+model Series {
+  id          String   @id @default(cuid())
+  childId     String
+  child       ChildProfile @relation(fields: [childId], references: [id], onDelete: Cascade)
+  worldId     String?
+  world       World?   @relation(fields: [worldId], references: [id])
+  title       String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  books Book[]
+
+  @@index([childId])
+}
+
+// === Books ===
+model Book {
+  id              String   @id @default(cuid())
+  seriesId        String?
+  series          Series?  @relation(fields: [seriesId], references: [id])
+  childId         String
+  child           ChildProfile @relation(fields: [childId], references: [id], onDelete: Cascade)
+  title           String
+  subtitle        String?
+  status          String   @default("draft") // draft | awaiting_parent | approved | exported | ordered
+  storyJson       Json?
+  coverUrl        String?
+  pdfDraftUrl     String?
+  pdfFinalUrl     String?
+  kdpReady        Boolean  @default(false)
+  parentApprovedAt DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  pages  BookPage[]
+  orders Order[]
+
+  @@index([childId])
+}
+
+model BookPage {
+  id             String   @id @default(cuid())
+  bookId         String
+  book           Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  pageNumber     Int
+  act            String
+  textContent    String
+  imagePrompt    String?
+  imageUrlLowres String?
+  imageUrlHd     String?
+  imageApproved  Boolean  @default(false)
+  layoutTemplate String   @default("centered")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([bookId, pageNumber])
+  @@index([bookId])
+}
+
+// === Orders ===
+model Order {
+  id                    String   @id @default(cuid())
+  userId                String
+  user                  User     @relation(fields: [userId], references: [id])
+  bookId                String
+  book                  Book     @relation(fields: [bookId], references: [id])
+  stripePaymentIntent   String?  @unique
+  quantity              Int      @default(1)
+  unitPriceCents        Int
+  status                String   @default("pending") // pending | paid | fulfilled | refunded
+  kdpUploadInitiatedAt  DateTime?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@index([userId])
+  @@index([bookId])
+}
+
+// === Quota ledger (free-tier rate limiting) ===
+model UsageEvent {
+  id        String   @id @default(cuid())
+  userId    String
+  kind      String   // story_started | image_generated | pdf_exported
+  meta      Json?
+  createdAt DateTime @default(now())
+
+  @@index([userId, kind, createdAt])
+}

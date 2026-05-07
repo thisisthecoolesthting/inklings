@@ -1,0 +1,40 @@
+{
+  "slug": "inklings",
+  "name": "Inklings",
+  "domain": "inklings.shop",
+  "tagline": "A storybook your child stars in.",
+  "audience": [
+    "parents of children ages 4-8",
+    "grandparents looking for keepsake gifts",
+    "homeschool families"
+  ],
+  "value_props": [
+    "Persistent character family — kids build a story universe, not a one-off book",
+    "Voice-first kid Studio with parent approval gate before anything publishes",
+    "Real printed children's books via Amazon KDP POD"
+  ],
+  "tiers": [
+    { "name": "Free", "price_cents": 0, "interval": "month", "limits": { "stories_per_month": 3, "watermark": true } },
+    { "name": "Premium", "price_cents": 999, "interval": "month", "limits": { "stories_per_month": -1, "watermark": false, "hd_export": true } },
+    { "name": "Printed Book", "price_cents": 1999, "interval": "one-time", "limits": { "physical_book": true } }
+  ],
+  "brand": {
+    "palette": {
+      "cream": "#FFF6E5",
+      "ink": "#4A2545",
+      "coral": "#F4815C",
+      "mint": "#A8DDB5",
+      "gold": "#D4A574"
+    },
+    "voice": "warm, gentle, magical, parent-trustworthy, never sales-y"
+  },
+  "stack": "Next 15 + Tailwind 3 + Prisma 6 + Postgres 17 + Stripe 15 + pdf-lib + sharp",
+  "spawned_from_spine": true,
+  "spine_version": "1.0",
+  "spine_deviations": [
+    "rounded-button 12px (vs spine 6px) — softer for consumer audience",
+    "page section padding 80/56 (matches PriceScout deviation)",
+    "no admin '/admin' shell — split into /studio (kid) + /portal (parent)",
+    "marketing palette is cream/plum (vs spine teal/blue) — storybook tone"
+  ]
+}
