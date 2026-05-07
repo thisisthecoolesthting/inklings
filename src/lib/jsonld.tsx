@@ -44,3 +44,27 @@ export function FaqPageJsonLd({ items }: { items: { q: string; a: string }[] }) 
     />
   );
 }
+
+export function OrganizationJsonLd() {
+  const base = getSiteUrl();
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Inklings",
+    url: base,
+    logo: `${base}/images/brand/inklings-mark.svg`,
+    description: "AI-guided storybook studio for kids ages 4-8. Voice-first, parent-approved, real printed children's books.",
+    sameAs: [],
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer support",
+      email: "hello@inklings.shop",
+    },
+  };
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
+}

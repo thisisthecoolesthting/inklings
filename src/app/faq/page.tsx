@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { brand } from "@/lib/brand";
 import { FAQ } from "@/components/FAQ";
 import { FAQ_HOME } from "@/content/faq-data";
+import { FaqPageJsonLd } from "@/lib/jsonld";
 
 export const metadata: Metadata = {
   title: `FAQ — ${brand.name}`,
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
 export default function FaqPage() {
   return (
     <>
+      <FaqPageJsonLd items={FAQ_HOME} />
       <section className="hero-storybook">
         <div className="container-ink section">
           <div className="mx-auto max-w-3xl text-center">

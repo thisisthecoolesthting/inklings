@@ -4,6 +4,7 @@ import { brand } from "@/lib/brand";
 import { FAQ } from "@/components/FAQ";
 import { PricingTiers } from "@/components/PricingTiers";
 import { FAQ_HOME } from "@/content/faq-data";
+import { FaqPageJsonLd } from "@/lib/jsonld";
 import { FEATURES } from "@/content/feature-pages";
 
 /**
@@ -13,6 +14,7 @@ import { FEATURES } from "@/content/feature-pages";
 export default function HomePage() {
   return (
     <>
+      <FaqPageJsonLd items={FAQ_HOME} />
       {/* SECTION 1 — Cream hero */}
       <section className="hero-storybook">
         <div className="container-ink section">

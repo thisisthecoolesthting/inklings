@@ -1,0 +1,34 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci --no-audit --no-fund
+      - run: npx prisma generate
+      - run: npx tsc --noEmit
+      - run: npx next build
+        env:
+          DATABASE_URL: postgresql://stub:stub@localhost:5432/stub
+          INK_SESSION_SECRET: ci-only-stub-not-for-prod-32chars
+          NEXT_PUBLIC_APP_URL: https://inklings.shop
+      - run: npx tsx scripts/generate_sample_kdp.ts
+        env:
+          DATABASE_URL: postgresql://stub:stub@localhost:5432/stub
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kdp-sample
+          path: build/proof/kdp-sample.pdf
+          if-no-files-found: error
