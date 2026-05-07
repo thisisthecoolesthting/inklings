@@ -1,0 +1,21 @@
+{
+  "dispatch_id": "INKLINGS-VOICE-STT-005",
+  "branch": "feat/voice-stt",
+  "shipped_at": "2026-05-07",
+  "executor": "Mikaela factory-agent (Claude Sonnet 4.5 tool loop) + Cowork-Claude finishing pass",
+  "summary": "Web Speech API STT in SparkyChat with token-set Jaccard fuzzy match (>=0.5) against visible chip labels. Mic button above choice grid, never replaces it. Falls open on every failure mode (no support, denied, no match, network error) — tap-button always usable.",
+  "files_changed": [
+    "src/components/studio/use-voice-recognition.ts (new — 70 lines, hook)",
+    "src/components/studio/SparkyChat.tsx (rewrite — added Mic/MicOff button, fuzzy matcher, lastResult effect)",
+    "src/app/globals.css (added sparky-mic-pulse + sparky-mic-shake keyframes + .mic-listening + .mic-shake helpers inside @layer components)"
+  ],
+  "executor_notes": [
+    "Mikaela ran 23 turns, hit max-turns budget mid-typecheck. Files were complete; Cowork-Claude resumed: ran typecheck (clean), build failed on a CSS unbalanced-brace from Mikaela's in-place edit, restored globals.css from origin and re-applied the additions with brace-counting verification, rebuild green."
+  ],
+  "verified": {
+    "typecheck": "tsc --noEmit exit 0",
+    "build": "next build passed",
+    "css_brace_balance": "41 open / 41 close after fix"
+  },
+  "browser_test_status": "Pending live deploy + manual test — push triggers cron auto-pull within 2 min, mic button reachable at https://inklings.shop/studio/story?child=demo-child-eli"
+}
