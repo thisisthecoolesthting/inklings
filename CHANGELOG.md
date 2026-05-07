@@ -20,6 +20,18 @@ Per-dispatch machine-readable proofs live in `build/proof/<DISPATCH_ID>.json`.
   `/var/www/inklings/.env` written with DATABASE_URL + INK_SESSION_SECRET + ANTHROPIC_API_KEY (sourced from `/opt/factory/.env`) + Resend key.
 - **Verified**: `https://inklings.shop` returns HTTP 200 with valid TLS cert.
 
+## 2026-05-07 — Sparky goes live (003)
+
+### Added
+- **Sparky calls Claude API live** (`INKLINGS-SPARKY-LIVE-003`).
+  `src/lib/sparky.ts` rewritten — `askSparky()` now POSTs to Anthropic with a tightly-bounded system prompt (1-2 short sentences, age-appropriate reading level, must reference at least one character by name, forbidden-word block list, no emoji, prose only). Returns `source: 'live' | 'stub' | 'moderation_fallback'`.
+- **Fallback chain** — missing API key, network error, empty response, or moderation block all silently fall back to the deterministic stub. The kid never sees an error.
+- **Free-tier quota guard** in `src/app/api/sparky/beat/route.ts` — 3 stories per 30-day window enforced via `UsageEvent kind='story_started'`.
+- **Telemetry** — every beat logs UsageEvent rows for future analytics + dispatch 004 image quotas.
+
+### Lives at
+`https://inklings.shop/studio` — auto-deploys via the 2-min cron after this PR merges.
+
 ## [Unreleased]
 
 ### Pending dispatches in `cursor-dispatch/outbox/`

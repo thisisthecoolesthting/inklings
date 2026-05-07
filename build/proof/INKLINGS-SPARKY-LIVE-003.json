@@ -1,0 +1,45 @@
+{
+  "dispatch_id": "INKLINGS-SPARKY-LIVE-003",
+  "branch": "feat/sparky-live-claude",
+  "shipped_at": "2026-05-07",
+  "summary": "Sparky now calls Claude API live. Falls back to deterministic stub on missing key, network error, or moderation block. Free-tier quota enforced (3 stories/month) via UsageEvent.",
+  "files_changed": ["src/lib/sparky.ts (rewrite)", "src/app/api/sparky/beat/route.ts (rewrite)"],
+  "anthropic_call": {
+    "endpoint": "https://api.anthropic.com/v1/messages",
+    "model_env": "ANTHROPIC_MODEL (defaults to claude-sonnet-4-6)",
+    "max_tokens": 200,
+    "temperature": 0.8,
+    "system_prompt_constraints": [
+      "Output 1-2 short sentences. No questions. No bullets.",
+      "Age-appropriate reading level (preschool ≤5, early reader 6-8)",
+      "Reference at least one character by name",
+      "No forbidden words (weapon/blood/scared/monster + handful)",
+      "No real-world brands/locations/copyrighted names",
+      "No emoji",
+      "Output prose only"
+    ]
+  },
+  "fallback_paths": [
+    "ANTHROPIC_API_KEY missing → stub (source: 'stub')",
+    "Anthropic 4xx/5xx or fetch exception → stub (source: 'stub')",
+    "Empty response from API → stub (source: 'stub')",
+    "moderateAiText() blocks output → stub (source: 'moderation_fallback')"
+  ],
+  "quota_guard": {
+    "tier": "free",
+    "limit": "3 stories per 30-day rolling window",
+    "trigger_beat": "where_are_we (first beat of any story)",
+    "blocked_response_paragraph": "You've made N stories this month — that's the free plan! Ask a grown-up about Premium for more stories.",
+    "premium_users": "unlimited"
+  },
+  "telemetry": [
+    "UsageEvent kind='story_started' on first beat (free tier counted)",
+    "UsageEvent kind='image_generated' on every beat with imagePrompt"
+  ],
+  "verified": {
+    "tsc_noEmit": "exit 0",
+    "next_build": "passed"
+  },
+  "deploys_via": "cron auto-pull every 2 min (commit lands → /var/log/inklings-deploy.log shows pull → pm2 restart with new build)",
+  "live_at": "https://inklings.shop/studio (after cron picks up the merge)"
+}
