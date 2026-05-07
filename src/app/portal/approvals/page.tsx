@@ -1,5 +1,7 @@
 import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
+import { approveCharacter, rejectCharacter, approveBook, rejectBook } from "./actions";
+import { SubmitButton } from "./submit-button";
 
 export default async function ApprovalsPage() {
   const session = await getSession();
@@ -35,8 +37,14 @@ export default async function ApprovalsPage() {
                 <p className="text-sm text-ink-500">From {ch.child.name}</p>
                 <p className="mt-3 text-sm text-ink-700">{ch.species}, {ch.role}.</p>
                 <div className="mt-4 flex gap-2">
-                  <button className="btn-primary text-sm" type="button">Approve</button>
-                  <button className="btn-secondary text-sm" type="button">Send back</button>
+                  <form action={approveCharacter}>
+                    <input type="hidden" name="id" value={ch.id} />
+                    <SubmitButton kind="approve">Approve</SubmitButton>
+                  </form>
+                  <form action={rejectCharacter}>
+                    <input type="hidden" name="id" value={ch.id} />
+                    <SubmitButton kind="reject">Send back</SubmitButton>
+                  </form>
                 </div>
               </li>
             ))}
@@ -50,12 +58,21 @@ export default async function ApprovalsPage() {
         ) : (
           <ul className="mt-3 space-y-4">
             {pendingBooks.map((b) => (
-              <li key={b.id} className="card-base flex items-center justify-between gap-4">
-                <div>
+              <li key={b.id} className="card-base">
+                <div className="mb-4">
                   <h3 className="text-lg font-bold text-ink">{b.title}</h3>
                   <p className="text-sm text-ink-500">From {b.child.name} &middot; {b._count.pages} pages</p>
                 </div>
-                <button className="btn-primary" type="button">Review pages</button>
+                <div className="flex gap-2">
+                  <form action={approveBook}>
+                    <input type="hidden" name="id" value={b.id} />
+                    <SubmitButton kind="approve">Approve</SubmitButton>
+                  </form>
+                  <form action={rejectBook}>
+                    <input type="hidden" name="id" value={b.id} />
+                    <SubmitButton kind="reject">Send back</SubmitButton>
+                  </form>
+                </div>
               </li>
             ))}
           </ul>
