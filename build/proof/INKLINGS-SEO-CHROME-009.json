@@ -1,0 +1,41 @@
+{
+  "dispatch_id": "INKLINGS-SEO-CHROME-009",
+  "branch": "main",
+  "commit": "2830aea",
+  "deliverables": {
+    "json_ld": {
+      "added": ["OrganizationJsonLd"],
+      "wired_into": ["src/app/page.tsx (FaqPageJsonLd)", "src/app/faq/page.tsx (FaqPageJsonLd)", "src/app/layout.tsx (OrganizationJsonLd)"],
+      "kept": ["BreadcrumbJsonLd (lib/jsonld.tsx, available for /features/[slug] etc.)"]
+    },
+    "brand_assets": [
+      "public/favicon.svg",
+      "public/images/brand/inklings-mark.svg",
+      "public/images/site/og-default.svg"
+    ],
+    "ci": {
+      "file": ".github/workflows/ci.yml",
+      "steps": ["actions/checkout@v4", "actions/setup-node@v4 (node 22, npm cache)", "npm ci", "npx prisma generate", "npx tsc --noEmit", "npx next build (with stub env)", "npx tsx scripts/generate_sample_kdp.ts", "actions/upload-artifact@v4 (kdp-sample.pdf)"]
+    },
+    "reproducibility": {
+      "package_lock_committed": true,
+      "lockfile_size_bytes": 140435,
+      "package_count": 442
+    },
+    "dispatch_outbox": [
+      "DEPLOY-001-inklings-vps.prompt.md",
+      "003-inklings-sparky-live-claude.prompt.md",
+      "004-inklings-image-pipeline-flux.prompt.md",
+      "005-inklings-voice-stt-tap-fallback.prompt.md",
+      "006-inklings-stripe-live.prompt.md",
+      "007-inklings-cmyk-export-and-bleed.prompt.md",
+      "008-inklings-walkthrough-video.prompt.md",
+      "010-inklings-niche-spec-and-template-extraction.prompt.md"
+    ],
+    "continuity": ["SESSION_HANDOFF.md", "AGENTS.md (marked LIVE 2026-05-07)"]
+  },
+  "verified": {
+    "tsc_noEmit": "exit 0",
+    "next_build": "passed (no SEO regressions)"
+  }
+}
