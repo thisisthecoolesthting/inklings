@@ -1,0 +1,41 @@
+{
+  "dispatch_id": "INKLINGS-BUILD-VERIFY-002",
+  "branch": "main",
+  "commit": "905519e",
+  "node_version": "v22.22.0",
+  "npm_version": "10.9.4",
+  "npm_install": {
+    "result": "OK",
+    "packages_added": 442,
+    "duration_seconds": 33,
+    "flags": "--no-audit --no-fund --omit=optional"
+  },
+  "prisma_generate": "OK",
+  "typecheck": "tsc --noEmit exits 0 (after one-line fix in src/app/studio/story/client.tsx)",
+  "next_build": {
+    "result": "OK",
+    "static_routes": ["/_not-found", "/about", "/contact", "/faq", "/forgot-password", "/how-it-works", "/legal/privacy", "/legal/terms", "/pricing", "/robots.txt", "/security", "/sitemap.xml"],
+    "dynamic_routes": ["/api/auth/login", "/api/auth/logout", "/api/auth/verify", "/api/billing/checkout", "/api/billing/portal", "/api/billing/webhook", "/api/sparky/beat", "/login", "/portal", "/portal/approvals", "/portal/children", "/portal/orders", "/portal/settings", "/studio", "/studio/character", "/studio/story", "/trial"],
+    "first_load_js_kb": 102,
+    "middleware_kb": 40.1
+  },
+  "kdp_sample": {
+    "script": "scripts/generate_sample_kdp.ts",
+    "output": "build/proof/kdp-sample.pdf",
+    "bytes": 3697,
+    "page_size_pts": 630,
+    "page_size_inches": "8.75 × 8.75 (incl. 0.125\" bleed)",
+    "pdf_version": "1.7"
+  },
+  "fixes_applied": [
+    "src/app/studio/story/client.tsx — map Sparky API response { paragraph } → state { text }",
+    ".gitignore — exclude *.tsbuildinfo and next-env.d.ts"
+  ],
+  "deferred": [
+    "Real DATABASE_URL — currently using stub for build-time only",
+    "ANTHROPIC_API_KEY for Sparky live (dispatch 003)",
+    "TOGETHER_API_KEY for image gen (dispatch 004)",
+    "Stripe Price IDs (dispatch 006)"
+  ],
+  "credentials_note": "Initial push used a one-time PAT supplied in chat. Token has been used for two commits (initial + this fix). Recommend rotation after dispatch verification."
+}
