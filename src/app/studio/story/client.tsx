@@ -6,7 +6,7 @@ import type { SparkyBeat, SparkyChoice } from "@/content/sparky-prompts";
 import type { SparkyContext } from "@/lib/sparky";
 import { submitStoryForApproval } from "./actions";
 
-interface PersistedPage { text: string; imagePrompt: string }
+interface PersistedPage { text: string; imagePrompt: string; imageUrl: string | null }
 
 export function StudioStoryClient({
   ctx,
@@ -35,12 +35,12 @@ export function StudioStoryClient({
       body: JSON.stringify({
         beatId: beat.id,
         choiceId: choice.id,
-        ctx: { ...ctx, storyState: pages.length === 0 ? [] : ctx.storyState.concat({ beatId: beat.id, choiceId: choice.id }) },
+        ctx: { ...ctx, storyState: ctx.storyState.concat({ beatId: beat.id, choiceId: choice.id }) },
       }),
     });
     if (res.ok) {
-      const data = (await res.json()) as { paragraph: string; imagePrompt: string };
-      setPages((p) => [...p, { text: data.paragraph, imagePrompt: data.imagePrompt }]);
+      const data = (await res.json()) as { paragraph: string; imagePrompt: string; imageUrl: string | null };
+      setPages((p) => [...p, { text: data.paragraph, imagePrompt: data.imagePrompt, imageUrl: data.imageUrl ?? null }]);
     }
     setBeatIdx((i) => i + 1);
     setThinking(false);
@@ -54,7 +54,12 @@ export function StudioStoryClient({
       const result = await submitStoryForApproval({
         childId,
         title,
-        pages: pages.map((p) => ({ text: p.text, imagePrompt: p.imagePrompt, act: "story" })),
+        pages: pages.map((p) => ({
+          text: p.text,
+          imagePrompt: p.imagePrompt,
+          imageUrl: p.imageUrl,
+          act: "story",
+        })),
       });
       if ("ok" in result && result.ok) {
         setBookId(result.bookId);
@@ -74,23 +79,27 @@ export function StudioStoryClient({
             ? "Sparky sent your story to your grown-up to look over."
             : "Tap the button to send your story to your grown-up."}
         </p>
-        <ol className="mt-8 space-y-4 text-left">
+        <ol className="mt-8 space-y-6 text-left">
           {pages.map((p, i) => (
             <li key={i} className="card-base">
               <span className="text-xs font-semibold uppercase tracking-wider text-coral">Page {i + 1}</span>
-              <p className="mt-2 text-lg text-ink">{p.text}</p>
+              {p.imageUrl && (
+                <img
+                  src={p.imageUrl}
+                  alt={`illustration for page ${i + 1}`}
+                  className="mt-3 w-full rounded-card border border-ink-100"
+                  loading="lazy"
+                />
+              )}
+              <p className="mt-3 text-lg text-ink">{p.text}</p>
             </li>
           ))}
         </ol>
         {submitState === "idle" && (
-          <button onClick={handleSubmit} className="btn-primary btn-large mt-10 inline-flex">
-            Show grown-up
-          </button>
+          <button onClick={handleSubmit} className="btn-primary btn-large mt-10 inline-flex">Show grown-up</button>
         )}
         {submitState === "submitting" && (
-          <button disabled className="btn-primary btn-large mt-10 inline-flex opacity-60">
-            Sending…
-          </button>
+          <button disabled className="btn-primary btn-large mt-10 inline-flex opacity-60">Sending…</button>
         )}
         {submitState === "submitted" && (
           <div className="mt-10">
@@ -112,6 +121,9 @@ export function StudioStoryClient({
         <div className="mx-auto mb-8 max-w-2xl space-y-4">
           {pages.map((p, i) => (
             <div key={i} className="card-base bg-cream-50">
+              {p.imageUrl && (
+                <img src={p.imageUrl} alt="" className="mb-3 w-full rounded-card border border-ink-100" loading="lazy" />
+              )}
               <p className="text-base text-ink">{p.text}</p>
             </div>
           ))}

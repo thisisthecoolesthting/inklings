@@ -39,6 +39,7 @@ export default async function StoryPage({
             name: c.name,
             species: c.species,
             personalityTraits: (c.personalityTraits as string[]) ?? [],
+            imageSeed: c.imageSeed,
           })),
           worldName: null,
           storyState: [],

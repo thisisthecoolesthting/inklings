@@ -10,6 +10,7 @@ import { sanitizeChildInput } from "@/lib/safety";
 const PageSchema = z.object({
   text: z.string().trim().min(1).max(800),
   imagePrompt: z.string().trim().max(1200).default(""),
+  imageUrl: z.string().nullable().optional(),
   act: z.string().default("beginning"),
 });
 
@@ -25,31 +26,23 @@ async function requireSession() {
   return s;
 }
 
-/**
- * Submit a finished story for parent approval. Called from the story client
- * at the end of the 5-act flow ("show grown-up" button).
- */
 export async function submitStoryForApproval(payload: unknown) {
   const session = await requireSession();
   const parsed = SubmitSchema.safeParse(payload);
   if (!parsed.success) {
-    return { ok: false as const, error: "invalid_payload", issues: parsed.error.issues };
+    return { ok: false as const, error: "invalid_payload" };
   }
 
-  // Ownership check
   const child = await prisma.childProfile.findFirst({
     where: { id: parsed.data.childId, parentId: session.userId },
   });
   if (!child) return { ok: false as const, error: "child_not_found" };
 
-  // Sanitize title
   const safeTitle = sanitizeChildInput(parsed.data.title).safe || "An Inklings Story";
 
-  // Map pages to acts (5-act story = 7 beats roughly): 0-1 beginning, 2 problem, 3-4 adventure, 5 resolution, 6 celebration
-  const actByIdx = (i: number, total: number): string => {
+  const actByIdx = (i: number): string => {
     const buckets = ["beginning", "beginning", "problem", "adventure", "adventure", "resolution", "celebration"];
-    if (i < buckets.length) return buckets[i];
-    return "celebration";
+    return buckets[i] ?? "celebration";
   };
 
   const book = await prisma.book.create({
@@ -61,9 +54,10 @@ export async function submitStoryForApproval(payload: unknown) {
       pages: {
         create: parsed.data.pages.map((p, i) => ({
           pageNumber: i + 1,
-          act: actByIdx(i, parsed.data.pages.length),
+          act: actByIdx(i),
           textContent: sanitizeChildInput(p.text).safe,
           imagePrompt: p.imagePrompt,
+          imageUrlLowres: p.imageUrl ?? null,
           imageApproved: false,
         })),
       },

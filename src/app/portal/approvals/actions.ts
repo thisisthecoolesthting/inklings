@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
+import { generateHd } from "@/lib/image-gen";
 
 const IdSchema = z.object({ id: z.string().min(8).max(40) });
 
@@ -25,11 +26,10 @@ export async function approveCharacter(formData: FormData) {
   const session = await requireSession();
   const parsed = IdSchema.safeParse({ id: formData.get("id") });
   if (!parsed.success) return;
-  // Verify ownership: character.child.parentId == session.userId
   const ch = await prisma.character.findFirst({
     where: { id: parsed.data.id, child: { parentId: session.userId } },
   });
-  if (!ch) return; // silent — never leak existence to non-owner
+  if (!ch) return;
   await prisma.character.update({
     where: { id: ch.id },
     data: { sandboxMode: false, parentApprovedAt: new Date() },
@@ -49,6 +49,31 @@ export async function rejectCharacter(formData: FormData) {
   revalidateAll();
 }
 
+/**
+ * Background HD render. Fire-and-forget — we await prisma updates but the HTTP
+ * response has already returned to the parent. Image gen takes ~3s per page;
+ * doing 7 in parallel is fine for the schnell endpoint.
+ */
+async function fireHdGeneration(bookId: string) {
+  const pages = await prisma.bookPage.findMany({
+    where: { bookId, imagePrompt: { not: null } },
+    select: { id: true, imagePrompt: true, imageUrlHd: true },
+  });
+  await Promise.all(
+    pages
+      .filter((p) => !p.imageUrlHd && p.imagePrompt)
+      .map(async (p) => {
+        const result = await generateHd(p.imagePrompt!);
+        if (result.ok) {
+          await prisma.bookPage.update({
+            where: { id: p.id },
+            data: { imageUrlHd: result.url, imageApproved: true },
+          });
+        }
+      }),
+  );
+}
+
 export async function approveBook(formData: FormData) {
   const session = await requireSession();
   const parsed = IdSchema.safeParse({ id: formData.get("id") });
@@ -62,6 +87,10 @@ export async function approveBook(formData: FormData) {
     data: { status: "approved", parentApprovedAt: new Date() },
   });
   revalidateAll();
+  // Fire HD generation in the background — don't await; let the action return
+  if (process.env.TOGETHER_API_KEY) {
+    fireHdGeneration(b.id).catch(() => {/* logged by image-gen.ts */});
+  }
 }
 
 export async function rejectBook(formData: FormData) {

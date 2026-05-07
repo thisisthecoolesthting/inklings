@@ -19,7 +19,7 @@ import { moderateAiText } from "@/lib/safety";
 export interface SparkyContext {
   childName: string;
   childAge: number;
-  characters: Array<{ name: string; species?: string | null; personalityTraits?: string[] | null }>;
+  characters: Array<{ name: string; species?: string | null; personalityTraits?: string[] | null; imageSeed?: string | null }>;
   worldName?: string | null;
   storyState: Array<{ beatId: string; choiceId: string }>;
 }
