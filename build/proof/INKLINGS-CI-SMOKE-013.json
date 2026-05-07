@@ -1,0 +1,12 @@
+{
+  "dispatch_id": "INKLINGS-CI-SMOKE-013",
+  "branch": "feat/scaffold-batch",
+  "shipped_at": "2026-05-07",
+  "files": [".github/workflows/ci.yml (added smoke job)"],
+  "smoke_job": {
+    "services": "postgres:17 with health check",
+    "steps": ["checkout", "node 22", "npm install", "prisma generate + db push", "playwright install chromium --with-deps", "next build", "next start -p 3400 (background, polled until ready)", "playwright test tests/smoke.spec.ts --reporter=list"],
+    "env": ["DATABASE_URL=postgres://inklings:inklings_test@localhost:5432/inklings_test", "INK_SESSION_SECRET=ci-only-stub-not-for-prod-32chars", "NEXT_PUBLIC_APP_URL=http://localhost:3400", "NEXT_TELEMETRY_DISABLED=1"]
+  },
+  "verified": "tsc --noEmit + next build still pass locally"
+}

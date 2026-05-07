@@ -32,6 +32,16 @@ Per-dispatch machine-readable proofs live in `build/proof/<DISPATCH_ID>.json`.
 ### Lives at
 `https://inklings.shop/studio` — auto-deploys via the 2-min cron after this PR merges.
 
+## 2026-05-07 — Scaffold batch (013 + 014 + 015)
+
+### Added
+- **CI smoke job** (`INKLINGS-CI-SMOKE-013`)
+  Second GitHub Actions job: spins up Postgres 17 service, runs prisma db push, installs Playwright chromium, boots `next start`, runs the 5 smoke tests in tests/smoke.spec.ts. Both jobs run on every push and PR.
+- **Features hub + 3 deep-dive pages** (`INKLINGS-FEATURES-HUB-014`)
+  /features (hub linking 6 features), /features/voice-first-studio, /features/character-bible, /features/parent-approval (hand-written deep dives), /features/[slug] (dynamic catch-all with generateStaticParams). BreadcrumbList JSON-LD on every page. Header nav now includes Features. Sitemap updated.
+- **Richer demo seed** (`INKLINGS-RICHER-SEED-015`)
+  Seed now creates: 2 children, 1 world, 2 approved + 1 sandbox character, 1 series, 1 approved book (7 pages) + 1 awaiting-parent book (5 pages), 1 fulfilled order. /portal/* shows real data on first run.
+
 ## [Unreleased]
 
 ### Pending dispatches in `cursor-dispatch/outbox/`
