@@ -48,7 +48,7 @@ const TIERS: Tier[] = [
       "Priority illustration generation",
     ],
     ctaLabel: "Try Premium free for 14 days",
-    ctaHref: "/trial?tier=premium",
+    ctaHref: "/api/billing/checkout?tier=premium",
   },
   {
     id: "printed_book",

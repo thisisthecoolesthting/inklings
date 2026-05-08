@@ -40,14 +40,15 @@ export default function HomePage() {
               </div>
             </div>
             <div className="relative aspect-[4/5] overflow-hidden rounded-card bg-cream-200 shadow-card">
-              {/* Hero illustration placeholder — will be a real KDP-grade rendering once first stories ship */}
-              <div className="flex h-full w-full flex-col items-center justify-center gap-4 p-8 text-center">
-                <Sparkles className="h-20 w-20 text-coral" aria-hidden />
-                <p className="text-2xl font-bold text-ink">A page from your child&apos;s book</p>
-                <p className="max-w-xs text-sm text-ink-600">
-                  Real illustrations swap in as soon as your first story is approved.
-                </p>
-              </div>
+              <img
+                src="/images/site/hero-storybook.jpg"
+                alt="A child with a golden puppy and a magical fox in a sunlit Meadowlands — Inklings storybook illustration"
+                width={1024}
+                height={1280}
+                className="absolute inset-0 h-full w-full object-cover"
+                loading="eager"
+                fetchPriority="high"
+              />
             </div>
           </div>
         </div>
