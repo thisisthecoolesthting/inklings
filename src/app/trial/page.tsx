@@ -2,9 +2,17 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { brand } from "@/lib/brand";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: `Start a free story — ${brand.name}`,
   description: "Create your free Inklings parent account in 60 seconds. No credit card.",
+};
+
+const ERROR_MESSAGES: Record<string, string> = {
+  invalid: "Please double-check the email address and try again.",
+  exists: "An account with that email already exists. Try signing in.",
+  server: "Something went wrong on our end. Please try again, or email hello@inklings.shop.",
 };
 
 interface TrialSearchParams {
@@ -13,19 +21,19 @@ interface TrialSearchParams {
   tier?: string;
 }
 
-const ERROR_MESSAGES: Record<string, string> = {
-  invalid: "Please double-check the email address and try again.",
-  exists: "An account with that email already exists. Try signing in.",
-  server: "Something went wrong on our end. Please try again, or email hello@inklings.shop.",
-};
-
-export default async function TrialPage({
-  searchParams,
-}: {
-  searchParams: Promise<TrialSearchParams>;
+export default async function TrialPage(props: {
+  searchParams?: Promise<TrialSearchParams> | TrialSearchParams;
 }) {
-  const params = await searchParams;
-  const errorMsg = params.error ? ERROR_MESSAGES[params.error] ?? ERROR_MESSAGES.server : undefined;
+  // Defensive: handle both Promise (Next 15+) and plain object (Next 14 fallback) shapes.
+  const raw = props?.searchParams;
+  const params: TrialSearchParams =
+    raw && typeof (raw as Promise<unknown>).then === "function"
+      ? await (raw as Promise<TrialSearchParams>)
+      : ((raw as TrialSearchParams) ?? {});
+
+  const errorMsg = params.error
+    ? ERROR_MESSAGES[params.error] ?? ERROR_MESSAGES.server
+    : undefined;
   const ok = params.ok === "1";
 
   return (
