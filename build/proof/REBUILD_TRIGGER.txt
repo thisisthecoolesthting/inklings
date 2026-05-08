@@ -1,0 +1,1 @@
+rebuild trigger 2026-05-08T03:53:21.1227679-04:00 — fix /trial 500 caused by sandbox-built .next manifest mismatch
