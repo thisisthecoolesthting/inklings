@@ -75,6 +75,21 @@ Per-dispatch machine-readable proofs live in `build/proof/<DISPATCH_ID>.json`.
 - **Marketing walkthrough video** (`INKLINGS-WALKTHROUGH-VIDEO-008`)
   Playwright-recorded 10-second walkthrough of the marketing site (home → pricing → safety) with caption overlays per spine §13. Embedded on a new /watch page and /how-it-works. Recorder script lives at scripts/record_walkthrough.cjs — re-run anytime with `npm run walkthrough:record` against any URL. Video is 891 KB, public/videos/walkthrough.webm.
 
+## 2026-05-08 — Launch-ready (Stripe live + hero image)
+
+### Added
+- **Stripe live wiring** (`INKLINGS-STRIPE-LIVE-006`)
+  src/lib/stripe.ts (Stripe SDK wrapper). Three real routes:
+  - /api/billing/checkout — premium subscription (14-day trial) OR print one-time (with shipping_address_collection)
+  - /api/billing/portal — customer portal session
+  - /api/billing/webhook — signature-verified, handles checkout.session.completed + customer.subscription.* events
+  All routes 503 gracefully when STRIPE_SECRET_KEY or Price IDs are unset. Premium CTA on /pricing wired. Portal billing button wired.
+- **Real hero illustration** (Track C)
+  Generated via Flux schnell (warm pastel storybook palette, 1024x1280, seed 31415). Saved to public/images/site/hero-storybook.jpg (101 KB). Swapped into the home hero, replacing the Sparkles placeholder.
+
+### Operator-blocked
+- Stripe Price IDs (Premium .99/mo + Print 9.99 one-time) — Cursor will mint. Once env updated, checkout goes live on next pm2 restart.
+
 ## [Unreleased]
 
 ### Pending dispatches in `cursor-dispatch/outbox/`

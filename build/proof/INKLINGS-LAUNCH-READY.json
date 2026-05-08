@@ -1,0 +1,40 @@
+{
+  "dispatch_id": "INKLINGS-LAUNCH-READY",
+  "branch": "feat/launch-ready",
+  "shipped_at": "2026-05-08",
+  "summary": "Stripe live wiring (006) + real hero image (Track C). Inklings now end-to-end ready for launch — once Cursor mints Price IDs and they land in /var/www/inklings/.env, the [Try Premium] and [Order Print] CTAs go from 503 to working Stripe Checkout sessions.",
+  "tracks": {
+    "B_stripe_live": {
+      "files_added": [
+        "src/lib/stripe.ts (getStripe + price-id helpers, gracefully returns null when SDK key missing)",
+        "src/app/api/billing/checkout/route.ts (real Stripe Checkout — premium subscription with 14-day trial OR print one-time, with shipping_address_collection)",
+        "src/app/api/billing/portal/route.ts (Stripe Customer Portal session for self-serve subscription management)",
+        "src/app/api/billing/webhook/route.ts (signature-verified, handles checkout.session.completed for both subscription + payment, customer.subscription.updated/deleted)"
+      ],
+      "files_modified": [
+        "src/components/PricingTiers.tsx (Premium CTA wired to /api/billing/checkout?tier=premium)",
+        "src/app/portal/settings/page.tsx ('Open billing portal' button now POSTs to /api/billing/portal)"
+      ],
+      "graceful_fallback": "All three routes 503 with a clear error_code when STRIPE_SECRET_KEY or required Price IDs are missing — kid never sees an error, parent gets a clean message",
+      "operator_blocked_on": "Cursor minting Price IDs in Stripe Dashboard. Once STRIPE_PRICE_PREMIUM_MONTHLY + STRIPE_PRICE_PRINT_BOOK + STRIPE_SECRET_KEY + STRIPE_WEBHOOK_SECRET are set in /var/www/inklings/.env, no code change needed — checkout goes live on next pm2 restart."
+    },
+    "C_hero_image": {
+      "asset": "public/images/site/hero-storybook.jpg (101 KB JPEG, 1024x1280)",
+      "model": "black-forest-labs/FLUX.1-schnell",
+      "seed": 31415,
+      "prompt": "cozy childrens book illustration, warm pastel storybook, a small child with a golden puppy and a magical fox in a sunlit meadow, soft palette of cream and coral and mint and plum, no text, flat color, friendly, age-appropriate, hand-drawn feel, vertical composition",
+      "swapped_into": "src/app/page.tsx home hero (replaced the Sparkles + 'illustration coming soon' placeholder)"
+    }
+  },
+  "verified": {
+    "tsc_noEmit": "exit 0",
+    "next_build": "passed (12 static + 17 dynamic routes still)"
+  },
+  "what_launch_ready_means_now": [
+    "Marketing site fully illustrated (real hero image)",
+    "Stripe Checkout code paths exist and 503 cleanly until Price IDs land",
+    "Customer Portal wired",
+    "Webhook handler verifies signature + updates subscription tier on events",
+    "All CRUD flows working end-to-end (parent signup → child profile → kid character + story → parent approve → ready for Stripe + KDP print)"
+  ]
+}

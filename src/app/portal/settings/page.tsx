@@ -20,7 +20,7 @@ export default async function SettingsPage() {
         <div className="card-base">
           <h2 className="text-xl font-bold text-ink">Billing</h2>
           <p className="mt-2 text-sm text-ink-700">Manage your subscription via Stripe Customer Portal.</p>
-          <button className="btn-secondary mt-4" type="button">Open billing portal</button>
+          <form action="/api/billing/portal" method="POST"><button type="submit" className="btn-secondary mt-4">Open billing portal</button></form>
         </div>
         <div className="card-base">
           <h2 className="text-xl font-bold text-ink">Delete account</h2>
