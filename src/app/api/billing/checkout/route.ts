@@ -3,6 +3,7 @@ import { z } from "zod";
 import { getSession } from "@/lib/session";
 import { getStripe, premiumPriceId, printPriceId, siteUrl } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
+import { getSiteUrl } from "@/lib/site-url";
 
 const Schema = z.object({
   tier: z.enum(["premium", "print"]),
@@ -32,7 +33,7 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) return NextResponse.json({ error: "invalid_payload" }, { status: 400 });
 
   const session = await getSession();
-  if (!session) return NextResponse.redirect(new URL("/login?next=/pricing", req.url), { status: 303 });
+  if (!session) return NextResponse.redirect(new URL("/login?next=/pricing", getSiteUrl()), { status: 303 });
 
   const user = await prisma.user.findUnique({ where: { id: session.userId } });
   if (!user) return NextResponse.json({ error: "user_not_found" }, { status: 404 });

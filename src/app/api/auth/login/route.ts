@@ -3,6 +3,7 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { signMagicLinkToken, buildMagicLinkUrl } from "@/lib/auth/magic-link";
 import { sendMagicLinkEmail } from "@/lib/email";
+import { getSiteUrl } from "@/lib/site-url";
 
 const Schema = z.object({ email: z.string().email().max(254), tier: z.string().optional() });
 
@@ -11,7 +12,7 @@ export async function POST(req: NextRequest) {
   const form = await req.formData();
   const parsed = Schema.safeParse({ email: form.get("email"), tier: form.get("tier") });
   if (!parsed.success) {
-    return NextResponse.redirect(new URL("/login?error=invalid", req.url), { status: 303 });
+    return NextResponse.redirect(new URL("/login?error=invalid", getSiteUrl()), { status: 303 });
   }
   const email = parsed.data.email.trim().toLowerCase();
 
@@ -38,8 +39,8 @@ export async function POST(req: NextRequest) {
     await sendMagicLinkEmail({ to: email, url });
   } catch (err) {
     console.error("magic-link email failed:", err);
-    return NextResponse.redirect(new URL("/login?error=server", req.url), { status: 303 });
+    return NextResponse.redirect(new URL("/login?error=server", getSiteUrl()), { status: 303 });
   }
 
-  return NextResponse.redirect(new URL("/login?ok=1", req.url), { status: 303 });
+  return NextResponse.redirect(new URL("/login?ok=1", getSiteUrl()), { status: 303 });
 }
