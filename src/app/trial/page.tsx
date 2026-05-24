@@ -22,14 +22,10 @@ interface TrialSearchParams {
 }
 
 export default async function TrialPage(props: {
-  searchParams?: Promise<TrialSearchParams> | TrialSearchParams;
+  searchParams?: Promise<TrialSearchParams>;
 }) {
   // Defensive: handle both Promise (Next 15+) and plain object (Next 14 fallback) shapes.
-  const raw = props?.searchParams;
-  const params: TrialSearchParams =
-    raw && typeof (raw as Promise<unknown>).then === "function"
-      ? await (raw as Promise<TrialSearchParams>)
-      : ((raw as TrialSearchParams) ?? {});
+  const params: TrialSearchParams = (await props?.searchParams) ?? {};
 
   const errorMsg = params.error
     ? ERROR_MESSAGES[params.error] ?? ERROR_MESSAGES.server

@@ -21,13 +21,9 @@ interface LoginSearchParams {
 }
 
 export default async function LoginPage(props: {
-  searchParams?: Promise<LoginSearchParams> | LoginSearchParams;
+  searchParams?: Promise<LoginSearchParams>;
 }) {
-  const raw = props?.searchParams;
-  const params: LoginSearchParams =
-    raw && typeof (raw as Promise<unknown>).then === "function"
-      ? await (raw as Promise<LoginSearchParams>)
-      : ((raw as LoginSearchParams) ?? {});
+  const params: LoginSearchParams = (await props?.searchParams) ?? {};
 
   const errorMsg = params.error
     ? ERROR_MESSAGES[params.error] ?? ERROR_MESSAGES.server

@@ -46,7 +46,7 @@ export default function TermsPage() {
 
         <h2 className="mt-8 text-2xl font-bold text-ink">Contact</h2>
         <p className="mt-3 text-ink-700">
-          <a className="text-coral underline" href="mailto:legal@inklings.shop">legal@inklings.shop</a>
+          <a className="text-coral underline" href="mailto:hello@inklings.shop">hello@inklings.shop</a>
         </p>
       </article>
     </section>

@@ -38,7 +38,7 @@ export default function PrivacyPage() {
 
         <h2 className="mt-8 text-2xl font-bold text-ink">Contact</h2>
         <p className="mt-3 text-ink-700">
-          Privacy questions: <a className="text-coral underline" href="mailto:privacy@inklings.shop">privacy@inklings.shop</a>
+          Privacy questions: <a className="text-coral underline" href="mailto:hello@inklings.shop">hello@inklings.shop</a>
         </p>
       </article>
     </section>

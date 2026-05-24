@@ -29,8 +29,8 @@ export default function ContactPage() {
             hello@inklings.shop
           </a>
           <p className="mt-8 text-sm text-ink-500">
-            Press inquiries: press@inklings.shop &middot;
-            Safety reports: safety@inklings.shop
+            Press inquiries: hello@inklings.shop &middot;
+            Safety reports: hello@inklings.shop
           </p>
         </div>
       </section>
