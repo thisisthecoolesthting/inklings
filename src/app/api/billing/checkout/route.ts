@@ -25,10 +25,18 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const form = await req.formData().catch(() => null);
-  const body = form
-    ? { tier: form.get("tier"), bookId: form.get("bookId") ?? undefined, quantity: form.get("quantity") ?? undefined }
-    : await req.json();
+  const ctype = req.headers.get("content-type") ?? "";
+  let body: unknown;
+  try {
+    if (ctype.includes("application/json")) {
+      body = await req.json();
+    } else {
+      const form = await req.formData();
+      body = { tier: form.get("tier"), bookId: form.get("bookId") ?? undefined, quantity: form.get("quantity") ?? undefined };
+    }
+  } catch {
+    return NextResponse.json({ error: "invalid_body" }, { status: 400 });
+  }
   const parsed = Schema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: "invalid_payload" }, { status: 400 });
 

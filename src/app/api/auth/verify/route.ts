@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { verifyMagicLinkToken } from "@/lib/auth/magic-link";
+import { hashToken } from "@/lib/auth/token-hash";
 import { signSessionToken, setSessionCookie } from "@/lib/session";
 import { getSiteUrl } from "@/lib/site-url";
 
@@ -21,6 +22,13 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(new URL("/login?error=not_found", getSiteUrl()));
   }
 
+  // One-time consumption: the stored hash must exist, be unconsumed, and unexpired.
+  const tokenHash = hashToken(token);
+  const link = await prisma.magicLink.findUnique({ where: { tokenHash } });
+  if (!link || link.consumed || link.userId !== user.id || link.expiresAt.getTime() < Date.now()) {
+    return NextResponse.redirect(new URL("/login?error=invalid", getSiteUrl()));
+  }
+
   const sessionToken = await signSessionToken({
     userId: user.id,
     email: user.email,
@@ -28,11 +36,10 @@ export async function GET(req: NextRequest) {
   });
   await setSessionCookie(sessionToken);
 
-  // Mark this magic link consumed (best-effort).
-  await prisma.magicLink.updateMany({
-    where: { userId: user.id, tokenHash: token.slice(-32), consumed: false },
-    data: { consumed: true },
-  }).catch(() => {});
+  // Mark this magic link consumed (best-effort, by unique hash).
+  await prisma.magicLink
+    .update({ where: { tokenHash }, data: { consumed: true } })
+    .catch(() => {});
 
   return NextResponse.redirect(new URL(next, getSiteUrl()));
 }

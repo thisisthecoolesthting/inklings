@@ -8,7 +8,7 @@ interface ResendMessage {
   text: string;
 }
 
-async function sendViaResend(msg: ResendMessage) {
+async function sendViaResend(msg: ResendMessage): Promise<void> {
   const key = process.env.RESEND_API_KEY;
   if (!key) {
     // Dev fallback — log the email so the magic link is visible in the terminal.
@@ -23,9 +23,36 @@ async function sendViaResend(msg: ResendMessage) {
   if (!res.ok) throw new Error(`Resend ${res.status}: ${await res.text()}`);
 }
 
+async function sendViaSmtp(msg: ResendMessage): Promise<void> {
+  const nodemailer = await import("nodemailer");
+  const transport = nodemailer.createTransport({
+    host: process.env.MAIL_HOST,
+    port: Number(process.env.MAIL_PORT ?? 587),
+    secure: false,
+    auth: {
+      user: process.env.MAIL_USER,
+      pass: process.env.MAIL_PASS,
+    },
+    tls: { rejectUnauthorized: false },
+  });
+  await transport.sendMail({
+    from: msg.from,
+    to: msg.to,
+    subject: msg.subject,
+    text: msg.text,
+    html: msg.html,
+  });
+}
+
+async function sendMessage(msg: ResendMessage): Promise<void> {
+  const useSmtp = !!process.env.MAIL_HOST && !!process.env.MAIL_USER;
+  if (useSmtp) return sendViaSmtp(msg);
+  else return sendViaResend(msg);
+}
+
 export async function sendMagicLinkEmail({ to, url }: { to: string; url: string }) {
   const from = process.env.RESEND_FROM_EMAIL ?? brand.emailFrom;
-  await sendViaResend({
+  await sendMessage({
     from: `${brand.name} <${from}>`,
     to: [to],
     subject: `Your sign-in link for ${brand.name}`,
@@ -44,7 +71,7 @@ export async function sendMagicLinkEmail({ to, url }: { to: string; url: string 
 export async function sendApprovalNotification({ to, childName, kind }: { to: string; childName: string; kind: "character" | "story" }) {
   const from = process.env.RESEND_FROM_EMAIL ?? brand.emailFrom;
   const url = `${process.env.NEXT_PUBLIC_APP_URL ?? "https://inklings.shop"}/portal/approvals`;
-  await sendViaResend({
+  await sendMessage({
     from: `${brand.name} <${from}>`,
     to: [to],
     subject: `${childName} has a new ${kind} waiting for your approval`,

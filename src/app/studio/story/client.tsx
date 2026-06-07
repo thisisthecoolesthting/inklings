@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Image from "next/image";
 import { SparkyChat } from "@/components/studio/SparkyChat";
 import type { SparkyBeat, SparkyChoice } from "@/content/sparky-prompts";
 import type { SparkyContext } from "@/lib/sparky";
@@ -84,11 +85,12 @@ export function StudioStoryClient({
             <li key={i} className="card-base">
               <span className="text-xs font-semibold uppercase tracking-wider text-coral">Page {i + 1}</span>
               {p.imageUrl && (
-                <img
+                <Image
                   src={p.imageUrl}
                   alt={`illustration for page ${i + 1}`}
                   className="mt-3 w-full rounded-card border border-ink-100"
-                  loading="lazy"
+                  width={512}
+                  height={512}
                 />
               )}
               <p className="mt-3 text-lg text-ink">{p.text}</p>
@@ -122,7 +124,7 @@ export function StudioStoryClient({
           {pages.map((p, i) => (
             <div key={i} className="card-base bg-cream-50">
               {p.imageUrl && (
-                <img src={p.imageUrl} alt="" className="mb-3 w-full rounded-card border border-ink-100" loading="lazy" />
+                <Image src={p.imageUrl} alt="" className="mb-3 w-full rounded-card border border-ink-100" width={512} height={512} />
               )}
               <p className="text-base text-ink">{p.text}</p>
             </div>

@@ -31,6 +31,7 @@ async function main() {
   const outDir = join(__dirname, "..", "build", "proof");
   mkdirSync(outDir, { recursive: true });
   const outPath = join(outDir, "kdp-sample.pdf");
+  // Note: all vector colors in this PDF are emitted as CMYK (DeviceCMYK) via rgbToCmyk() in page-template.ts.
   writeFileSync(outPath, pdf);
 
   // Quick spec check

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { approveCharacter, rejectCharacter, approveBook, rejectBook } from "./actions";
@@ -87,7 +88,7 @@ export default async function ApprovalsPage() {
                     <div key={p.id} className="rounded-card border border-ink-100 bg-cream-50 p-3">
                       <span className="text-xs font-semibold uppercase tracking-wider text-coral">Page {p.pageNumber}</span>
                       {p.imageUrlLowres && (
-                        <img src={p.imageUrlLowres} alt="" className="mt-2 w-full rounded border border-ink-100" loading="lazy" />
+                        <Image src={p.imageUrlLowres} alt="" className="mt-2 w-full rounded border border-ink-100" width={512} height={512} />
                       )}
                       <p className="mt-2 text-sm text-ink line-clamp-3">{p.textContent}</p>
                     </div>

@@ -78,6 +78,26 @@ export default async function TrialPage(props: {
                 placeholder="parent@example.com"
               />
             </div>
+            <div className="space-y-1.5">
+              <div className="flex items-start gap-2">
+                <input
+                  id="coppa_consent"
+                  type="checkbox"
+                  name="coppa_consent"
+                  value="yes"
+                  required
+                  className="mt-0.5 shrink-0 accent-coral"
+                />
+                <label htmlFor="coppa_consent" className="text-xs text-ink-600 leading-relaxed">
+                  I am this child&apos;s parent or legal guardian, and I consent to Inklings
+                  collecting the information my child provides to create their stories.
+                </label>
+              </div>
+              <p className="text-xs text-ink-500">
+                Inklings is designed for children ages 4–8 and is operated for parents. We never
+                market to children directly.
+              </p>
+            </div>
             <button type="submit" className="btn-primary btn-large btn-full">
               Email me a sign-in link
             </button>

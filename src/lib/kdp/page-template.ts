@@ -13,7 +13,14 @@
  * Dispatch 007 adds the sRGB → CMYK conversion via sharp before embedJpg.
  * Strict KDP requires DeviceCMYK on PDF/X-1a interior files.
  */
-import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { PDFDocument, StandardFonts, cmyk } from "pdf-lib";
+
+/** Convert sRGB (0..1 each) to a pdf-lib CMYK color object. */
+function rgbToCmyk(r: number, g: number, b: number) {
+  const k = 1 - Math.max(r, g, b);
+  if (k === 1) return cmyk(0, 0, 0, 1);
+  return cmyk((1 - r - k) / (1 - k), (1 - g - k) / (1 - k), (1 - b - k) / (1 - k), k);
+}
 
 const IN = 72; // points per inch
 export const KDP_SPEC = {
@@ -71,26 +78,26 @@ export async function renderBookPdf(book: BookInput): Promise<Uint8Array> {
 
   // Cover (page 1)
   const cover = pdf.addPage([pageSize, pageSize]);
-  cover.drawRectangle({ x: 0, y: 0, width: pageSize, height: pageSize, color: rgb(1.0, 0.965, 0.898) });
+  cover.drawRectangle({ x: 0, y: 0, width: pageSize, height: pageSize, color: rgbToCmyk(1.0, 0.965, 0.898) });
   cover.drawText(book.title, {
     x: safeMargin, y: pageSize - safeMargin - 60,
-    size: 38, font, color: rgb(0.29, 0.145, 0.27),
+    size: 38, font, color: rgbToCmyk(0.29, 0.145, 0.27),
   });
   if (book.subtitle) {
     cover.drawText(book.subtitle, {
       x: safeMargin, y: pageSize - safeMargin - 100,
-      size: 18, font: bodyFont, color: rgb(0.49, 0.31, 0.43),
+      size: 18, font: bodyFont, color: rgbToCmyk(0.49, 0.31, 0.43),
     });
   }
   cover.drawText(`a story by ${book.author}`, {
     x: safeMargin, y: safeMargin + 12,
-    size: 14, font: bodyFont, color: rgb(0.49, 0.31, 0.43),
+    size: 14, font: bodyFont, color: rgbToCmyk(0.49, 0.31, 0.43),
   });
 
   // Story pages
   for (const p of book.pages) {
     const page = pdf.addPage([pageSize, pageSize]);
-    page.drawRectangle({ x: 0, y: 0, width: pageSize, height: pageSize, color: rgb(1.0, 0.965, 0.898) });
+    page.drawRectangle({ x: 0, y: 0, width: pageSize, height: pageSize, color: rgbToCmyk(1.0, 0.965, 0.898) });
 
     if (p.imageBytes && p.imageBytes.length > 0) {
       // CMYK conversion before embedding (dispatch 007)
@@ -109,7 +116,7 @@ export async function renderBookPdf(book: BookInput): Promise<Uint8Array> {
       page.drawRectangle({
         x: safeMargin, y: pageSize * 0.4,
         width: pageSize - 2 * safeMargin, height: pageSize * 0.5,
-        borderColor: rgb(0.66, 0.86, 0.71), borderWidth: 2,
+        borderColor: rgbToCmyk(0.66, 0.86, 0.71), borderWidth: 2,
       });
     }
 
@@ -118,13 +125,13 @@ export async function renderBookPdf(book: BookInput): Promise<Uint8Array> {
     lines.forEach((line, i) => {
       page.drawText(line, {
         x: safeMargin, y: textY - i * 24,
-        size: 18, font: bodyFont, color: rgb(0.29, 0.145, 0.27),
+        size: 18, font: bodyFont, color: rgbToCmyk(0.29, 0.145, 0.27),
       });
     });
 
     page.drawText(`${p.pageNumber}`, {
       x: pageSize / 2 - 6, y: safeMargin / 2,
-      size: 10, font: bodyFont, color: rgb(0.49, 0.31, 0.43),
+      size: 10, font: bodyFont, color: rgbToCmyk(0.49, 0.31, 0.43),
     });
   }
 

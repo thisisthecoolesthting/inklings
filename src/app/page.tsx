@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Sparkles, Mic, BookOpen, ShieldCheck, Wand2, Heart } from "lucide-react";
 import { brand } from "@/lib/brand";
 import { FAQ } from "@/components/FAQ";
@@ -40,14 +41,13 @@ export default function HomePage() {
               </div>
             </div>
             <div className="relative aspect-[4/5] overflow-hidden rounded-card bg-cream-200 shadow-card">
-              <img
+              <Image
                 src="/images/site/hero-storybook.jpg"
                 alt="A child with a golden puppy and a magical fox in a sunlit Meadowlands — Inklings storybook illustration"
                 width={1024}
                 height={1280}
                 className="absolute inset-0 h-full w-full object-cover"
-                loading="eager"
-                fetchPriority="high"
+                priority
               />
             </div>
           </div>

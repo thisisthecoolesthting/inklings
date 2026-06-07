@@ -202,6 +202,20 @@ model Order {
   @@index([bookId])
 }
 
+// === COPPA parental consent (captured at trial signup) ===
+model ParentalConsent {
+  id          String   @id @default(cuid())
+  userId      String
+  email       String
+  consentText String
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([email])
+}
+
 // === Quota ledger (free-tier rate limiting) ===
 model UsageEvent {
   id        String   @id @default(cuid())

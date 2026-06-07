@@ -6,7 +6,14 @@
  * Amazon's cover creator from the front-cover image we provide. This
  * file holds the front-cover render only.
  */
-import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { PDFDocument, StandardFonts, cmyk } from "pdf-lib";
+
+/** Convert sRGB (0..1 each) to a pdf-lib CMYK color object. */
+function rgbToCmyk(r: number, g: number, b: number) {
+  const k = 1 - Math.max(r, g, b);
+  if (k === 1) return cmyk(0, 0, 0, 1);
+  return cmyk((1 - r - k) / (1 - k), (1 - g - k) / (1 - k), (1 - b - k) / (1 - k), k);
+}
 
 export interface CoverInput {
   title: string;
@@ -25,7 +32,7 @@ export async function renderCoverPdf(input: CoverInput): Promise<Uint8Array> {
   pdf.setAuthor(input.author);
   pdf.setCreator("Inklings KDP cover-template");
   const page = pdf.addPage([SIZE, SIZE]);
-  page.drawRectangle({ x: 0, y: 0, width: SIZE, height: SIZE, color: rgb(0.957, 0.918, 0.792) });
+  page.drawRectangle({ x: 0, y: 0, width: SIZE, height: SIZE, color: rgbToCmyk(0.957, 0.918, 0.792) });
 
   if (input.coverImageBytes) {
     const img = input.coverImageFormat === "jpg"
@@ -42,6 +49,6 @@ export async function renderCoverPdf(input: CoverInput): Promise<Uint8Array> {
   }
 
   const font = await pdf.embedFont(StandardFonts.HelveticaBold);
-  page.drawText(input.title, { x: 0.5 * IN, y: SIZE - 1.2 * IN, size: 42, font, color: rgb(0.29, 0.145, 0.27) });
+  page.drawText(input.title, { x: 0.5 * IN, y: SIZE - 1.2 * IN, size: 42, font, color: rgbToCmyk(0.29, 0.145, 0.27) });
   return pdf.save();
 }
