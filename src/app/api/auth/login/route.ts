@@ -30,8 +30,8 @@ export async function POST(req: NextRequest) {
   const form = await req.formData();
   const parsed = Schema.safeParse({
     email: form.get("email"),
-    tier: form.get("tier"),
-    coppa_consent: form.get("coppa_consent"),
+    tier: form.get("tier") ?? undefined,
+    coppa_consent: form.get("coppa_consent") ?? undefined,
   });
   if (!parsed.success) {
     return NextResponse.redirect(new URL("/login?error=invalid", getSiteUrl()), { status: 303 });

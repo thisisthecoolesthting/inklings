@@ -5,8 +5,18 @@ import { brand } from "@/lib/brand";
 import { FEATURES } from "@/content/feature-pages";
 import { BreadcrumbJsonLd } from "@/lib/jsonld";
 
+// Slugs that have bespoke static pages under src/app/features/<slug>/page.tsx.
+// They must NOT be generated here too, or Next.js sees a route collision
+// (static page vs. this dynamic route) and resolution becomes build-order
+// dependent — the cause of the intermittent 404s on these three URLs.
+const STATIC_FEATURE_SLUGS = ["voice-first-studio", "character-bible", "parent-approval"];
+
+// Only serve the slugs we explicitly generate; everything else 404s (the
+// static pages own their three URLs by virtue of being more-specific segments).
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
-  return FEATURES.map((f) => ({ slug: f.slug }));
+  return FEATURES.filter((f) => !STATIC_FEATURE_SLUGS.includes(f.slug)).map((f) => ({ slug: f.slug }));
 }
 
 export async function generateMetadata({
