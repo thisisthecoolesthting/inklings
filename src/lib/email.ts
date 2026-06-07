@@ -1,4 +1,5 @@
 import { brand } from "@/lib/brand";
+import { sendViaStalwart } from "@/lib/stalwart-send";
 
 interface ResendMessage {
   from: string;
@@ -6,6 +7,13 @@ interface ResendMessage {
   subject: string;
   html: string;
   text: string;
+}
+
+/** Parse `Name <addr@host>` or `addr@host` into { name?, email }. */
+function parseFrom(from: string): { name?: string; email: string } {
+  const m = from.match(/^\s*(.*?)\s*<([^>]+)>\s*$/);
+  if (m) return { name: m[1] || undefined, email: m[2].trim() };
+  return { email: from.trim() };
 }
 
 async function sendViaResend(msg: ResendMessage): Promise<void> {
@@ -45,9 +53,23 @@ async function sendViaSmtp(msg: ResendMessage): Promise<void> {
 }
 
 async function sendMessage(msg: ResendMessage): Promise<void> {
-  const useSmtp = !!process.env.MAIL_HOST && !!process.env.MAIL_USER;
-  if (useSmtp) return sendViaSmtp(msg);
-  else return sendViaResend(msg);
+  // Preferred: send as a real Stalwart mailbox via admin JMAP (no per-mailbox
+  // password). Activated when STALWART_ADMIN_PASSWORD is configured.
+  if (process.env.STALWART_ADMIN_PASSWORD) {
+    const { name, email } = parseFrom(msg.from);
+    return sendViaStalwart({
+      from: email,
+      fromName: name,
+      to: msg.to,
+      subject: msg.subject,
+      text: msg.text,
+      html: msg.html,
+    });
+  }
+  // Fallback: SMTP submission (requires a mailbox password).
+  if (process.env.MAIL_HOST && process.env.MAIL_USER) return sendViaSmtp(msg);
+  // Default: Resend HTTP API (or dev console log when unset).
+  return sendViaResend(msg);
 }
 
 export async function sendMagicLinkEmail({ to, url }: { to: string; url: string }) {
