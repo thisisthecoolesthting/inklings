@@ -31,7 +31,6 @@ function authHeader(): string {
 }
 
 type MethodCall = [string, Record<string, unknown>, string];
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type MethodResponse = [string, any, string];
 
 async function jmap(methodCalls: MethodCall[], using: string[]): Promise<MethodResponse[]> {
@@ -127,7 +126,6 @@ export async function sendViaStalwart(msg: StalwartMessage): Promise<void> {
   const draftsId = boxes.find((b) => b.role === "drafts")?.id;
   const sentId = boxes.find((b) => b.role === "sent")?.id;
   if (!draftsId) throw new Error(`Stalwart account for ${msg.from} has no Drafts mailbox`);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const identities = (respOf(meta, "Identity/get")?.list ?? []) as any[];
   const identity =
     identities.find((i) => (i.email || "").toLowerCase() === msg.from.toLowerCase()) ?? identities[0];
@@ -135,9 +133,7 @@ export async function sendViaStalwart(msg: StalwartMessage): Promise<void> {
 
   // Build the draft. Include HTML + text alternative when html is provided.
   const draftKey = "draft1";
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const bodyValues: Record<string, any> = { tpart: { value: msg.text } };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const emailCreate: any = {
     mailboxIds: { [draftsId]: true },
     keywords: { $draft: true, $seen: true },
@@ -154,7 +150,6 @@ export async function sendViaStalwart(msg: StalwartMessage): Promise<void> {
   }
   emailCreate.bodyValues = bodyValues;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onSuccess: any = { [`mailboxIds/${draftsId}`]: null, "keywords/$draft": null };
   if (sentId) onSuccess[`mailboxIds/${sentId}`] = true;
 
