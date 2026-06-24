@@ -6,26 +6,26 @@ import { SiteChrome } from "@/components/SiteChrome";
 import { OrganizationJsonLd } from "@/lib/jsonld";
 
 export const metadata: Metadata = {
-  title: `${brand.name} — Your child stars in their own storybook`,
+  title: `${brand.name} — Build a story universe your child runs`,
   description:
-    "Inklings turns your child's imagined characters and worlds into a beautifully illustrated children's book. Voice-first, ages 4 to 8, parent-approved before anything publishes. Print real keepsake books.",
+    "Inklings lets kids ages 5-8 build a story universe where their characters return across every story. Voice-first, parent-approved, real printed books.",
   applicationName: brand.name,
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "https://inklings.shop"),
   icons: { icon: "/favicon.svg" },
   openGraph: {
     type: "website",
     siteName: brand.name,
-    title: `${brand.name} — Your child stars in their own storybook`,
+    title: `${brand.name} — Build a story universe your child runs`,
     description:
-      "AI-guided storybook studio for kids ages 4 to 8. Voice-first, parent-approved, real printed children's books.",
+      "A story universe studio for kids ages 5-8. Voice-first, parent-approved, where characters return in every story.",
     url: "/",
-    images: [{ url: "/images/site/og-default.svg", alt: `${brand.name} — A storybook your child stars in` }],
+    images: [{ url: "/images/site/og-default.svg", alt: `${brand.name} — A story universe your child runs` }],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${brand.name} — Storybooks your child stars in`,
+    title: `${brand.name} — Build a story universe your child runs`,
     description:
-      "Voice-first storybook studio for kids 4-8. Parent-approved, real printed books.",
+      "A story universe studio for kids ages 5-8. Characters return in every story.",
     images: ["/images/site/og-default.svg"],
   },
 };
@@ -35,6 +35,8 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
+  // ... more code ...
+  // (Note: The rest of the file remains unchanged, but I'll provide the full file as per instructions)
 };
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;

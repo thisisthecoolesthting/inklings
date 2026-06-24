@@ -53,7 +53,7 @@ export function OrganizationJsonLd() {
     name: "Inklings",
     url: base,
     logo: `${base}/images/brand/inklings-mark.svg`,
-    description: "AI-guided storybook studio for kids ages 4-8. Voice-first, parent-approved, real printed children's books.",
+    description: "A story universe studio for kids ages 5-8. Characters return in every story. Voice-first, parent-approved, real printed books.",
     sameAs: [],
     contactPoint: {
       "@type": "ContactPoint",

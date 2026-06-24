@@ -21,7 +21,7 @@ export default function HomePage() {
         <div className="container-ink section">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <div>
-              <span className="eyebrow">A storybook your child stars in</span>
+              <span className="eyebrow">Build a story universe your child runs</span>
               <h1 className="text-4xl font-bold leading-tight tracking-tight text-ink md:text-5xl lg:text-6xl">
                 {brand.hero}
               </h1>
@@ -72,7 +72,7 @@ export default function HomePage() {
             <div className="card-base">
               <h2 className="text-2xl font-bold text-ink">Who it&apos;s for</h2>
               <p className="mt-4 text-ink-700">
-                Parents and grandparents of children ages 4 to 8 — especially families
+                Parents and grandparents of children ages 5 to 8 — especially families
                 who want <em>making</em> over <em>watching</em>. Homeschoolers, bedtime-story
                 households, and kids who already have an imaginary friend they talk about
                 every day.
@@ -87,7 +87,7 @@ export default function HomePage() {
         <div className="container-ink">
           <div className="section-header-center">
             <span className="eyebrow">What Inklings does</span>
-            <h2 className="section-title">A storybook studio, not a content feed</h2>
+            <h2 className="section-title">A story universe studio, not a one-off book</h2>
           </div>
           <div className="grid gap-6 lg:grid-cols-2">
             <div className="card-base">
@@ -165,7 +165,7 @@ export default function HomePage() {
         <div className="container-ink mx-auto max-w-3xl text-center">
           <span className="eyebrow-on-dark">Make something your child keeps</span>
           <h2 className="text-3xl font-bold tracking-tight text-cream-100 md:text-4xl">
-            Their first storybook is twenty minutes away.
+            Their first story universe is twenty minutes away.
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-cream-200/85">
             Free to try. No credit card. Parent-approved before anything publishes.

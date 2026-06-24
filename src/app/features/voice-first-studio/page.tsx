@@ -5,7 +5,7 @@ import { BreadcrumbJsonLd } from "@/lib/jsonld";
 
 export const metadata: Metadata = {
   title: `Voice-first kid Studio — ${brand.name}`,
-  description: "How Inklings's kid Studio works for ages 4-8. Voice STT with tap-button fallback. No reading required. Bounded branching with Sparky.",
+  description: "How Inklings's kid Studio works for ages 5-8. Voice STT with tap-button fallback. No reading required. Bounded branching with Sparky.",
 };
 
 export default function FeatureVoice() {
@@ -18,7 +18,7 @@ export default function FeatureVoice() {
             <span className="eyebrow">Feature deep-dive</span>
             <h1 className="text-4xl font-bold text-ink md:text-5xl">Voice-first, no reading required.</h1>
             <p className="mt-6 text-lg text-ink-700">
-              Most apps for kids ages 4 to 8 assume the kid can read. Most ages 4 to 8 can&apos;t — at least not at the speed needed to enjoy a creative tool. Inklings flips it: your child <em>talks</em> to Sparky, and Sparky narrates the story back. Reading is optional everywhere.
+              Most apps for kids ages 5 to 8 assume the kid can read. Most ages 5 to 8 can&apos;t — at least not at the speed needed to enjoy a creative tool. Inklings flips it: your child <em>talks</em> to Sparky, and Sparky narrates the story back. Reading is optional everywhere.
             </p>
           </div>
         </div>

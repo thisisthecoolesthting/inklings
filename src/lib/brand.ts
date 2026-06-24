@@ -4,21 +4,21 @@
  */
 export const brand = {
   name: "Inklings",
-  tagline: "Your child stars in their own storybook.",
+  tagline: "Build a story universe your child runs.",
   domain: process.env.APP_DOMAIN ?? "inklings.shop",
   emailFrom: `hello@${process.env.APP_DOMAIN ?? "inklings.shop"}`,
   // Short hero headline.
-  hero: "Your child stars in their own storybook.",
+  hero: "Build a story universe — not just one book.",
   heroSub:
-    "Inklings turns the characters and worlds your kid imagines into a beautifully illustrated children's book — guided by Sparky, the friendly storyteller. Built for ages 4 to 8, voice-first, parent-approved before anything is printed.",
+    "Inklings lets your child invent characters and worlds that return across every story they write — guided by Sparky, the voice-first storyteller. Built for ages 5-8, kid-driven, and parent-approved before anything publishes.",
   // Used in nav & footer.
   shortPitch:
-    "An AI-guided storybook studio for kids ages 4 to 8 — voice-first, parent-approved, real printed books.",
+    "A story universe studio for kids ages 5-8 — voice-first, parent-approved, where characters return in every story.",
   // CTA copy
   primaryCta: "Start a free story",
   secondaryCta: "How it works",
   // Trust strip under hero CTAs (per spine §6)
-  trustStrip: "Free to try · Parent-approved before anything publishes · Real printed books",
+  trustStrip: "Free to try · Characters return in every story · Parent-approved · Real printed books",
 };
 
 export type BrandStrings = typeof brand;

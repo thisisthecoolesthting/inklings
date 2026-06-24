@@ -3,7 +3,7 @@ export interface FaqItem { q: string; a: string }
 export const FAQ_HOME: FaqItem[] = [
   {
     q: "What ages is Inklings for?",
-    a: "Inklings is built for kids ages 4 to 8. The Studio is voice-first with giant tap-buttons — no reading required. Sparky guides every step.",
+    a: "Inklings is built for kids ages 5 to 8. The Studio is voice-first with giant tap-buttons — no reading required. Sparky guides every step.",
   },
   {
     q: "Will my child be alone with an AI?",
