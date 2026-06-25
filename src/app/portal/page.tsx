@@ -98,7 +98,7 @@ export default async function PortalHome({
           </ul>
           {totalReadyToPrint > readyToPrint.length && (
             <Link href="/portal/orders" className="mt-4 inline-flex text-sm text-ink-500 underline">
-              View all in Orders &rarr;
+              View all ready to print &rarr;
             </Link>
           )}
         </div>

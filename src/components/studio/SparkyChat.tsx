@@ -90,9 +90,7 @@ export function SparkyChat({
                 <Mic className="h-10 w-10 md:h-8 md:w-8" aria-hidden />
               )}
             </button>
-            {(!isSupported || state === "denied") && (
-              <p className="mt-3 text-sm text-ink-500">Tap one of the buttons below — that works great!</p>
-            )}
+            <p className="mt-3 text-sm text-ink-500">Or tap one of the choices below!</p>
             {state === "no-match" && (
               <p className="mt-3 text-sm text-coral font-medium">Sparky didn&apos;t catch that. Tap a choice below.</p>
             )}

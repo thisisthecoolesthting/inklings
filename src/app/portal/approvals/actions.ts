@@ -50,7 +50,13 @@ export async function rejectCharacter(formData: FormData) {
   revalidateAll();
 }
 
-async function fireHdGeneration(bookId: string) {
+async function fireHdGeneration(bookId: string, userId: string) {
+  const book = await prisma.book.findFirst({
+    where: { id: bookId, child: { parentId: userId } },
+    select: { id: true }
+  });
+  if (!book) return;
+
   const pages = await prisma.bookPage.findMany({
     where: { bookId, imagePrompt: { not: null } },
     select: { id: true, imagePrompt: true, imageUrlHd: true },
@@ -92,7 +98,7 @@ async function approveBookInternal(bookId: string, userId: string) {
     data: { status: "approved", parentApprovedAt: new Date() },
   });
   if (process.env.TOGETHER_API_KEY) {
-    fireHdGeneration(b.id).catch(() => {});
+    fireHdGeneration(b.id, userId).catch(() => {});
   }
   return b;
 }

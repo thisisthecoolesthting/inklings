@@ -57,6 +57,9 @@ export default async function StudioHome() {
               {c._count.characters === 0 && (
                 <p className="mt-4 text-xs italic text-ink-500">Make 2 characters to unlock stories</p>
               )}
+              {c._count.characters === 1 && (
+                <p className="mt-4 text-xs italic text-ink-500">Make 1 more character to unlock stories</p>
+              )}
             </div>
           ))}
         </div>

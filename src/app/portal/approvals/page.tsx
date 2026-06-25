@@ -106,6 +106,11 @@ export default async function ApprovalsPage() {
 
       <section>
         <h2 className="text-xl font-bold text-ink">Stories waiting</h2>
+        {pendingBooks.length > 0 && (
+          <div className="mt-3 rounded-card bg-mint-50 px-4 py-2 text-sm text-ink-700">
+            Approving queues HD illustrations &mdash; usually ready in a few minutes.
+          </div>
+        )}
         {pendingBooks.length === 0 ? (
           <div className="card-base mt-3 text-ink-500">No stories awaiting approval.</div>
         ) : (
@@ -118,13 +123,13 @@ export default async function ApprovalsPage() {
                     <p className="text-sm text-ink-500">From {b.child.name} &middot; {b._count.pages} pages</p>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    <form action={approveBookAndPrint}>
-                      <input type="hidden" name="id" value={b.id} />
-                      <SubmitButton kind="approve">Approve &amp; order print</SubmitButton>
-                    </form>
                     <form action={approveBook}>
                       <input type="hidden" name="id" value={b.id} />
                       <SubmitButton kind="approve">Approve only</SubmitButton>
+                    </form>
+                    <form action={approveBookAndPrint}>
+                      <input type="hidden" name="id" value={b.id} />
+                      <SubmitButton kind="approve">Approve &amp; go to print checkout</SubmitButton>
                     </form>
                     <form action={rejectBook}>
                       <input type="hidden" name="id" value={b.id} />
@@ -143,7 +148,6 @@ export default async function ApprovalsPage() {
                     </div>
                   ))}
                 </div>
-                <p className="mt-4 text-xs text-ink-500">Approving queues HD illustrations in the background. Most parents order the printed book right here.</p>
               </li>
             ))}
           </ul>
