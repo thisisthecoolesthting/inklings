@@ -3,6 +3,7 @@
  * Build one complete demo story for marketing: text-free illustrations + readable typography.
  * Run on VPS: cd /var/www/inklings && npx tsx scripts/build-marketing-showcase.ts
  * Use --force to regenerate images even if files exist.
+ * Use --recomposite to refresh typography only (reuses saved or extracted illustrations).
  */
 import { mkdir, readFile, writeFile, access } from "node:fs/promises";
 import path from "node:path";
@@ -11,8 +12,16 @@ import { generatePreview, seedFromImageSeed } from "../src/lib/image-gen";
 
 const OUT_DIR = path.join(process.cwd(), "public", "images", "showcase", "milo-moonbeam");
 const SIZE = 1024;
-const IMG_H = 660;
+/** Illustration band — ~58% of page; generous text band below like a printed storybook. */
+const IMG_H = 600;
 const TEXT_H = SIZE - IMG_H;
+/** Typography tuned for full-width storybook readability at 1024px. */
+const PAD_X = 32;
+const FONT_SIZE = 40;
+const LINE_HEIGHT = 50;
+const MAX_LINES = 5;
+/** Prior composite layout — used when extracting art from existing pages. */
+const LEGACY_ILL_H = 660;
 
 const DEMO = {
   slug: "milo-moonbeam",
@@ -69,7 +78,7 @@ function escapeXml(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
 }
 
-function wrapLines(text: string, maxChars = 42): string[] {
+function wrapLines(text: string, maxChars = 56): string[] {
   const words = text.split(/\s+/);
   const lines: string[] = [];
   let line = "";
@@ -83,7 +92,34 @@ function wrapLines(text: string, maxChars = 42): string[] {
     }
   }
   if (line) lines.push(line);
-  return lines.slice(0, 4);
+  return lines.slice(0, MAX_LINES);
+}
+
+function storyTextSvg(lines: string[], pageNum: number): Buffer {
+  const blockH = lines.length * LINE_HEIGHT;
+  const startY = Math.round((TEXT_H - blockH) / 2) + Math.round(FONT_SIZE * 0.82);
+  const textX = PAD_X;
+  const textW = SIZE - PAD_X * 2;
+  const tspans = lines
+    .map(
+      (ln, i) =>
+        `<tspan x="${textX}" dy="${i === 0 ? 0 : LINE_HEIGHT}" textLength="${textW}" lengthAdjust="spacingAndGlyphs">${escapeXml(ln)}</tspan>`,
+    )
+    .join("");
+
+  return Buffer.from(`<svg width="${SIZE}" height="${TEXT_H}" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100%" height="100%" fill="#FFF6E5"/>
+  <rect x="0" y="0" width="${SIZE}" height="3" fill="#E8B84A"/>
+  <text
+    x="${textX}"
+    y="${startY}"
+    font-family="Georgia, 'Palatino Linotype', 'Times New Roman', serif"
+    font-size="${FONT_SIZE}"
+    font-weight="500"
+    fill="#4A2545"
+  >${tspans}</text>
+  <text font-family="Helvetica, Arial, sans-serif" font-size="16" fill="#7D506E" x="${SIZE / 2}" y="${TEXT_H - 22}" text-anchor="middle">${pageNum}</text>
+</svg>`);
 }
 
 async function compositePage(opts: {
@@ -97,18 +133,7 @@ async function compositePage(opts: {
     .toBuffer();
 
   const lines = wrapLines(opts.text);
-  const lineHeight = 36;
-  const startY = 56 + lineHeight;
-  const tspans = lines
-    .map((ln, i) => `<tspan x="56" dy="${i === 0 ? 0 : lineHeight}">${escapeXml(ln)}</tspan>`)
-    .join("");
-
-  const svg = Buffer.from(`<svg width="${SIZE}" height="${TEXT_H}" xmlns="http://www.w3.org/2000/svg">
-  <rect width="100%" height="100%" fill="#FFF6E5"/>
-  <text font-family="Georgia, 'Times New Roman', serif" font-size="26" fill="#4A2545" y="${startY}">${tspans}</text>
-  <text font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#7D506E" x="${SIZE - 56}" y="${TEXT_H - 28}" text-anchor="end">Page ${opts.pageNum}</text>
-</svg>`);
-
+  const svg = storyTextSvg(lines, opts.pageNum);
   const textBand = await sharp(svg).png().toBuffer();
 
   return sharp({
@@ -150,15 +175,39 @@ async function fileExists(p: string): Promise<boolean> {
   }
 }
 
+async function saveIllustration(n: number, jpeg: Buffer): Promise<void> {
+  const illPath = path.join(OUT_DIR, `ill-${String(n).padStart(2, "0")}.jpg`);
+  await writeFile(illPath, jpeg);
+}
+
+async function loadIllustration(n: number, compositePath: string): Promise<Buffer> {
+  const illPath = path.join(OUT_DIR, `ill-${String(n).padStart(2, "0")}.jpg`);
+  if (await fileExists(illPath)) {
+    return readFile(illPath);
+  }
+  if (await fileExists(compositePath)) {
+    const meta = await sharp(compositePath).metadata();
+    const h = Math.min(LEGACY_ILL_H, (meta.height ?? SIZE) - 80);
+    const extracted = await sharp(compositePath)
+      .extract({ left: 0, top: 0, width: SIZE, height: h })
+      .jpeg({ quality: 92 })
+      .toBuffer();
+    await writeFile(illPath, extracted);
+    return extracted;
+  }
+  throw new Error(`No illustration source for page ${n}`);
+}
+
 async function main() {
   const force = process.argv.includes("--force");
+  const recomposite = process.argv.includes("--recomposite");
   await mkdir(OUT_DIR, { recursive: true });
 
   const seed = seedFromImageSeed(DEMO.seedKey);
   const manifestPages: Array<{ n: number; file: string; text: string }> = [];
-  let coverPath = `/images/showcase/${DEMO.slug}/cover.jpg`;
+  const coverPath = `/images/showcase/${DEMO.slug}/cover.jpg`;
 
-  console.log(`Building showcase: ${DEMO.title} (seed ${seed})`);
+  console.log(`Building showcase: ${DEMO.title} (seed ${seed})${recomposite ? " [recomposite]" : ""}`);
 
   for (let i = 0; i < DEMO.pages.length; i++) {
     const page = DEMO.pages[i]!;
@@ -166,6 +215,17 @@ async function main() {
     const filename = `page-${String(n).padStart(2, "0")}.jpg`;
     const outPath = path.join(OUT_DIR, filename);
     const publicPath = `/images/showcase/${DEMO.slug}/${filename}`;
+
+    if (recomposite) {
+      console.log(`  recompositing ${filename}…`);
+      const illBytes = await loadIllustration(n, outPath);
+      await writeFile(
+        outPath,
+        await compositePage({ illustrationJpeg: illBytes, text: page.text, pageNum: n }),
+      );
+      manifestPages.push({ n, file: publicPath, text: page.text });
+      continue;
+    }
 
     if (!force && (await fileExists(outPath))) {
       console.log(`  skip ${filename} (exists)`);
@@ -182,6 +242,7 @@ async function main() {
 
     const illPath = path.join(process.cwd(), "public", gen.url.replace(/^\//, ""));
     const illBytes = await readFile(illPath);
+    await saveIllustration(n, illBytes);
     const composite = await compositePage({
       illustrationJpeg: illBytes,
       text: page.text,
