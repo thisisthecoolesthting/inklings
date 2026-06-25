@@ -14,7 +14,7 @@ export default async function PortalHome({
   if (!session) return null;
 
   const user = await prisma.user.findUnique({ where: { id: session.userId } });
-  const [children, pendingBooks, readyToPrint, orders] = await Promise.all([
+  const [children, pendingBooks, readyToPrint, totalReadyToPrint, orders] = await Promise.all([
     prisma.childProfile.count({ where: { parentId: session.userId } }),
     prisma.book.count({
       where: { status: "awaiting_parent", child: { parentId: session.userId } },
@@ -28,6 +28,13 @@ export default async function PortalHome({
       include: { child: true },
       orderBy: { parentApprovedAt: "desc" },
       take: 3,
+    }),
+    prisma.book.count({
+      where: {
+        status: "approved",
+        child: { parentId: session.userId },
+        orders: { none: { status: { in: ["paid", "fulfilled"] } } },
+      },
     }),
     prisma.order.count({ where: { userId: session.userId } }),
   ]);
@@ -89,6 +96,11 @@ export default async function PortalHome({
               </li>
             ))}
           </ul>
+          {totalReadyToPrint > readyToPrint.length && (
+            <Link href="/portal/orders" className="mt-4 inline-flex text-sm text-ink-500 underline">
+              View all in Orders &rarr;
+            </Link>
+          )}
         </div>
       )}
 

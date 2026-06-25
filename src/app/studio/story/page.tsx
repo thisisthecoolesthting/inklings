@@ -7,6 +7,7 @@ import { getActiveSeriesContext, ensureDefaultSeries } from "@/lib/series-bootst
 import { minCoreCastToPublish } from "@/lib/tier-limits";
 import { StoryActProgress } from "@/components/studio/StoryActProgress";
 import { StudioStoryClient } from "./client";
+import { bootstrapStarterCast } from "./actions";
 
 export default async function StoryPage({
   searchParams,
@@ -54,6 +55,9 @@ export default async function StoryPage({
         <p className="mt-2 text-sm text-ink-500">Ask a grown-up to assign characters in the portal, or make new ones in the studio.</p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link href={`/studio/character?child=${childId}`} className="btn-primary">Make a character</Link>
+          <form action={bootstrapStarterCast.bind(null, childId, seriesCtx.id)}>
+            <button type="submit" className="btn-ghost">Use Sparky&apos;s friends</button>
+          </form>
           <Link href="/grownup" className="btn-ghost">Ask a grown-up</Link>
         </div>
       </div>

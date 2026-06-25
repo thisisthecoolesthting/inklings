@@ -41,6 +41,7 @@ export default async function CharacterIntro({
             className="mt-1 w-full rounded-button border-2 border-ink-100 bg-white px-4 py-3 text-lg focus:border-coral focus:outline-none"
             placeholder="Biscuit"
           />
+          <p className="mt-1 text-xs text-ink-500">Like Biscuit or Luna</p>
         </div>
 
         <div className="mt-6">
@@ -50,6 +51,7 @@ export default async function CharacterIntro({
             className="mt-1 w-full rounded-button border-2 border-ink-100 bg-white px-4 py-3 text-lg focus:border-coral focus:outline-none"
             placeholder="golden retriever puppy"
           />
+          <p className="mt-1 text-xs text-ink-500">A fox, puppy, dragon…</p>
         </div>
 
         <div className="mt-6">
@@ -59,6 +61,7 @@ export default async function CharacterIntro({
             className="mt-1 w-full rounded-button border-2 border-ink-100 bg-white px-4 py-3 text-lg focus:border-coral focus:outline-none"
             placeholder="best friend, hero, helper..."
           />
+          <p className="mt-1 text-xs text-ink-500">Hero, best friend, helper</p>
         </div>
 
         <div className="mt-6">

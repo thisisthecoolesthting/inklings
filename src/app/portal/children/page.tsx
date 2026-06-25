@@ -2,7 +2,8 @@ import Link from "next/link";
 import { Trash2 } from "lucide-react";
 import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
-import { addChild, deleteChild } from "./actions";
+import { addChild } from "./actions";
+import { DeleteChildButton } from "./DeleteChildButton";
 
 export default async function ChildrenPage() {
   const session = await getSession();
@@ -57,16 +58,14 @@ export default async function ChildrenPage() {
                 <div>
                   <h2 className="text-xl font-bold text-ink">{c.name}</h2>
                   <p className="text-sm text-ink-500">Age {c.age}</p>
+                  {c._count.characters === 0 && (
+                    <p className="mt-2 text-xs italic text-ink-500">No characters yet — open Studio to make some</p>
+                  )}
                   <p className="mt-3 text-sm text-ink-700">
                     {c._count.characters} characters &middot; {c._count.books} stories
                   </p>
                 </div>
-                <form action={deleteChild}>
-                  <input type="hidden" name="id" value={c.id} />
-                  <button type="submit" aria-label={`Remove ${c.name}`} className="text-ink-500 hover:text-coral">
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                </form>
+                <DeleteChildButton id={c.id} name={c.name} />
               </div>
               <div className="mt-4 flex gap-2">
                 <Link href={`/studio?child=${c.id}`} className="btn-secondary text-sm">Open Studio</Link>

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { approveCharacter, rejectCharacter, approveBook, approveBookAndPrint, rejectBook } from "./actions";
@@ -8,10 +9,11 @@ import { PrintCheckoutForm } from "@/components/portal/PrintCheckoutForm";
 export default async function ApprovalsPage() {
   const session = await getSession();
   if (!session) return null;
-  const [pendingCharacters, pendingBooks, readyToPrint] = await Promise.all([
+  const [pendingCharacters, pendingBooks, readyToPrint, totalReadyToPrint] = await Promise.all([
     prisma.character.findMany({
       where: { sandboxMode: true, child: { parentId: session.userId } },
-      include: { child: true }, orderBy: { createdAt: "desc" },
+      include: { child: true },
+      orderBy: { createdAt: "desc" },
     }),
     prisma.book.findMany({
       where: { status: "awaiting_parent", child: { parentId: session.userId } },
@@ -32,6 +34,13 @@ export default async function ApprovalsPage() {
       orderBy: { parentApprovedAt: "desc" },
       take: 5,
     }),
+    prisma.book.count({
+      where: {
+        status: "approved",
+        child: { parentId: session.userId },
+        orders: { none: { status: { in: ["paid", "fulfilled"] } } },
+      },
+    }),
   ]);
   return (
     <>
@@ -51,12 +60,19 @@ export default async function ApprovalsPage() {
                   <span className="font-semibold text-ink">{b.title}</span>
                   <span className="ml-2 text-sm text-ink-500">by {b.child.name}</span>
                 </div>
-                <PrintCheckoutForm bookId={b.id} className="btn-primary text-sm" />
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+                  <PrintCheckoutForm bookId={b.id} className="btn-primary text-sm" />
+                </li>
+              ))}
+            </ul>
+            {totalReadyToPrint > readyToPrint.length && (
+              <div className="mt-4 text-center">
+                <Link href="/portal/orders" className="text-sm text-ink-500 underline">
+                  View all in Orders &rarr;
+                </Link>
+              </div>
+            )}
+          </section>
+        )}
 
       <section className="mb-10">
         <h2 className="text-xl font-bold text-ink">Characters waiting</h2>

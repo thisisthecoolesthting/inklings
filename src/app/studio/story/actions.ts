@@ -98,3 +98,47 @@ export async function submitStoryForApproval(payload: unknown) {
   revalidatePath("/library");
   return { ok: true as const, bookId: book.id, pageCount: book.pages.length };
 }
+
+export async function bootstrapStarterCast(childId: string, seriesId: string) {
+  const session = await requireSession();
+
+  // Verify ownership
+  const child = await prisma.childProfile.findFirst({
+    where: { id: childId, parentId: session.userId },
+  });
+  if (!child) throw new Error("Child not found");
+
+  // Create Milo
+  const milo = await prisma.character.create({
+    data: {
+      childId,
+      name: "Milo",
+      species: "fox",
+      role: "hero",
+      sandboxMode: true,
+    },
+  });
+
+  // Create Pip
+  const pip = await prisma.character.create({
+    data: {
+      childId,
+      name: "Pip",
+      species: "puppy",
+      role: "best friend",
+      sandboxMode: true,
+    },
+  });
+
+  // Assign to series
+  await prisma.seriesCast.createMany({
+    data: [
+      { seriesId, characterId: milo.id, slot: 1, role: "core" },
+      { seriesId, characterId: pip.id, slot: 2, role: "core" },
+    ],
+    skipDuplicates: true,
+  });
+
+  revalidatePath(`/studio/story`);
+  redirect(`/studio/story?child=${childId}&series=${seriesId}`);
+}

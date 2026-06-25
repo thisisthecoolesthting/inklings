@@ -100,7 +100,7 @@ export function StudioStoryClient({
             <li key={i} className="card-base">
               <span className="text-xs font-semibold uppercase tracking-wider text-coral">Page {i + 1}</span>
               {p.imageUrl && <StoryIllustration src={p.imageUrl} alt={`illustration for page ${i + 1}`} />}
-              <p className="mt-3 text-lg text-ink">{p.text}</p>
+              <p className="mt-3 text-xl text-ink">{p.text}</p>
             </li>
           ))}
         </ol>
@@ -127,7 +127,12 @@ export function StudioStoryClient({
             </div>
           </div>
         )}
-        {submitState === "error" && <p className="mt-6 text-coral">Something went wrong saving the story. Please try again.</p>}
+        {submitState === "error" && (
+          <div className="mt-8 card-base bg-coral-50 border-coral/20">
+            <p className="text-ink font-bold">Oh no! Sparky had a little trouble saving your story.</p>
+            <button onClick={() => setSubmitState('idle')} className="btn-primary mt-4">Try again</button>
+          </div>
+        )}
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link href="/studio" className="btn-ghost">Back to Sparky</Link>
           <Link href="/library" className="btn-ghost">My collection</Link>
@@ -148,9 +153,9 @@ export function StudioStoryClient({
               {p.imageUrl ? (
                 <StoryIllustration src={p.imageUrl} alt={`Story page ${i + 1} illustration`} />
               ) : (
-                <p className="mb-3 text-sm italic text-ink-500">Sparky is writing and painting…</p>
+                i === pages.length - 1 && <p className="mb-3 text-sm italic text-ink-500">Sparky is writing and painting…</p>
               )}
-              <p className="text-base text-ink">{p.text}</p>
+              <p className="text-xl text-ink">{p.text}</p>
             </div>
           ))}
         </div>

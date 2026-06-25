@@ -40,6 +40,10 @@ export async function middleware(req: NextRequest) {
 
   const res = NextResponse.next();
 
+  if (isPortal && grownupOk) {
+    res.cookies.delete(KID_MODE_COOKIE);
+  }
+
   if (isKidSurface) {
     res.cookies.set(KID_MODE_COOKIE, "1", {
       httpOnly: true,

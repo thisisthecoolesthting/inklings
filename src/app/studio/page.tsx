@@ -32,7 +32,14 @@ export default async function StudioHome() {
                 {c.name[0]}
               </div>
               <h2 className="mt-4 text-2xl font-bold text-ink">{c.name}</h2>
-              <p className="text-sm text-ink-500">Age {c.age} &middot; {c._count.characters} characters</p>
+              <p className="text-sm text-ink-500">
+                Age {c.age} &middot;{" "}
+                {c._count.characters === 0
+                  ? "No characters yet"
+                  : c._count.characters === 1
+                  ? "1 character"
+                  : `${c._count.characters} characters`}
+              </p>
               <div className="mt-6 flex flex-col gap-3">
                 <Link
                   href={`/studio/story?child=${c.id}`}
@@ -47,6 +54,9 @@ export default async function StudioHome() {
                   <Users className="h-5 w-5" aria-hidden /> Make a character
                 </Link>
               </div>
+              {c._count.characters === 0 && (
+                <p className="mt-4 text-xs italic text-ink-500">Make 2 characters to unlock stories</p>
+              )}
             </div>
           ))}
         </div>

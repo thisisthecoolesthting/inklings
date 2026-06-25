@@ -55,19 +55,31 @@ async function fireHdGeneration(bookId: string) {
     where: { bookId, imagePrompt: { not: null } },
     select: { id: true, imagePrompt: true, imageUrlHd: true },
   });
+  let failures = 0;
   await Promise.all(
     pages
       .filter((p) => !p.imageUrlHd && p.imagePrompt)
       .map(async (p) => {
-        const result = await generateHd(p.imagePrompt!);
-        if (result.ok) {
-          await prisma.bookPage.update({
-            where: { id: p.id },
-            data: { imageUrlHd: result.url, imageApproved: true },
-          });
+        try {
+          const result = await generateHd(p.imagePrompt!);
+          if (result.ok) {
+            await prisma.bookPage.update({
+              where: { id: p.id },
+              data: { imageUrlHd: result.url, imageApproved: true },
+            });
+          } else {
+            console.error(`HD generation failed for page ${p.id}:`, result);
+            failures++;
+          }
+        } catch (err) {
+          console.error(`HD generation error for page ${p.id}:`, err);
+          failures++;
         }
       }),
   );
+  if (failures > 0) {
+    console.warn(`Book ${bookId} finished HD generation with ${failures} failures.`);
+  }
 }
 
 async function approveBookInternal(bookId: string, userId: string) {
