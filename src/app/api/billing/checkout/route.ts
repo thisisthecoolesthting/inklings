@@ -1,14 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/lib/session";
-import { getStripe, premiumPriceId, printPriceId, siteUrl } from "@/lib/stripe";
+import { getStripe, premiumPriceId, printPriceId, giftPriceId, siteUrl } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
 import { getSiteUrl } from "@/lib/site-url";
 
 const Schema = z.object({
-  tier: z.enum(["premium", "print"]),
+  tier: z.enum(["premium", "print", "gift"]),
+  giftPlan: z.enum(["gift_1m", "gift_6m", "gift_12m"]).optional(),
   bookId: z.string().min(8).max(40).optional(),
   quantity: z.coerce.number().int().min(1).max(10).optional(),
+  recipientEmail: z.string().email().optional().or(z.literal("")),
 });
 
 /**
@@ -32,7 +34,13 @@ export async function POST(req: NextRequest) {
       body = await req.json();
     } else {
       const form = await req.formData();
-      body = { tier: form.get("tier"), bookId: form.get("bookId") ?? undefined, quantity: form.get("quantity") ?? undefined };
+      body = {
+        tier: form.get("tier"),
+        giftPlan: form.get("giftPlan") ?? undefined,
+        bookId: form.get("bookId") ?? undefined,
+        quantity: form.get("quantity") ?? undefined,
+        recipientEmail: form.get("recipientEmail") ?? undefined,
+      };
     }
   } catch {
     return NextResponse.json({ error: "invalid_body" }, { status: 400 });
@@ -71,6 +79,28 @@ export async function POST(req: NextRequest) {
     return NextResponse.redirect(checkout.url!, { status: 303 });
   }
 
+  if (parsed.data.tier === "gift") {
+    const giftPlan = parsed.data.giftPlan;
+    if (!giftPlan) return NextResponse.json({ error: "giftPlan_required" }, { status: 400 });
+    const priceId = giftPriceId(giftPlan);
+    if (!priceId) return NextResponse.json({ error: "gift_price_id_unset" }, { status: 503 });
+    const checkout = await stripe.checkout.sessions.create({
+      customer: customerId,
+      mode: "payment",
+      line_items: [{ price: priceId, quantity: 1 }],
+      metadata: {
+        userId: user.id,
+        kind: "gift",
+        giftPlan,
+        purchaserEmail: user.email,
+        recipientEmail: parsed.data.recipientEmail || "",
+      },
+      success_url: `${siteUrl()}/portal?gift_success=1`,
+      cancel_url: `${siteUrl()}/gift`,
+    });
+    return NextResponse.redirect(checkout.url!, { status: 303 });
+  }
+
   // tier === 'print'
   const priceId = printPriceId();
   if (!priceId) return NextResponse.json({ error: "print_price_id_unset" }, { status: 503 });
@@ -96,11 +126,12 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
-  // Convenience: GET with query string also works for the [Try Premium] link.
   const tier = req.nextUrl.searchParams.get("tier");
   if (!tier) return NextResponse.json({ error: "tier_required" }, { status: 400 });
   const fakeBody = new FormData();
   fakeBody.set("tier", tier);
+  const bookId = req.nextUrl.searchParams.get("bookId");
+  if (bookId) fakeBody.set("bookId", bookId);
   const fakeReq = new NextRequest(req.url, { method: "POST", body: fakeBody as any });
   return POST(fakeReq);
 }

@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { verifyMagicLinkToken } from "@/lib/auth/magic-link";
 import { hashToken } from "@/lib/auth/token-hash";
 import { signSessionToken, setSessionCookie } from "@/lib/session";
+import { unlockGrownupOnLogin } from "@/lib/grownup-gate";
 import { getSiteUrl } from "@/lib/site-url";
 
 /** GET /api/auth/verify?token=... — exchanges magic link for ink_session. */
@@ -22,7 +23,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(new URL("/login?error=not_found", getSiteUrl()));
   }
 
-  // One-time consumption: the stored hash must exist, be unconsumed, and unexpired.
   const tokenHash = hashToken(token);
   const link = await prisma.magicLink.findUnique({ where: { tokenHash } });
   if (!link || link.consumed || link.userId !== user.id || link.expiresAt.getTime() < Date.now()) {
@@ -35,8 +35,8 @@ export async function GET(req: NextRequest) {
     tier: user.subscriptionTier,
   });
   await setSessionCookie(sessionToken);
+  await unlockGrownupOnLogin();
 
-  // Mark this magic link consumed (best-effort, by unique hash).
   await prisma.magicLink
     .update({ where: { tokenHash }, data: { consumed: true } })
     .catch(() => {});

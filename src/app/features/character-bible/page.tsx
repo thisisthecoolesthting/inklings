@@ -29,7 +29,7 @@ export default function FeatureBible() {
           <div className="card-base">
             <h2 className="text-2xl font-bold text-ink">The Character Bible</h2>
             <p className="mt-3">
-              Each character your child creates gets a permanent record: name, species, personality traits, favorite activities, recurring phrases, a locked illustration seed. When the same character appears in story #4, they look like the same character from story #1.
+              Each character your child creates gets a permanent record: name, species, personality traits, favorite activities, recurring phrases, and a saved look. When the same character appears in story #4, they look like the same character from story #1.
             </p>
           </div>
           <div className="card-base">

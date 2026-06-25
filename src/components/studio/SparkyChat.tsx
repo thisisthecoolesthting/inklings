@@ -5,12 +5,13 @@ import { Mic, MicOff, Sparkles } from "lucide-react";
 import type { SparkyBeat, SparkyChoice } from "@/content/sparky-prompts";
 import { sanitizeChildInput } from "@/lib/safety";
 import { useVoiceRecognition } from "./use-voice-recognition";
+import { SparkyLoadingGame } from "./SparkyLoadingGame";
 
 function tokenSetMatch(a: string, b: string): number {
   const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9 ]/g, "").split(/\s+/).filter(Boolean);
   const aSet = new Set(norm(a));
   const bSet = new Set(norm(b));
-  const intersect = [...aSet].filter(x => bSet.has(x)).length;
+  const intersect = [...aSet].filter((x) => bSet.has(x)).length;
   const union = new Set([...aSet, ...bSet]).size;
   return union === 0 ? 0 : intersect / union;
 }
@@ -39,10 +40,8 @@ export function SparkyChat({
 
   useEffect(() => {
     if (!lastResult || state !== "listening") return;
-
     const { safe } = sanitizeChildInput(lastResult.transcript);
     const match = findClosest(safe, beat.choices);
-
     if (match) {
       setState("matched");
       setMatchedChoiceId(match.id);
@@ -74,10 +73,7 @@ export function SparkyChat({
       </div>
 
       {thinking ? (
-        <div className="mt-6 card-base bg-mint-100 text-center" aria-live="polite">
-          <p className="text-lg font-semibold text-ink">Sparky is writing and painting your page…</p>
-          <p className="mt-2 text-sm text-ink-600">This takes a few seconds — hang tight!</p>
-        </div>
+        <SparkyLoadingGame />
       ) : (
         <>
           <div className="mt-6 flex justify-center">
@@ -86,15 +82,7 @@ export function SparkyChat({
               onClick={start}
               disabled={!isSupported || state === "listening" || state === "denied"}
               aria-label="Tap and talk"
-              className={`
-                relative flex h-[88px] w-[88px] items-center justify-center 
-                rounded-full bg-coral text-white shadow-card transition-all
-                hover:bg-coral-600 active:scale-95
-                disabled:opacity-50 disabled:cursor-not-allowed
-                md:h-[72px] md:w-[72px]
-                ${state === "listening" ? "mic-listening" : ""}
-                ${shaking ? "mic-shake" : ""}
-              `}
+              className={`relative flex h-[88px] w-[88px] items-center justify-center rounded-full bg-coral text-white shadow-card transition-all hover:bg-coral-600 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 md:h-[72px] md:w-[72px] ${state === "listening" ? "mic-listening" : ""} ${shaking ? "mic-shake" : ""}`}
             >
               {!isSupported || state === "denied" ? (
                 <MicOff className="h-10 w-10 md:h-8 md:w-8" aria-hidden />
@@ -103,17 +91,13 @@ export function SparkyChat({
               )}
             </button>
           </div>
-
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
             {beat.choices.map((c) => (
               <button
                 key={c.id}
                 type="button"
                 onClick={() => onChoose(c)}
-                className={`
-                  sparky-chip justify-start text-left transition-all
-                  ${matchedChoiceId === c.id ? "ring-4 ring-coral scale-105" : ""}
-                `}
+                className={`sparky-chip justify-start text-left transition-all ${matchedChoiceId === c.id ? "scale-105 ring-4 ring-coral" : ""}`}
               >
                 {c.emoji && <span className="text-2xl" aria-hidden>{c.emoji}</span>}
                 <span>{c.label}</span>

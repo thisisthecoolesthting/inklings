@@ -16,6 +16,15 @@ export function printPriceId(): string | null {
   return process.env.STRIPE_PRICE_PRINT_BOOK ?? null;
 }
 
+export function giftPriceId(plan: string): string | null {
+  const map: Record<string, string | undefined> = {
+    gift_1m: process.env.STRIPE_PRICE_GIFT_1M,
+    gift_6m: process.env.STRIPE_PRICE_GIFT_6M,
+    gift_12m: process.env.STRIPE_PRICE_GIFT_12M,
+  };
+  return map[plan] ?? null;
+}
+
 export function siteUrl(): string {
   return (process.env.NEXT_PUBLIC_APP_URL ?? "https://inklings.shop").replace(/\/$/, "");
 }

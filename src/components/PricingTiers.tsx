@@ -58,7 +58,7 @@ const TIERS: Tier[] = [
     period: "per book",
     features: [
       "Real hardcover keepsake (8.5\" × 8.5\")",
-      "Printed by Amazon KDP, ships in 7-10 days",
+      "Ships in 7–10 days to your door",
       "Up to 32 illustrated pages",
       "Available on any tier (one-time charge)",
       "Bulk &amp; gift orders supported",

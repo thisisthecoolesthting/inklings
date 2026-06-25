@@ -53,7 +53,7 @@ export default async function StudioHome() {
       )}
 
       <footer className="mt-16 text-center">
-        <Link href="/portal" className="text-sm text-ink-500 underline">Back to parent portal</Link>
+        <Link href="/library" className="text-sm text-ink-500 underline">Go to my library</Link>
       </footer>
     </div>
   );

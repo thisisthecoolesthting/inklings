@@ -20,6 +20,8 @@ model User {
   stripeCustomerId   String?        @unique
   subscriptionTier   String         @default("free") // free | premium
   subscriptionStatus String?
+  premiumUntil       DateTime?
+  printCredits       Int            @default(0)
   createdAt          DateTime       @default(now())
   updatedAt          DateTime       @updatedAt
 
@@ -27,6 +29,7 @@ model User {
   sessions           Session[]
   magicLinks         MagicLink[]
   orders             Order[]
+  giftCodesRedeemed  GiftCode[]     @relation("GiftRedeemer")
 }
 
 // === Magic-link auth ===
@@ -60,6 +63,7 @@ model ChildProfile {
   name      String
   age       Int
   avatarUrl String?
+  activeSeriesId String?
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
 
@@ -100,6 +104,8 @@ model Character {
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
+  seriesCast SeriesCast[]
+
   @@index([childId])
 }
 
@@ -131,10 +137,12 @@ model Series {
   world       World?   @relation(fields: [worldId], references: [id])
   title       String
   description String?
+  isDefault   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  books Book[]
+  books      Book[]
+  seriesCast SeriesCast[]
 
   @@index([childId])
 }
@@ -193,13 +201,34 @@ model Order {
   stripePaymentIntent   String?  @unique
   quantity              Int      @default(1)
   unitPriceCents        Int
-  status                String   @default("pending") // pending | paid | fulfilled | refunded
-  kdpUploadInitiatedAt  DateTime?
+  status                String   @default("pending") // pending | paid | paid_needs_shipping | fulfilled | refunded
+  kdpUploadInitiatedAt  DateTime? // legacy; unused — Lulu is the print partner
+  luluJobId             String?
+  luluStatus            String?
+  printSubmittedAt      DateTime?
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
 
   @@index([userId])
   @@index([bookId])
+}
+
+// === Gift Premium codes ===
+model GiftCode {
+  id               String    @id @default(cuid())
+  code             String    @unique
+  plan             String
+  months           Int
+  purchaserEmail   String
+  recipientEmail   String?
+  stripeSessionId  String?   @unique
+  redeemedByUserId String?
+  redeemedBy       User?     @relation("GiftRedeemer", fields: [redeemedByUserId], references: [id])
+  redeemedAt       DateTime?
+  expiresAt        DateTime
+  createdAt        DateTime  @default(now())
+
+  @@index([purchaserEmail])
 }
 
 // === COPPA parental consent (captured at trial signup) ===
@@ -225,4 +254,21 @@ model UsageEvent {
   createdAt DateTime @default(now())
 
   @@index([userId, kind, createdAt])
+}
+
+model SeriesCast {
+  id          String    @id @default(cuid())
+  seriesId    String
+  series      Series    @relation(fields: [seriesId], references: [id], onDelete: Cascade)
+  characterId String
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  slot        Int
+  role        String    @default("core")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([seriesId, slot])
+  @@unique([seriesId, characterId])
+  @@index([seriesId])
+  @@index([characterId])
 }

@@ -15,6 +15,7 @@
  */
 import type { SparkyBeat } from "@/content/sparky-prompts";
 import { moderateAiText } from "@/lib/safety";
+import { buildScenePrompt } from "./image-gen";
 
 export interface SparkyContext {
   childName: string;
@@ -201,7 +202,10 @@ export function buildImagePrompt(ctx: SparkyContext, scene: string): string {
   const traits = ctx.characters
     .map((c) => `${c.name} (${c.species ?? "character"}, ${(c.personalityTraits ?? []).join(", ")})`)
     .join("; ");
-  const stylePrefix = "children's book illustration, flat color, warm pastel storybook palette, friendly, 2D, age-appropriate";
-  const styleSuffix = "no text, no letters, clean background, safe for children";
-  return `${stylePrefix}, ${traits}, scene: ${scene}, ${styleSuffix}`;
+  return buildScenePrompt({
+    childName: ctx.childName,
+    characters: traits,
+    scene,
+    worldName: ctx.worldName,
+  });
 }

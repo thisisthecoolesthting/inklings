@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Sparkles, Users, ShieldCheck, ShoppingBag, Settings, LogOut, BookOpen, Home } from "lucide-react";
+import { Sparkles, Users, ShieldCheck, ShoppingBag, Settings, LogOut, Home } from "lucide-react";
 import { brand } from "@/lib/brand";
 import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
@@ -9,20 +9,24 @@ export default async function PortalLayout({ children }: { children: React.React
   const session = await getSession();
   if (!session) redirect("/login?next=/portal");
 
-  const pendingCharacters = await prisma.character.count({
-    where: { sandboxMode: true, child: { parentId: session.userId } },
-  });
-  const pendingBooks = await prisma.book.count({
-    where: { status: "awaiting_parent", child: { parentId: session.userId } },
-  });
-  const pendingTotal = pendingCharacters + pendingBooks;
+  const [pendingBooks, readyToPrint] = await Promise.all([
+    prisma.book.count({
+      where: { status: "awaiting_parent", child: { parentId: session.userId } },
+    }),
+    prisma.book.count({
+      where: {
+        status: "approved",
+        child: { parentId: session.userId },
+        orders: { none: { status: { in: ["paid", "fulfilled"] } } },
+      },
+    }),
+  ]);
 
   const NAV = [
     { href: "/portal", label: "Dashboard", icon: Sparkles },
+    { href: "/portal/approvals", label: "Approvals", icon: ShieldCheck, badge: pendingBooks },
+    { href: "/portal/orders", label: "Print", icon: ShoppingBag, badge: readyToPrint },
     { href: "/portal/children", label: "Children", icon: Users },
-    { href: "/portal/approvals", label: "Approvals", icon: ShieldCheck, badge: pendingTotal },
-    { href: "/portal/orders", label: "Orders", icon: ShoppingBag },
-    { href: "/studio", label: "Kid Studio", icon: BookOpen },
     { href: "/portal/settings", label: "Settings", icon: Settings },
   ];
 
@@ -51,6 +55,9 @@ export default async function PortalLayout({ children }: { children: React.React
             </Link>
           ))}
         </nav>
+        <Link href="/studio" className="btn-primary btn-full mt-6 text-center text-sm">
+          Kid Studio
+        </Link>
         <div className="mt-6 border-t border-ink-100 pt-4">
           <Link href="/" className="flex items-center gap-2 text-sm text-ink-500 hover:text-ink">
             <Home className="h-4 w-4" aria-hidden /> Marketing site

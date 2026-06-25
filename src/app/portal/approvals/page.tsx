@@ -1,13 +1,14 @@
 import Image from "next/image";
 import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
-import { approveCharacter, rejectCharacter, approveBook, rejectBook } from "./actions";
+import { approveCharacter, rejectCharacter, approveBook, approveBookAndPrint, rejectBook } from "./actions";
 import { SubmitButton } from "./submit-button";
+import { PrintCheckoutForm } from "@/components/portal/PrintCheckoutForm";
 
 export default async function ApprovalsPage() {
   const session = await getSession();
   if (!session) return null;
-  const [pendingCharacters, pendingBooks] = await Promise.all([
+  const [pendingCharacters, pendingBooks, readyToPrint] = await Promise.all([
     prisma.character.findMany({
       where: { sandboxMode: true, child: { parentId: session.userId } },
       include: { child: true }, orderBy: { createdAt: "desc" },
@@ -21,13 +22,41 @@ export default async function ApprovalsPage() {
       },
       orderBy: { createdAt: "desc" },
     }),
+    prisma.book.findMany({
+      where: {
+        status: "approved",
+        child: { parentId: session.userId },
+        orders: { none: { status: { in: ["paid", "fulfilled"] } } },
+      },
+      include: { child: true },
+      orderBy: { parentApprovedAt: "desc" },
+      take: 5,
+    }),
   ]);
   return (
     <>
       <header className="mb-10">
         <h1 className="text-3xl font-bold text-ink">Approvals</h1>
-        <p className="mt-1 text-ink-700">Nothing publishes without your sign-off.</p>
+        <p className="mt-1 text-ink-700">Nothing publishes without your sign-off. Order a printed keepsake right after you approve.</p>
       </header>
+
+      {readyToPrint.length > 0 && (
+        <section className="mb-10 rounded-card border-2 border-coral/30 bg-coral/5 p-6">
+          <h2 className="text-lg font-bold text-ink">Ready to print</h2>
+          <p className="mt-1 text-sm text-ink-700">These approved stories can become hardcover keepsakes ($19.99, ships in 7–10 days).</p>
+          <ul className="mt-4 space-y-3">
+            {readyToPrint.map((b) => (
+              <li key={b.id} className="flex flex-wrap items-center justify-between gap-3 rounded-button bg-white px-4 py-3">
+                <div>
+                  <span className="font-semibold text-ink">{b.title}</span>
+                  <span className="ml-2 text-sm text-ink-500">by {b.child.name}</span>
+                </div>
+                <PrintCheckoutForm bookId={b.id} className="btn-primary text-sm" />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <section className="mb-10">
         <h2 className="text-xl font-bold text-ink">Characters waiting</h2>
@@ -67,15 +96,19 @@ export default async function ApprovalsPage() {
           <ul className="mt-3 space-y-6">
             {pendingBooks.map((b) => (
               <li key={b.id} className="card-base">
-                <div className="flex items-start justify-between gap-4">
+                <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
                     <h3 className="text-xl font-bold text-ink">{b.title}</h3>
                     <p className="text-sm text-ink-500">From {b.child.name} &middot; {b._count.pages} pages</p>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
+                    <form action={approveBookAndPrint}>
+                      <input type="hidden" name="id" value={b.id} />
+                      <SubmitButton kind="approve">Approve &amp; order print</SubmitButton>
+                    </form>
                     <form action={approveBook}>
                       <input type="hidden" name="id" value={b.id} />
-                      <SubmitButton kind="approve">Approve</SubmitButton>
+                      <SubmitButton kind="approve">Approve only</SubmitButton>
                     </form>
                     <form action={rejectBook}>
                       <input type="hidden" name="id" value={b.id} />
@@ -94,7 +127,7 @@ export default async function ApprovalsPage() {
                     </div>
                   ))}
                 </div>
-                <p className="mt-4 text-xs text-ink-500">Approving will queue HD illustration generation in the background.</p>
+                <p className="mt-4 text-xs text-ink-500">Approving queues HD illustrations in the background. Most parents order the printed book right here.</p>
               </li>
             ))}
           </ul>

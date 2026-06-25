@@ -2,8 +2,16 @@ import { NextResponse, type NextRequest } from "next/server";
 import Stripe from "stripe";
 import { getStripe } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
+import { createGiftCode, giftPlanMonths } from "@/lib/gift-codes";
+import { sendGiftCodeEmail, sendPrintOrderConfirmation } from "@/lib/email";
 
 export const runtime = "nodejs";
+
+const GIFT_LABELS: Record<string, string> = {
+  gift_1m: "1 month of Premium",
+  gift_6m: "6 months of Premium",
+  gift_12m: "1 year of Premium",
+};
 
 export async function POST(req: NextRequest) {
   const stripe = getStripe();
@@ -24,15 +32,40 @@ export async function POST(req: NextRequest) {
   switch (event.type) {
     case "checkout.session.completed": {
       const cs = event.data.object as Stripe.Checkout.Session;
-      const userId = (cs.metadata?.userId ?? cs.subscription ? null : null) as string | null;
+
       if (cs.mode === "subscription" && cs.customer) {
         const customer = typeof cs.customer === "string" ? cs.customer : cs.customer.id;
         await prisma.user.updateMany({
           where: { stripeCustomerId: customer },
           data: { subscriptionTier: "premium", subscriptionStatus: "active" },
         });
-      } else if (cs.mode === "payment" && cs.metadata?.bookId && cs.metadata?.userId) {
-        await prisma.order.create({
+      } else if (cs.mode === "payment" && cs.metadata?.kind === "gift") {
+        const plan = cs.metadata.giftPlan ?? "gift_1m";
+        const purchaserEmail =
+          cs.customer_details?.email ?? cs.customer_email ?? cs.metadata.purchaserEmail ?? "";
+        const recipientEmail = cs.metadata.recipientEmail || null;
+
+        if (purchaserEmail) {
+          const gift = await createGiftCode({
+            plan,
+            purchaserEmail,
+            recipientEmail,
+            stripeSessionId: cs.id,
+          });
+          void sendGiftCodeEmail({
+            to: purchaserEmail,
+            code: gift.code,
+            planLabel: GIFT_LABELS[plan] ?? `${giftPlanMonths(plan)} months Premium`,
+            recipientEmail,
+          }).catch((e) => console.error("[webhook] gift email failed", e));
+        }
+      } else if (
+        cs.mode === "payment" &&
+        cs.metadata?.bookId &&
+        cs.metadata?.userId &&
+        cs.metadata?.kind === "print"
+      ) {
+        const order = await prisma.order.create({
           data: {
             userId: cs.metadata.userId,
             bookId: cs.metadata.bookId,
@@ -42,6 +75,27 @@ export async function POST(req: NextRequest) {
             status: "paid",
           },
         });
+
+        const book = await prisma.book.findUnique({ where: { id: cs.metadata.bookId } });
+        const user = await prisma.user.findUnique({ where: { id: cs.metadata.userId } });
+        if (user?.email && book?.title) {
+          void sendPrintOrderConfirmation({ to: user.email, bookTitle: book.title }).catch((e) =>
+            console.error("[webhook] print confirm email failed", e),
+          );
+        }
+
+        void (async () => {
+          try {
+            const fullSession =
+              cs.shipping_details?.address?.line1 != null
+                ? cs
+                : await stripe.checkout.sessions.retrieve(cs.id);
+            const { fulfillPrintOrder } = await import("@/lib/lulu/fulfill-print-order");
+            await fulfillPrintOrder(order.id, fullSession);
+          } catch (err) {
+            console.error("[webhook] print fulfillment failed", order.id, err);
+          }
+        })();
       }
       break;
     }

@@ -18,6 +18,7 @@ async function requireSession() {
 function revalidateAll() {
   revalidatePath("/portal");
   revalidatePath("/portal/approvals");
+  revalidatePath("/portal/orders");
   revalidatePath("/portal/children");
   revalidatePath("/studio");
 }
@@ -49,11 +50,6 @@ export async function rejectCharacter(formData: FormData) {
   revalidateAll();
 }
 
-/**
- * Background HD render. Fire-and-forget — we await prisma updates but the HTTP
- * response has already returned to the parent. Image gen takes ~3s per page;
- * doing 7 in parallel is fine for the schnell endpoint.
- */
 async function fireHdGeneration(bookId: string) {
   const pages = await prisma.bookPage.findMany({
     where: { bookId, imagePrompt: { not: null } },
@@ -74,23 +70,38 @@ async function fireHdGeneration(bookId: string) {
   );
 }
 
-export async function approveBook(formData: FormData) {
-  const session = await requireSession();
-  const parsed = IdSchema.safeParse({ id: formData.get("id") });
-  if (!parsed.success) return;
+async function approveBookInternal(bookId: string, userId: string) {
   const b = await prisma.book.findFirst({
-    where: { id: parsed.data.id, child: { parentId: session.userId } },
+    where: { id: bookId, child: { parentId: userId } },
   });
-  if (!b) return;
+  if (!b || b.status === "approved" || b.status === "ordered") return b;
   await prisma.book.update({
     where: { id: b.id },
     data: { status: "approved", parentApprovedAt: new Date() },
   });
-  revalidateAll();
-  // Fire HD generation in the background — don't await; let the action return
   if (process.env.TOGETHER_API_KEY) {
-    fireHdGeneration(b.id).catch(() => {/* logged by image-gen.ts */});
+    fireHdGeneration(b.id).catch(() => {});
   }
+  return b;
+}
+
+export async function approveBook(formData: FormData) {
+  const session = await requireSession();
+  const parsed = IdSchema.safeParse({ id: formData.get("id") });
+  if (!parsed.success) return;
+  await approveBookInternal(parsed.data.id, session.userId);
+  revalidateAll();
+}
+
+/** Approve story then send parent straight to print checkout — highest-intent moment. */
+export async function approveBookAndPrint(formData: FormData) {
+  const session = await requireSession();
+  const parsed = IdSchema.safeParse({ id: formData.get("id") });
+  if (!parsed.success) redirect("/portal/approvals");
+  const b = await approveBookInternal(parsed.data.id, session.userId);
+  if (!b) redirect("/portal/approvals");
+  revalidateAll();
+  redirect(`/api/billing/checkout?tier=print&bookId=${b.id}`);
 }
 
 export async function rejectBook(formData: FormData) {

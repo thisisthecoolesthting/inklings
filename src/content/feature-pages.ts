@@ -35,7 +35,7 @@ export const FEATURES: FeatureBlock[] = [
     slug: "printed-keepsake",
     title: "Real printed keepsake books",
     summary:
-      "Order hardcover 8.5\" × 8.5\" books printed by Amazon's POD service. Ships in 7-10 days.",
+      "Order hardcover 8.5\" × 8.5\" keepsake books. Ships in 7–10 days.",
   },
   {
     slug: "safety-first",

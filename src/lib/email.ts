@@ -107,3 +107,61 @@ export async function sendApprovalNotification({ to, childName, kind }: { to: st
     </body></html>`,
   });
 }
+
+export async function sendGiftCodeEmail(opts: {
+  to: string;
+  code: string;
+  planLabel: string;
+  recipientEmail?: string | null;
+}) {
+  const from = process.env.RESEND_FROM_EMAIL ?? brand.emailFrom;
+  const redeemUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? "https://inklings.shop"}/gift/redeem`;
+
+  await sendMessage({
+    from: `${brand.name} <${from}>`,
+    to: [opts.to],
+    subject: `Your ${brand.name} gift — ${opts.planLabel}`,
+    text: `Gift code: ${opts.code}\n\nRedeem at ${redeemUrl}`,
+    html: `<!doctype html><html><body style="font-family:-apple-system,sans-serif;background:#FFF6E5;padding:32px;">
+      <div style="max-width:520px;margin:0 auto;background:#fff;padding:32px;border-radius:20px;">
+        <h1>Gift Premium ready</h1>
+        <p style="font-size:28px;font-weight:bold;color:#F4815C;">${opts.code}</p>
+        <p><a href="${redeemUrl}" style="display:inline-block;background:#F4815C;color:#fff;padding:14px 28px;border-radius:12px;text-decoration:none;">Redeem gift code</a></p>
+      </div>
+    </body></html>`,
+  });
+
+  if (opts.recipientEmail && opts.recipientEmail !== opts.to) {
+    await sendMessage({
+      from: `${brand.name} <${from}>`,
+      to: [opts.recipientEmail],
+      subject: `Someone gifted you ${brand.name} Premium`,
+      text: `Redeem at ${redeemUrl}\n\nCode: ${opts.code}`,
+      html: `<!doctype html><html><body style="font-family:-apple-system,sans-serif;background:#FFF6E5;padding:32px;">
+        <div style="max-width:520px;margin:0 auto;background:#fff;padding:32px;border-radius:20px;">
+          <h1>You got a story universe gift</h1>
+          <p style="font-size:28px;font-weight:bold;color:#F4815C;">${opts.code}</p>
+          <p><a href="${redeemUrl}" style="display:inline-block;background:#F4815C;color:#fff;padding:14px 28px;border-radius:12px;text-decoration:none;">Redeem now</a></p>
+        </div>
+      </body></html>`,
+    });
+  }
+}
+
+export async function sendPrintOrderConfirmation(opts: { to: string; bookTitle: string }) {
+  const from = process.env.RESEND_FROM_EMAIL ?? brand.emailFrom;
+  const ordersUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? "https://inklings.shop"}/portal/orders`;
+  await sendMessage({
+    from: `${brand.name} <${from}>`,
+    to: [opts.to],
+    subject: `Print order confirmed — ${opts.bookTitle}`,
+    text: `"${opts.bookTitle}" is being printed. Ships in 7–10 days. ${ordersUrl}`,
+    html: `<!doctype html><html><body style="font-family:-apple-system,sans-serif;background:#FFF6E5;padding:32px;">
+      <div style="max-width:520px;margin:0 auto;background:#fff;padding:32px;border-radius:20px;">
+        <h1>Print order confirmed</h1>
+        <p><strong>${opts.bookTitle}</strong> is on its way — expect delivery in 7–10 business days.</p>
+        <p><a href="${ordersUrl}" style="display:inline-block;background:#F4815C;color:#fff;padding:14px 28px;border-radius:12px;text-decoration:none;">View orders</a></p>
+      </div>
+    </body></html>`,
+  });
+}

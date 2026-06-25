@@ -1,24 +1,19 @@
 /**
- * Brand strings — change here to rename the product. Reflected across
- * marketing pages, kid Studio, parent portal, and emails.
+ * Brand strings — change here to rename the product.
  */
 export const brand = {
   name: "Inklings",
-  tagline: "Build a story universe your child runs.",
+  tagline: "Turn your child's imagination into a real book.",
   domain: process.env.APP_DOMAIN ?? "inklings.shop",
   emailFrom: `hello@${process.env.APP_DOMAIN ?? "inklings.shop"}`,
-  // Short hero headline.
-  hero: "Build a story universe — not just one book.",
+  hero: "Turn your child's imagination into a real book.",
   heroSub:
-    "Inklings lets your child invent characters and worlds that return across every story they write — guided by Sparky, the voice-first storyteller. Built for ages 5-8, kid-driven, and parent-approved before anything publishes.",
-  // Used in nav & footer.
+    "Kids ages 5–8 invent characters and worlds that come back in every story — then you approve and order a hardcover keepsake. No kid login. No ads.",
   shortPitch:
-    "A story universe studio for kids ages 5-8 — voice-first, parent-approved, where characters return in every story.",
-  // CTA copy
-  primaryCta: "Start a free story",
-  secondaryCta: "How it works",
-  // Trust strip under hero CTAs (per spine §6)
-  trustStrip: "Free to try · Characters return in every story · Parent-approved · Real printed books",
+    "A creative story studio for kids 5–8 — parent-approved, real printed books, characters that return every adventure.",
+  primaryCta: "Create your first book free",
+  secondaryCta: "See how it works",
+  trustStrip: "Free first book · Parent-approved · No ads · Real hardcovers",
 };
 
 export type BrandStrings = typeof brand;

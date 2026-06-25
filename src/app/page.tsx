@@ -1,36 +1,33 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Sparkles, Mic, BookOpen, ShieldCheck, Wand2, Heart } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { brand } from "@/lib/brand";
 import { FAQ } from "@/components/FAQ";
 import { PricingTiers } from "@/components/PricingTiers";
 import { FAQ_HOME } from "@/content/faq-data";
 import { FaqPageJsonLd } from "@/lib/jsonld";
 import { FEATURES } from "@/content/feature-pages";
+import { SampleStoryGallery, PrintShowcase } from "@/components/marketing/StoryVisuals";
+import { TrustBadges } from "@/components/marketing/TrustBadges";
+import { KidDemoVideo } from "@/components/marketing/KidDemoVideo";
 
-/**
- * Home page — follows the spine §6 six-section recipe, swapped to the
- * Inklings warm-storybook palette and consumer voice.
- */
 export default function HomePage() {
   return (
     <>
       <FaqPageJsonLd items={FAQ_HOME} />
-      {/* SECTION 1 — Cream hero */}
       <section className="hero-storybook">
         <div className="container-ink section">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <div>
-              <span className="eyebrow">Build a story universe your child runs</span>
+              <span className="eyebrow">For kids 5–8 · Parent-approved</span>
               <h1 className="text-4xl font-bold leading-tight tracking-tight text-ink md:text-5xl lg:text-6xl">
                 {brand.hero}
               </h1>
               <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-700 md:text-xl">
                 {brand.heroSub}
               </p>
-              <p className="mt-6 text-sm font-medium text-ink-500">
-                {brand.trustStrip}
-              </p>
+              <TrustBadges className="mt-8" />
+              <p className="mt-6 text-sm font-medium text-ink-500">{brand.trustStrip}</p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link href="/trial" className="btn-primary btn-large">
                   {brand.primaryCta}
@@ -43,7 +40,7 @@ export default function HomePage() {
             <div className="relative aspect-[4/5] overflow-hidden rounded-card bg-cream-200 shadow-card">
               <Image
                 src="/images/site/hero-storybook.jpg"
-                alt="A child with a golden puppy and a magical fox in a sunlit Meadowlands — Inklings storybook illustration"
+                alt="Illustrated storybook scene — child, puppy, and fox in a sunlit meadow"
                 width={1024}
                 height={1280}
                 className="absolute inset-0 h-full w-full object-cover"
@@ -54,44 +51,40 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* SECTION 2 — Problem + Who it's for */}
       <section className="section bg-cream-100">
         <div className="container-ink">
           <div className="grid gap-6 md:grid-cols-2">
             <div className="card-base">
-              <h2 className="text-2xl font-bold text-ink">
-                Screen time, but the kind you&apos;re proud of
-              </h2>
+              <h2 className="text-2xl font-bold text-ink">Making, not watching</h2>
               <p className="mt-4 text-ink-700">
-                Most kids&apos; apps are passive entertainment. Inklings is the opposite —
-                your child <em>creates</em>. They invent characters, build worlds, and write
-                stories that get printed into real books they can hold. Every minute they
-                spend builds something they keep.
+                Your child picks what happens next. Sparky turns their choices into illustrated pages.
+                You review once — then order a hardcover that ships to your door.
               </p>
             </div>
             <div className="card-base">
               <h2 className="text-2xl font-bold text-ink">Who it&apos;s for</h2>
               <p className="mt-4 text-ink-700">
-                Parents and grandparents of children ages 5 to 8 — especially families
-                who want <em>making</em> over <em>watching</em>. Homeschoolers, bedtime-story
-                households, and kids who already have an imaginary friend they talk about
-                every day.
+                Parents and grandparents of children ages 5 to 8 — especially families who want a
+                keepsake, not another passive app. Characters and worlds carry across every book in their collection.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* SECTION 3 — Capabilities + How it works */}
+      <KidDemoVideo />
+      <SampleStoryGallery />
+      <PrintShowcase />
+
       <section className="section">
         <div className="container-ink">
           <div className="section-header-center">
-            <span className="eyebrow">What Inklings does</span>
-            <h2 className="section-title">A story universe studio, not a one-off book</h2>
+            <span className="eyebrow">Simple steps</span>
+            <h2 className="section-title">From imagination to bookshelf</h2>
           </div>
           <div className="grid gap-6 lg:grid-cols-2">
             <div className="card-base">
-              <h3 className="mb-4 text-xl font-bold text-ink">Capabilities</h3>
+              <h3 className="mb-4 text-xl font-bold text-ink">What your child gets</h3>
               <ul className="space-y-3 text-ink-700">
                 {FEATURES.map((f) => (
                   <li key={f.slug} className="flex items-start gap-3">
@@ -110,23 +103,23 @@ export default function HomePage() {
               <ol className="space-y-4 text-ink-700">
                 <li className="flex gap-3">
                   <span className="flex h-7 w-7 flex-none items-center justify-center rounded-full bg-coral text-sm font-bold text-white">1</span>
-                  <span>You create a parent account. Your child&apos;s profile is linked to yours — no separate kid login.</span>
+                  <span>You sign up — your child uses your account in Sparky&apos;s Studio (no kid password).</span>
                 </li>
                 <li className="flex gap-3">
                   <span className="flex h-7 w-7 flex-none items-center justify-center rounded-full bg-coral text-sm font-bold text-white">2</span>
-                  <span>Your child meets Sparky in the Studio. They build characters by talking, tapping, drawing, or photographing.</span>
+                  <span>They meet Sparky, create characters, and tap through a short adventure together.</span>
                 </li>
                 <li className="flex gap-3">
                   <span className="flex h-7 w-7 flex-none items-center justify-center rounded-full bg-coral text-sm font-bold text-white">3</span>
-                  <span>Sparky walks them through a five-act story together — beginning, problem, adventure, resolution, celebration.</span>
+                  <span>Illustrated pages appear as they go — a real storybook takes shape in minutes.</span>
                 </li>
                 <li className="flex gap-3">
                   <span className="flex h-7 w-7 flex-none items-center justify-center rounded-full bg-coral text-sm font-bold text-white">4</span>
-                  <span>You review and approve every page in your portal. Edit text, regenerate art, or send back for changes.</span>
+                  <span>You approve the finished book in your portal — edit text or art if you want.</span>
                 </li>
                 <li className="flex gap-3">
                   <span className="flex h-7 w-7 flex-none items-center justify-center rounded-full bg-coral text-sm font-bold text-white">5</span>
-                  <span>Download a free PDF, or order a real hardcover keepsake. The book ships to your door.</span>
+                  <span>Download a PDF or order a hardcover keepsake — the book ships to your door.</span>
                 </li>
               </ol>
             </div>
@@ -134,22 +127,20 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* SECTION — Pricing teaser */}
       <section className="section bg-cream-100">
         <div className="container-ink">
           <div className="section-header-center">
             <span className="eyebrow">Simple pricing</span>
-            <h2 className="section-title">Start free. Upgrade when it&apos;s working.</h2>
+            <h2 className="section-title">Start free. Print when you&apos;re ready.</h2>
             <p className="section-subtitle">
-              Free covers most weekend creators. Premium unlocks unlimited stories and HD print export.
-              Real printed books are a one-time charge on any tier.
+              Try your first book free. Premium unlocks unlimited stories and HD export.
+              Printed hardcovers are a one-time add-on on any plan.
             </p>
           </div>
           <PricingTiers />
         </div>
       </section>
 
-      {/* SECTION 4 — FAQ */}
       <section className="section">
         <div className="container-ink mx-auto max-w-3xl">
           <div className="section-header-center">
@@ -160,22 +151,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* SECTION 6 — Dark final CTA */}
       <section className="hero-final-cta py-24">
         <div className="container-ink mx-auto max-w-3xl text-center">
-          <span className="eyebrow-on-dark">Make something your child keeps</span>
+          <span className="eyebrow-on-dark">A book they can hold</span>
           <h2 className="text-3xl font-bold tracking-tight text-cream-100 md:text-4xl">
-            Their first story universe is twenty minutes away.
+            Their first book is about twenty minutes away.
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-cream-200/85">
-            Free to try. No credit card. Parent-approved before anything publishes.
+            Free to try. No credit card. You approve before anything publishes.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link href="/trial" className="btn-primary btn-large">
               {brand.primaryCta}
             </Link>
-            <Link href="/how-it-works" className="btn-ghost btn-large border-cream-200/60 text-cream-100 hover:bg-cream-100/10">
-              {brand.secondaryCta}
+            <Link href="/gift" className="btn-ghost btn-large border-cream-200/60 text-cream-100 hover:bg-cream-100/10">
+              Gift Premium
             </Link>
           </div>
         </div>

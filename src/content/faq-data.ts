@@ -15,11 +15,11 @@ export const FAQ_HOME: FaqItem[] = [
   },
   {
     q: "How are characters made consistent across stories?",
-    a: "Each character has a Character Bible — colors, outfit, personality, and a locked illustration seed — so the same puppy looks like the same puppy across every story your child writes. Series memory carries it forward over time.",
+    a: "Each character has a Character Bible — colors, outfit, personality, and a saved look — so the same puppy looks like the same puppy across every story your child writes. Series memory carries it forward over time.",
   },
   {
     q: "Are the printed books real, hardcover books?",
-    a: "Yes. We use Amazon's print-on-demand service to produce real 8.5\" × 8.5\" children's books that ship in 7-10 days. Print orders are a one-time charge, available on any tier.",
+    a: "Yes. We print real 8.5\" × 8.5\" hardcover children's books — full color, professionally bound. Books ship in 7–10 days. Print orders are a one-time charge, available on any tier.",
   },
   {
     q: "What happens to photos I upload?",
