@@ -6,9 +6,9 @@ export const brand = {
   tagline: "Turn your child's imagination into a real book.",
   domain: process.env.APP_DOMAIN ?? "inklings.shop",
   emailFrom: `hello@${process.env.APP_DOMAIN ?? "inklings.shop"}`,
-  hero: "Turn your child's imagination into a real book.",
+  hero: "Your kid is the author — not just the hero.",
   heroSub:
-    "Kids ages 5–8 invent characters and worlds that come back in every story — then you approve and order a hardcover keepsake. No kid login. No ads.",
+    "Kids 5–8 invent characters and worlds with Sparky, page by page. You approve every story — then order a hardcover keepsake that ships to your door. No kid login. No ads.",
   shortPitch:
     "A creative story studio for kids 5–8 — parent-approved, real printed books, characters that return every adventure.",
   primaryCta: "Create your first book free",

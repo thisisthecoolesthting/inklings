@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Sparkles } from "lucide-react";
 import { brand } from "@/lib/brand";
 import { FAQ } from "@/components/FAQ";
@@ -8,48 +7,14 @@ import { FAQ_HOME } from "@/content/faq-data";
 import { FaqPageJsonLd } from "@/lib/jsonld";
 import { FEATURES } from "@/content/feature-pages";
 import { SampleStoryGallery, PrintShowcase } from "@/components/marketing/StoryVisuals";
-import { TrustBadges } from "@/components/marketing/TrustBadges";
-import { KidDemoVideo } from "@/components/marketing/KidDemoVideo";
+import { StudioPreviewSection } from "@/components/marketing/StudioPreviewSection";
+import { HomeHero } from "@/components/marketing/HomeHero";
 
 export default function HomePage() {
   return (
     <>
       <FaqPageJsonLd items={FAQ_HOME} />
-      <section className="hero-storybook">
-        <div className="container-ink section">
-          <div className="grid items-center gap-12 lg:grid-cols-2">
-            <div>
-              <span className="eyebrow">For kids 5–8 · Parent-approved</span>
-              <h1 className="text-4xl font-bold leading-tight tracking-tight text-ink md:text-5xl lg:text-6xl">
-                {brand.hero}
-              </h1>
-              <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-700 md:text-xl">
-                {brand.heroSub}
-              </p>
-              <TrustBadges className="mt-8" />
-              <p className="mt-6 text-sm font-medium text-ink-500">{brand.trustStrip}</p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Link href="/trial" className="btn-primary btn-large">
-                  {brand.primaryCta}
-                </Link>
-                <Link href="/how-it-works" className="btn-ghost btn-large">
-                  {brand.secondaryCta}
-                </Link>
-              </div>
-            </div>
-            <div className="relative aspect-[4/5] overflow-hidden rounded-card bg-cream-200 shadow-card">
-              <Image
-                src="/images/site/hero-storybook.jpg"
-                alt="Illustrated storybook scene — child, puppy, and fox in a sunlit meadow"
-                width={1024}
-                height={1280}
-                className="absolute inset-0 h-full w-full object-cover"
-                priority
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+      <HomeHero />
 
       <section className="section bg-cream-100">
         <div className="container-ink">
@@ -72,7 +37,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <KidDemoVideo />
+      <StudioPreviewSection />
       <SampleStoryGallery />
       <PrintShowcase />
 

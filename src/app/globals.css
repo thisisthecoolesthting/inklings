@@ -62,9 +62,10 @@ body {
   /* Hero — soft cream gradient with a hint of coral warmth (per Inklings brand override) */
   .hero-storybook {
     background:
-      radial-gradient(ellipse at 30% 30%, rgba(244, 129, 92, 0.10) 0%, transparent 60%),
-      radial-gradient(ellipse at 70% 70%, rgba(168, 221, 181, 0.18) 0%, transparent 60%),
-      linear-gradient(180deg, #FFF6E5 0%, #FAEACA 100%);
+      radial-gradient(ellipse 80% 60% at 85% 15%, rgba(244, 129, 92, 0.14) 0%, transparent 55%),
+      radial-gradient(ellipse 70% 50% at 10% 85%, rgba(168, 221, 181, 0.22) 0%, transparent 55%),
+      radial-gradient(ellipse 50% 40% at 50% 100%, rgba(74, 37, 69, 0.04) 0%, transparent 70%),
+      linear-gradient(180deg, #FFF6E5 0%, #FAEACA 55%, #FFF6E5 100%);
   }
   .hero-final-cta {
     background:

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { brand } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -58,9 +59,11 @@ export default function HowPage() {
           </div>
 
           <div id="printed" className="card-base mt-12 overflow-hidden p-0">
-            <img
-              src="/images/marketing/print-hardcover.jpg"
-              alt="Hardcover Inklings storybook — printed keepsake"
+            <Image
+              src="/images/site/hero-storybook.jpg"
+              alt="Illustrated Inklings storybook cover — the same art style that ships in print"
+              width={1024}
+              height={576}
               className="h-56 w-full object-cover sm:h-72"
             />
             <div className="p-6">
