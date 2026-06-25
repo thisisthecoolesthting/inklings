@@ -4,6 +4,7 @@
 
 ## TL;DR
 
+0. **Product & business decisions:** read `NORTH-STAR.md` first — vision, financial model, KPIs, and build priority order.
 1. Before any non-trivial UI/route/component change, read `docs/SOLUTIONSTORE_SAAS_SPINE.md` (cloned from PriceScout) and `docs/INKLINGS_SPINE_DEVIATIONS.md`.
 2. Push to `origin` = `https://github.com/thisisthecoolesthting/inklings.git`, branch `main` (LIVE 2026-05-07) (PRs from `feat/<slug>`).
 3. Audience is **parents of children ages 4-8** plus grandparents and homeschool families. Never marketing copy aimed at kids — kids see only the Studio.
@@ -14,6 +15,7 @@
 
 | File | Why |
 |---|---|
+| `NORTH-STAR.md` | **Vision, revenue model, KPIs, pricing variations, build priority.** Use for any product/pricing/UX tradeoff. |
 | `docs/SOLUTIONSTORE_SAAS_SPINE.md` | Canonical SaaS template inherited from PriceScout. Section recipe, mobile rules, deploy, copy conventions. |
 | `docs/INKLINGS_SPINE_DEVIATIONS.md` | Inklings-specific brand/architecture overrides vs the spine. |
 | `prisma/schema.prisma` | Database shape. Read before any model change. |
