@@ -50,6 +50,15 @@ export default async function TrialPage(props: {
             >
               <strong className="font-semibold">Couldn&apos;t create your account.</strong>{" "}
               {errorMsg}
+              {params.error === "exists" && (
+                <>
+                  {" "}
+                  <Link href="/login" className="font-semibold underline">
+                    Sign in instead
+                  </Link>
+                  .
+                </>
+              )}
             </div>
           )}
           {ok && (

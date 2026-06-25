@@ -6,14 +6,13 @@ import type { SparkyBeat, SparkyChoice } from "@/content/sparky-prompts";
 import { sanitizeChildInput } from "@/lib/safety";
 import { useVoiceRecognition } from "./use-voice-recognition";
 
-// Fuzzy-match helpers
 function tokenSetMatch(a: string, b: string): number {
   const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9 ]/g, "").split(/\s+/).filter(Boolean);
   const aSet = new Set(norm(a));
   const bSet = new Set(norm(b));
   const intersect = [...aSet].filter(x => bSet.has(x)).length;
   const union = new Set([...aSet, ...bSet]).size;
-  return union === 0 ? 0 : intersect / union; // Jaccard similarity, 0..1
+  return union === 0 ? 0 : intersect / union;
 }
 
 function findClosest(transcript: string, choices: SparkyChoice[]): SparkyChoice | null {
@@ -38,17 +37,15 @@ export function SparkyChat({
   const [matchedChoiceId, setMatchedChoiceId] = useState<string | null>(null);
   const [shaking, setShaking] = useState(false);
 
-  // Process voice results
   useEffect(() => {
     if (!lastResult || state !== "listening") return;
-    
+
     const { safe } = sanitizeChildInput(lastResult.transcript);
     const match = findClosest(safe, beat.choices);
-    
+
     if (match) {
       setState("matched");
       setMatchedChoiceId(match.id);
-      // Highlight the matched chip for 800ms, then choose
       setTimeout(() => {
         onChoose(match);
         setMatchedChoiceId(null);
@@ -76,9 +73,13 @@ export function SparkyChat({
         </div>
       </div>
 
-      {!thinking && (
+      {thinking ? (
+        <div className="mt-6 card-base bg-mint-100 text-center" aria-live="polite">
+          <p className="text-lg font-semibold text-ink">Sparky is writing and painting your page…</p>
+          <p className="mt-2 text-sm text-ink-600">This takes a few seconds — hang tight!</p>
+        </div>
+      ) : (
         <>
-          {/* Mic button - big, round, above the choice grid */}
           <div className="mt-6 flex justify-center">
             <button
               type="button"
@@ -103,7 +104,6 @@ export function SparkyChat({
             </button>
           </div>
 
-          {/* Choice grid */}
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
             {beat.choices.map((c) => (
               <button

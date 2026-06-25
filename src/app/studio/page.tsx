@@ -2,7 +2,6 @@ import Link from "next/link";
 import { Sparkles, BookOpen, Users } from "lucide-react";
 import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
-import { BigButton } from "@/components/studio/BigButton";
 
 export default async function StudioHome() {
   const session = await getSession();
@@ -28,28 +27,27 @@ export default async function StudioHome() {
       ) : (
         <div className="mx-auto grid max-w-3xl gap-4 sm:grid-cols-2">
           {children.map((c) => (
-            <Link
-              key={c.id}
-              href={`/studio/story?child=${c.id}`}
-              className="card-base text-center hover:-translate-y-1"
-            >
+            <div key={c.id} className="card-base text-center">
               <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-mint-100 text-3xl">
                 {c.name[0]}
               </div>
               <h2 className="mt-4 text-2xl font-bold text-ink">{c.name}</h2>
               <p className="text-sm text-ink-500">Age {c.age} &middot; {c._count.characters} characters</p>
               <div className="mt-6 flex flex-col gap-3">
-                <span className="big-button text-base">
+                <Link
+                  href={`/studio/story?child=${c.id}`}
+                  className="big-button inline-flex items-center justify-center gap-2 text-base"
+                >
                   <BookOpen className="h-5 w-5" aria-hidden /> Start a story
-                </span>
+                </Link>
                 <Link
                   href={`/studio/character?child=${c.id}`}
-                  className="big-button-mint text-base"
+                  className="big-button-mint inline-flex items-center justify-center gap-2 text-base"
                 >
                   <Users className="h-5 w-5" aria-hidden /> Make a character
                 </Link>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       )}
