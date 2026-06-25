@@ -2,8 +2,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { readdir } from "node:fs/promises";
 import path from "node:path";
+import { getShowcaseCoverUrl, getShowcasePageUrls } from "@/lib/marketing-showcase";
 
 export async function getSampleUploads(limit = 8): Promise<string[]> {
+  const showcase = await getShowcasePageUrls(limit);
+  if (showcase.length > 0) return showcase;
+
   try {
     const dir = path.join(process.cwd(), "public", "uploads", "preview");
     const files = (await readdir(dir)).filter((f) => f.endsWith(".jpg")).slice(0, limit);
@@ -21,10 +25,10 @@ export async function SampleStoryGallery() {
     <section className="section bg-cream-100">
       <div className="container-ink">
         <div className="section-header-center">
-          <span className="eyebrow">From real stories</span>
-          <h2 className="section-title">Pages kids actually made</h2>
+          <span className="eyebrow">From a real Sparky story</span>
+          <h2 className="section-title">Pages with words kids can read</h2>
           <p className="section-subtitle mx-auto max-w-2xl">
-            Every illustration below came out of Sparky Studio — same art style your child gets.
+            Illustrations are generated without text — we set the story in a clear, readable typeface below each picture, just like the printed book.
           </p>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -32,7 +36,7 @@ export async function SampleStoryGallery() {
             <div key={src} className="overflow-hidden rounded-card border border-ink-100 shadow-card">
               <Image
                 src={src}
-                alt={`Sample storybook page ${i + 1} created in Inklings`}
+                alt={`Sample storybook page ${i + 1} from Inklings`}
                 width={512}
                 height={512}
                 className="aspect-square w-full object-cover"
@@ -47,8 +51,9 @@ export async function SampleStoryGallery() {
 
 export async function PrintShowcase() {
   const pages = await getSampleUploads(4);
-  const spreadLeft = pages[0] ?? "/images/site/hero-storybook.jpg";
-  const spreadRight = pages[1] ?? pages[0] ?? "/images/site/hero-storybook.jpg";
+  const cover = (await getShowcaseCoverUrl()) ?? "/images/site/hero-storybook.jpg";
+  const spreadLeft = pages[0] ?? cover;
+  const spreadRight = pages[1] ?? pages[0] ?? cover;
 
   return (
     <section className="section">
@@ -57,8 +62,8 @@ export async function PrintShowcase() {
           <div className="space-y-4">
             <div className="mx-auto max-w-xs overflow-hidden rounded-card shadow-card ring-1 ring-ink-100">
               <Image
-                src="/images/site/hero-storybook.jpg"
-                alt="Cover art from an Inklings storybook — fox, puppy, and meadow scene"
+                src={cover}
+                alt="Cover of Milo and the Moonbeam Map — sample Inklings storybook"
                 width={768}
                 height={960}
                 className="aspect-[4/5] w-full object-cover"
@@ -71,7 +76,7 @@ export async function PrintShowcase() {
               <div className="relative flex-1">
                 <Image
                   src={spreadLeft}
-                  alt="Inside spread — left page from a child's story"
+                  alt="Inside spread — left page with illustration and story text"
                   width={512}
                   height={512}
                   className="aspect-square w-full object-cover"
@@ -81,7 +86,7 @@ export async function PrintShowcase() {
               <div className="relative flex-1">
                 <Image
                   src={spreadRight}
-                  alt="Inside spread — right page from a child's story"
+                  alt="Inside spread — right page with illustration and story text"
                   width={512}
                   height={512}
                   className="aspect-square w-full object-cover"
@@ -94,7 +99,7 @@ export async function PrintShowcase() {
             <h2 className="mt-2 text-3xl font-bold text-ink">Hold the universe in your hands</h2>
             <p className="mt-4 text-lg text-ink-700">
               After you approve a story, order an 8.5″ hardcover — a real book your child can keep on the shelf
-              and read again and again. The art you see on the site is the same style that lands in print.
+              and read again and again. Every page pairs art with easy-to-read text.
             </p>
             <ul className="mt-6 space-y-2 text-sm text-ink-700">
               <li className="flex gap-2">
@@ -104,7 +109,7 @@ export async function PrintShowcase() {
                 <span className="font-bold text-coral">✓</span> Ships in 7–10 days
               </li>
               <li className="flex gap-2">
-                <span className="font-bold text-coral">✓</span> Up to 32 illustrated pages
+                <span className="font-bold text-coral">✓</span> Readable story text on every page
               </li>
             </ul>
             <Link href="/gift" className="btn-primary mt-6 inline-flex">

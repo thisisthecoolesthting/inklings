@@ -1,0 +1,44 @@
+{
+  "slug": "milo-moonbeam",
+  "title": "Milo and the Moonbeam Map",
+  "childName": "Milo",
+  "builtAt": "2026-06-25T04:22:10.050Z",
+  "cover": "/images/showcase/milo-moonbeam/cover.jpg",
+  "pages": [
+    {
+      "n": 1,
+      "file": "/images/showcase/milo-moonbeam/page-01.jpg",
+      "text": "Milo the fox woke up in the Meadowlands. The grass was soft, and the morning smelled like honey."
+    },
+    {
+      "n": 2,
+      "file": "/images/showcase/milo-moonbeam/page-02.jpg",
+      "text": "Pip the puppy trotted over. \"Let's explore the Stardust Woods today!\" Milo grinned and nodded yes."
+    },
+    {
+      "n": 3,
+      "file": "/images/showcase/milo-moonbeam/page-03.jpg",
+      "text": "Something was wrong. The moonbeam bell that lit their favorite path had gone completely silent."
+    },
+    {
+      "n": 4,
+      "file": "/images/showcase/milo-moonbeam/page-04.jpg",
+      "text": "They followed a trail of glowing pebbles deeper into the woods. Fireflies danced ahead like tiny lanterns."
+    },
+    {
+      "n": 5,
+      "file": "/images/showcase/milo-moonbeam/page-05.jpg",
+      "text": "A river blocked the way. Pip found stepping-stones shaped like stars — one, two, three hops!"
+    },
+    {
+      "n": 6,
+      "file": "/images/showcase/milo-moonbeam/page-06.jpg",
+      "text": "Behind the waterfall they found the bell, tangled in silver vines. Together they untangled it."
+    },
+    {
+      "n": 7,
+      "file": "/images/showcase/milo-moonbeam/page-07.jpg",
+      "text": "The bell rang once — bright and warm. They walked home under a sky full of friendly stars."
+    }
+  ]
+}

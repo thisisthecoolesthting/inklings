@@ -14,6 +14,7 @@
     "playwright:install": "playwright install chromium",
     "e2e": "playwright test",
     "kdp:sample": "tsx scripts/generate_sample_kdp.ts",
+    "marketing:showcase": "tsx scripts/build-marketing-showcase.ts",
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "npx tsx prisma/seed.ts",
     "walkthrough:record": "node scripts/record_walkthrough.cjs"

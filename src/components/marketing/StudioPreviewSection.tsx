@@ -11,7 +11,9 @@ const STEPS = [
 
 export async function StudioPreviewSection() {
   const pages = await getSampleUploads(4);
-  const tiles = pages.length >= 4 ? pages.slice(0, 4) : pages.length > 0 ? pages : ["/images/site/hero-storybook.jpg"];
+  const tiles = pages.length >= 4 ? pages.slice(0, 4) : pages.length > 0 ? pages : [];
+
+  if (tiles.length === 0) return null;
 
   return (
     <section className="section bg-cream-100">
@@ -23,7 +25,7 @@ export async function StudioPreviewSection() {
               A kid makes a book in about 20 minutes
             </h2>
             <p className="mt-4 text-lg text-ink-700">
-              No video to watch — try it live. These are real pages from Sparky Studio, not stock photos.
+              These pages are from a complete demo story — art on top, clear story text below. No garbled AI words in the pictures.
             </p>
             <ol className="mt-8 space-y-4">
               {STEPS.map((step, i) => (
@@ -45,23 +47,23 @@ export async function StudioPreviewSection() {
               <span className="h-2.5 w-2.5 rounded-full bg-red-300" aria-hidden />
               <span className="h-2.5 w-2.5 rounded-full bg-gold/80" aria-hidden />
               <span className="h-2.5 w-2.5 rounded-full bg-mint-400" aria-hidden />
-              <span className="ml-2 text-xs font-medium text-ink-500">Sparky Studio · sample pages</span>
+              <span className="ml-2 text-xs font-medium text-ink-500">Sparky Studio · sample story</span>
             </div>
-            <div className={`grid gap-2 p-4 ${tiles.length === 1 ? "grid-cols-1" : "grid-cols-2"}`}>
+            <div className="grid grid-cols-2 gap-2 p-4">
               {tiles.map((src, i) => (
                 <div key={`${src}-${i}`} className="overflow-hidden rounded-lg border border-ink-100 bg-cream-50">
                   <Image
                     src={src}
-                    alt={`Story page ${i + 1} from Inklings Studio`}
+                    alt={`Story page ${i + 1} with readable text`}
                     width={480}
                     height={480}
-                    className="aspect-square w-full object-cover"
+                    className="aspect-square w-full object-cover object-top"
                   />
                 </div>
               ))}
             </div>
             <p className="border-t border-ink-100 px-4 py-3 text-center text-xs text-ink-500">
-              Illustrations from real Inklings stories · yours will star your child&apos;s characters
+              Milo and the Moonbeam Map · demo story built in Inklings
             </p>
           </div>
         </div>

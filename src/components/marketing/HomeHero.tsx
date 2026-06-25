@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { brand } from "@/lib/brand";
 import { TrustBadges } from "@/components/marketing/TrustBadges";
+import { getShowcaseCoverUrl, getShowcasePageUrls } from "@/lib/marketing-showcase";
 import { getSampleUploads } from "@/components/marketing/StoryVisuals";
 
 const PAGE_LAYOUT = [
@@ -11,13 +12,15 @@ const PAGE_LAYOUT = [
 ] as const;
 
 export async function HomeHero() {
-  const uploads = await getSampleUploads(3);
+  const showcase = await getShowcasePageUrls(3);
   const pages =
-    uploads.length >= 3
-      ? uploads.slice(0, 3)
-      : uploads.length > 0
-        ? [...uploads, ...uploads].slice(0, 3)
+    showcase.length >= 3
+      ? showcase.slice(0, 3)
+      : (await getSampleUploads(3)).length >= 1
+        ? (await getSampleUploads(3))
         : ["/images/site/hero-storybook.jpg"];
+
+  const cover = (await getShowcaseCoverUrl()) ?? pages[0]!;
 
   return (
     <section className="hero-storybook overflow-hidden">
@@ -46,14 +49,21 @@ export async function HomeHero() {
           </div>
 
           <div className="relative mx-auto w-full max-w-md lg:max-w-none">
-            <div
-              className="relative aspect-[4/5] w-full"
-              aria-label="Sample story pages created in Inklings"
-            >
+            <div className="relative aspect-[4/5] w-full" aria-label="Sample story pages from Inklings">
               <div
                 className="absolute inset-[6%] rounded-[2rem] bg-gradient-to-br from-mint-100/90 via-cream-100 to-coral/15 shadow-inner"
                 aria-hidden
               />
+              <div className="absolute left-[8%] top-[6%] z-40 w-[38%] overflow-hidden rounded-lg border-[3px] border-white shadow-lg">
+                <Image
+                  src={cover}
+                  alt="Sample storybook cover"
+                  width={400}
+                  height={500}
+                  priority
+                  className="aspect-[4/5] w-full object-cover"
+                />
+              </div>
               {PAGE_LAYOUT.map((slot, i) => (
                 <div
                   key={`${pages[i]}-${i}`}
@@ -61,16 +71,16 @@ export async function HomeHero() {
                 >
                   <Image
                     src={pages[i]!}
-                    alt={`${slot.label} from a real Inklings story`}
+                    alt={`${slot.label} — illustration with readable story text`}
                     width={640}
                     height={640}
                     priority={i === 0}
-                    className="aspect-square w-full object-cover"
+                    className="aspect-square w-full object-cover object-top"
                   />
                 </div>
               ))}
               <div className="absolute bottom-3 left-1/2 z-40 -translate-x-1/2 whitespace-nowrap rounded-full border border-ink-100 bg-white/95 px-4 py-1.5 text-xs font-semibold text-ink-600 shadow-sm backdrop-blur-sm">
-                Real pages · same art that prints
+                Real story · readable text on every page
               </div>
             </div>
           </div>
