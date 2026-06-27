@@ -26,34 +26,36 @@ function revalidateAll() {
 export async function approveCharacter(formData: FormData) {
   const session = await requireSession();
   const parsed = IdSchema.safeParse({ id: formData.get("id") });
-  if (!parsed.success) return;
+  if (!parsed.success) redirect("/portal/approvals");
   const ch = await prisma.character.findFirst({
     where: { id: parsed.data.id, child: { parentId: session.userId } },
   });
-  if (!ch) return;
+  if (!ch) redirect("/portal/approvals");
   await prisma.character.update({
     where: { id: ch.id },
     data: { sandboxMode: false, parentApprovedAt: new Date() },
   });
   revalidateAll();
+  redirect("/portal/approvals?characterApproved=1");
 }
 
 export async function rejectCharacter(formData: FormData) {
   const session = await requireSession();
   const parsed = IdSchema.safeParse({ id: formData.get("id") });
-  if (!parsed.success) return;
+  if (!parsed.success) redirect("/portal/approvals");
   const ch = await prisma.character.findFirst({
     where: { id: parsed.data.id, child: { parentId: session.userId } },
   });
-  if (!ch) return;
+  if (!ch) redirect("/portal/approvals");
   await prisma.character.delete({ where: { id: ch.id } });
   revalidateAll();
+  redirect("/portal/approvals");
 }
 
 async function fireHdGeneration(bookId: string, userId: string) {
   const book = await prisma.book.findFirst({
     where: { id: bookId, child: { parentId: userId } },
-    select: { id: true }
+    select: { id: true },
   });
   if (!book) return;
 
@@ -106,9 +108,11 @@ async function approveBookInternal(bookId: string, userId: string) {
 export async function approveBook(formData: FormData) {
   const session = await requireSession();
   const parsed = IdSchema.safeParse({ id: formData.get("id") });
-  if (!parsed.success) return;
-  await approveBookInternal(parsed.data.id, session.userId);
+  if (!parsed.success) redirect("/portal/approvals");
+  const b = await approveBookInternal(parsed.data.id, session.userId);
+  if (!b) redirect("/portal/approvals");
   revalidateAll();
+  redirect("/portal/approvals?bookApproved=1");
 }
 
 /** Approve story then send parent straight to print checkout — highest-intent moment. */
@@ -125,14 +129,15 @@ export async function approveBookAndPrint(formData: FormData) {
 export async function rejectBook(formData: FormData) {
   const session = await requireSession();
   const parsed = IdSchema.safeParse({ id: formData.get("id") });
-  if (!parsed.success) return;
+  if (!parsed.success) redirect("/portal/approvals");
   const b = await prisma.book.findFirst({
     where: { id: parsed.data.id, child: { parentId: session.userId } },
   });
-  if (!b) return;
+  if (!b) redirect("/portal/approvals");
   await prisma.book.update({
     where: { id: b.id },
     data: { status: "draft" },
   });
   revalidateAll();
+  redirect("/portal/approvals");
 }

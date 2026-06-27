@@ -25,14 +25,20 @@ export async function getShowcaseManifest(): Promise<ShowcaseManifest | null> {
   }
 }
 
+function withCacheBust(url: string, builtAt?: string): string {
+  if (!builtAt) return url;
+  const v = builtAt.replace(/[^0-9]/g, "").slice(0, 14);
+  return `${url}?v=${v}`;
+}
+
 /** Ordered page image paths for marketing (cover first optional, then story pages). */
 export async function getShowcasePageUrls(limit = 8): Promise<string[]> {
   const m = await getShowcaseManifest();
   if (!m?.pages?.length) return [];
-  return m.pages.slice(0, limit).map((p) => p.file);
+  return m.pages.slice(0, limit).map((p) => withCacheBust(p.file, m.builtAt));
 }
 
 export async function getShowcaseCoverUrl(): Promise<string | null> {
   const m = await getShowcaseManifest();
-  return m?.cover ?? null;
+  return m?.cover ? withCacheBust(m.cover, m.builtAt) : null;
 }

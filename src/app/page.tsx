@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Sparkles } from "lucide-react";
 import { brand } from "@/lib/brand";
@@ -6,9 +7,18 @@ import { PricingTiers } from "@/components/PricingTiers";
 import { FAQ_HOME } from "@/content/faq-data";
 import { FaqPageJsonLd } from "@/lib/jsonld";
 import { FEATURES } from "@/content/feature-pages";
+import { AUDIENCE_LANDINGS } from "@/content/audience-landings";
 import { SampleStoryGallery, PrintShowcase } from "@/components/marketing/StoryVisuals";
 import { StudioPreviewSection } from "@/components/marketing/StudioPreviewSection";
 import { HomeHero } from "@/components/marketing/HomeHero";
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  title: `${brand.name} — Build a story universe your child runs`,
+  description:
+    "Inklings lets kids ages 5-8 build a story universe where their characters return across every story. Voice-first, parent-approved, real printed books.",
+  path: "/",
+});
 
 export default function HomePage() {
   return (
@@ -32,6 +42,15 @@ export default function HomePage() {
                 Parents and grandparents of children ages 5 to 8 — especially families who want a
                 keepsake, not another passive app. Characters and worlds carry across every book in their collection.
               </p>
+              <ul className="mt-4 flex flex-wrap gap-2">
+                {AUDIENCE_LANDINGS.map((l) => (
+                  <li key={l.path}>
+                    <Link href={l.path} className="rounded-full bg-mint-100 px-3 py-1 text-sm font-medium text-ink-700 hover:bg-mint-200">
+                      {l.breadcrumbLabel}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
@@ -128,6 +147,9 @@ export default function HomePage() {
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link href="/trial" className="btn-primary btn-large">
               {brand.primaryCta}
+            </Link>
+            <Link href="/for-grandparents" className="btn-ghost btn-large border-cream-200/60 text-cream-100 hover:bg-cream-100/10">
+              Gift for grandparents
             </Link>
             <Link href="/gift" className="btn-ghost btn-large border-cream-200/60 text-cream-100 hover:bg-cream-100/10">
               Gift Premium

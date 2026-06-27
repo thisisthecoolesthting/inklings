@@ -9,6 +9,20 @@ const STEPS = [
   "Order a printed hardcover when you are ready.",
 ];
 
+function PageTile({ src, index }: { src: string; index: number }) {
+  return (
+    <div className="relative aspect-square min-h-0 w-full overflow-hidden rounded-lg border border-ink-100 bg-cream-50">
+      <Image
+        src={src}
+        alt={`Story page ${index + 1} with readable text`}
+        fill
+        sizes="(max-width: 640px) 80vw, (max-width: 1024px) 40vw, 280px"
+        className="object-contain p-0.5"
+      />
+    </div>
+  );
+}
+
 export async function StudioPreviewSection() {
   const pages = await getSampleUploads(4);
   const tiles = pages.length >= 4 ? pages.slice(0, 4) : pages.length > 0 ? pages : [];
@@ -16,9 +30,9 @@ export async function StudioPreviewSection() {
   if (tiles.length === 0) return null;
 
   return (
-    <section className="section bg-cream-100">
+    <section className="section scroll-mt-28 bg-cream-100">
       <div className="container-ink">
-        <div className="grid items-center gap-12 lg:grid-cols-2">
+        <div className="mx-auto max-w-3xl xl:max-w-none xl:grid xl:grid-cols-2 xl:items-start xl:gap-16">
           <div>
             <span className="eyebrow">See it in action</span>
             <h2 className="mt-2 text-3xl font-bold text-ink md:text-4xl">
@@ -42,24 +56,16 @@ export async function StudioPreviewSection() {
             </Link>
           </div>
 
-          <div className="overflow-hidden rounded-card border border-ink-100 bg-white shadow-card">
+          <div className="mt-10 rounded-card border border-ink-100 bg-white shadow-card xl:mt-0">
             <div className="flex items-center gap-2 border-b border-ink-100 bg-cream-50 px-4 py-3">
               <span className="h-2.5 w-2.5 rounded-full bg-red-300" aria-hidden />
               <span className="h-2.5 w-2.5 rounded-full bg-gold/80" aria-hidden />
               <span className="h-2.5 w-2.5 rounded-full bg-mint-400" aria-hidden />
               <span className="ml-2 text-xs font-medium text-ink-500">Sparky Studio · sample story</span>
             </div>
-            <div className="grid grid-cols-2 gap-2 p-4">
+            <div className="grid grid-cols-2 gap-4 p-5 sm:gap-5 sm:p-6">
               {tiles.map((src, i) => (
-                <div key={`${src}-${i}`} className="overflow-hidden rounded-lg border border-ink-100 bg-cream-50">
-                  <Image
-                    src={src}
-                    alt={`Story page ${i + 1} with readable text`}
-                    width={480}
-                    height={480}
-                    className="aspect-square w-full object-cover object-top"
-                  />
-                </div>
+                <PageTile key={`${src}-${i}`} src={src} index={i} />
               ))}
             </div>
             <p className="border-t border-ink-100 px-4 py-3 text-center text-xs text-ink-500">

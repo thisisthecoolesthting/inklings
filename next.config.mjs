@@ -7,6 +7,7 @@ const nextConfig = {
       { protocol: "https", hostname: "**.together.ai" },
       { protocol: "https", hostname: "**.supabase.co" },
     ],
+    localPatterns: [{ pathname: "/uploads/**" }],
   },
 };
 export default nextConfig;

@@ -11,7 +11,8 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
     pathname?.startsWith("/portal") ||
     pathname?.startsWith("/studio") ||
     pathname?.startsWith("/login") ||
-    pathname?.startsWith("/forgot-password");
+    pathname?.startsWith("/forgot-password") ||
+    pathname?.startsWith("/reset-password");
 
   return (
     <>

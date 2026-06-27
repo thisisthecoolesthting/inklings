@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Sparkles } from "lucide-react";
 import { brand } from "@/lib/brand";
+import { AUDIENCE_LANDINGS } from "@/content/audience-landings";
 
 export function Footer() {
   return (
@@ -14,7 +15,7 @@ export function Footer() {
             </div>
             <p className="mt-4 max-w-md text-sm text-cream-200/80">{brand.shortPitch}</p>
           </div>
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
             <div>
               <h4 className="mb-4 text-sm font-semibold text-white">Product</h4>
               <ul className="space-y-2 text-sm text-cream-200/80">
@@ -23,6 +24,18 @@ export function Footer() {
                 <li><Link href="/pricing" className="transition-colors hover:text-coral">Pricing</Link></li>
                 <li><Link href="/gift" className="transition-colors hover:text-coral">Gift Premium</Link></li>
                 <li><Link href="/trial" className="transition-colors hover:text-coral">{brand.primaryCta}</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="mb-4 text-sm font-semibold text-white">Who it&apos;s for</h4>
+              <ul className="space-y-2 text-sm text-cream-200/80">
+                {AUDIENCE_LANDINGS.map((l) => (
+                  <li key={l.path}>
+                    <Link href={l.path} className="transition-colors hover:text-coral">
+                      {l.breadcrumbLabel}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
             <div>

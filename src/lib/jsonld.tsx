@@ -53,13 +53,45 @@ export function OrganizationJsonLd() {
     name: "Inklings",
     url: base,
     logo: `${base}/images/brand/inklings-mark.svg`,
-    description: "A story universe studio for kids ages 5-8. Characters return in every story. Voice-first, parent-approved, real printed books.",
+    description:
+      "A story universe studio for kids ages 5-8. Characters return in every story. Voice-first, parent-approved, real printed books.",
     sameAs: [],
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "customer support",
       email: "hello@inklings.shop",
     },
+  };
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
+}
+
+export function ProductOffersJsonLd({
+  offers,
+}: {
+  offers: Array<{ name: string; price: string; description: string }>;
+}) {
+  const base = getSiteUrl();
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: "Inklings Story Studio",
+    description: "Voice-first story studio for kids ages 5-8 with parent approval and printed keepsake books.",
+    brand: { "@type": "Brand", name: "Inklings" },
+    url: `${base}/pricing`,
+    offers: offers.map((o) => ({
+      "@type": "Offer",
+      name: o.name,
+      price: o.price.replace(/[^0-9.]/g, ""),
+      priceCurrency: "USD",
+      description: o.description,
+      url: `${base}/pricing`,
+      availability: "https://schema.org/InStock",
+    })),
   };
   return (
     <script

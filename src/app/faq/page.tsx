@@ -1,17 +1,24 @@
 import type { Metadata } from "next";
-import { brand } from "@/lib/brand";
 import { FAQ } from "@/components/FAQ";
 import { FAQ_HOME } from "@/content/faq-data";
-import { FaqPageJsonLd } from "@/lib/jsonld";
+import { BreadcrumbJsonLd, FaqPageJsonLd } from "@/lib/jsonld";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: `FAQ — ${brand.name}`,
-  description: "Answers to the questions parents ask before signing up.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "FAQ — questions parents ask first",
+  description: "Answers about safety, pricing, printing, voice input, and parent approval for Inklings ages 5–8.",
+  path: "/faq",
+});
 
 export default function FaqPage() {
   return (
     <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", path: "/" },
+          { name: "FAQ", path: "/faq" },
+        ]}
+      />
       <FaqPageJsonLd items={FAQ_HOME} />
       <section className="hero-storybook">
         <div className="container-ink section">

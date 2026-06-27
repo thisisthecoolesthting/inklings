@@ -28,18 +28,22 @@ function findClosest(transcript: string, choices: SparkyChoice[]): SparkyChoice 
 export function SparkyChat({
   beat,
   onChoose,
-  thinking = false,
+  waiting = false,
+  pageNumber = 1,
+  isFirstPage = false,
 }: {
   beat: SparkyBeat;
   onChoose: (choice: SparkyChoice) => void;
-  thinking?: boolean;
+  waiting?: boolean;
+  pageNumber?: number;
+  isFirstPage?: boolean;
 }) {
   const { state, setState, lastResult, start, isSupported } = useVoiceRecognition();
   const [matchedChoiceId, setMatchedChoiceId] = useState<string | null>(null);
   const [shaking, setShaking] = useState(false);
 
   useEffect(() => {
-    if (!lastResult || state !== "listening") return;
+    if (!lastResult || state !== "listening" || waiting) return;
     const { safe } = sanitizeChildInput(lastResult.transcript);
     const match = findClosest(safe, beat.choices);
     if (match) {
@@ -58,7 +62,7 @@ export function SparkyChat({
         setState("idle");
       }, 400);
     }
-  }, [lastResult, state, beat.choices, onChoose, setState]);
+  }, [lastResult, state, beat.choices, onChoose, setState, waiting]);
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -72,8 +76,8 @@ export function SparkyChat({
         </div>
       </div>
 
-      {thinking ? (
-        <SparkyLoadingGame />
+      {waiting ? (
+        <SparkyLoadingGame pageNumber={pageNumber} isFirstPage={isFirstPage} />
       ) : (
         <>
           <div className="mt-6 flex flex-col items-center">
@@ -92,7 +96,7 @@ export function SparkyChat({
             </button>
             <p className="mt-3 text-sm text-ink-500">Or tap one of the choices below!</p>
             {state === "no-match" && (
-              <p className="mt-3 text-sm text-coral font-medium">Sparky didn&apos;t catch that. Tap a choice below.</p>
+              <p className="mt-3 text-sm font-medium text-coral">Sparky didn&apos;t catch that. Tap a choice below.</p>
             )}
           </div>
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
@@ -103,7 +107,11 @@ export function SparkyChat({
                 onClick={() => onChoose(c)}
                 className={`sparky-chip justify-start text-left transition-all ${matchedChoiceId === c.id ? "scale-105 ring-4 ring-coral" : ""}`}
               >
-                {c.emoji && <span className="text-2xl" aria-hidden>{c.emoji}</span>}
+                {c.emoji && (
+                  <span className="text-2xl" aria-hidden>
+                    {c.emoji}
+                  </span>
+                )}
                 <span>{c.label}</span>
               </button>
             ))}

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
@@ -6,7 +5,12 @@ import { approveCharacter, rejectCharacter, approveBook, approveBookAndPrint, re
 import { SubmitButton } from "./submit-button";
 import { PrintCheckoutForm } from "@/components/portal/PrintCheckoutForm";
 
-export default async function ApprovalsPage() {
+export default async function ApprovalsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ bookApproved?: string; characterApproved?: string }>;
+}) {
+  const sp = await searchParams;
   const session = await getSession();
   if (!session) return null;
   const [pendingCharacters, pendingBooks, readyToPrint, totalReadyToPrint] = await Promise.all([
@@ -49,6 +53,17 @@ export default async function ApprovalsPage() {
         <p className="mt-1 text-ink-700">Nothing publishes without your sign-off. Order a printed keepsake right after you approve.</p>
       </header>
 
+      {sp.bookApproved === "1" && (
+        <div className="card-base mb-8 border-mint-200 bg-mint-50">
+          <p className="font-semibold text-ink">Story approved — it&apos;s in your library and ready to print when you are.</p>
+        </div>
+      )}
+      {sp.characterApproved === "1" && (
+        <div className="card-base mb-8 border-mint-200 bg-mint-50">
+          <p className="font-semibold text-ink">Character approved — they can appear in future stories.</p>
+        </div>
+      )}
+
       {readyToPrint.length > 0 && (
         <section className="mb-10 rounded-card border-2 border-coral/30 bg-coral/5 p-6">
           <h2 className="text-lg font-bold text-ink">Ready to print</h2>
@@ -60,19 +75,19 @@ export default async function ApprovalsPage() {
                   <span className="font-semibold text-ink">{b.title}</span>
                   <span className="ml-2 text-sm text-ink-500">by {b.child.name}</span>
                 </div>
-                  <PrintCheckoutForm bookId={b.id} className="btn-primary text-sm" />
-                </li>
-              ))}
-            </ul>
-            {totalReadyToPrint > readyToPrint.length && (
-              <div className="mt-4 text-center">
-                <Link href="/portal/orders" className="text-sm text-ink-500 underline">
-                  View all in Orders &rarr;
-                </Link>
-              </div>
-            )}
-          </section>
-        )}
+                <PrintCheckoutForm bookId={b.id} className="btn-primary text-sm" />
+              </li>
+            ))}
+          </ul>
+          {totalReadyToPrint > readyToPrint.length && (
+            <div className="mt-4 text-center">
+              <Link href="/portal/orders" className="text-sm text-ink-500 underline">
+                View all in Orders &rarr;
+              </Link>
+            </div>
+          )}
+        </section>
+      )}
 
       <section className="mb-10">
         <h2 className="text-xl font-bold text-ink">Characters waiting</h2>
@@ -142,7 +157,14 @@ export default async function ApprovalsPage() {
                     <div key={p.id} className="rounded-card border border-ink-100 bg-cream-50 p-3">
                       <span className="text-xs font-semibold uppercase tracking-wider text-coral">Page {p.pageNumber}</span>
                       {p.imageUrlLowres && (
-                        <Image src={p.imageUrlLowres} alt="" className="mt-2 w-full rounded border border-ink-100" width={512} height={512} />
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={p.imageUrlLowres}
+                          alt=""
+                          className="mt-2 w-full rounded border border-ink-100"
+                          width={512}
+                          height={384}
+                        />
                       )}
                       <p className="mt-2 text-sm text-ink line-clamp-3">{p.textContent}</p>
                     </div>

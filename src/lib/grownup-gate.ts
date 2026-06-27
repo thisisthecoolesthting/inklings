@@ -32,7 +32,7 @@ export async function unlockGrownupMode() {
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
-    maxAge: 60 * 60 * 2,
+    maxAge: 60 * 30,
   });
   jar.delete(KID_MODE_COOKIE);
 }

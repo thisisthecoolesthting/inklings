@@ -31,15 +31,18 @@ export async function SampleStoryGallery() {
             Illustrations are generated without text — we set the story in a clear, readable typeface below each picture, just like the printed book.
           </p>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 lg:gap-8">
           {samples.map((src, i) => (
-            <div key={src} className="overflow-hidden rounded-card border border-ink-100 shadow-card">
+            <div
+              key={src}
+              className="relative aspect-square min-h-0 w-full overflow-hidden rounded-card border border-ink-100 bg-white shadow-card"
+            >
               <Image
                 src={src}
                 alt={`Sample storybook page ${i + 1} from Inklings`}
-                width={512}
-                height={512}
-                className="aspect-square w-full object-cover"
+                fill
+                sizes="(max-width: 640px) 90vw, (max-width: 1024px) 44vw, 320px"
+                className="object-contain"
               />
             </div>
           ))}
@@ -58,38 +61,39 @@ export async function PrintShowcase() {
   return (
     <section className="section">
       <div className="container-ink">
-        <div className="grid items-center gap-10 lg:grid-cols-2">
-          <div className="space-y-4">
-            <div className="mx-auto max-w-xs overflow-hidden rounded-card shadow-card ring-1 ring-ink-100">
-              <Image
-                src={cover}
-                alt="Cover of Milo and the Moonbeam Map — sample Inklings storybook"
-                width={768}
-                height={960}
-                className="aspect-[4/5] w-full object-cover"
-              />
+        <div className="grid items-center gap-12 xl:grid-cols-2">
+          <div className="mx-auto w-full max-w-sm space-y-5 sm:max-w-md">
+            <div className="rounded-card bg-cream-50 shadow-card ring-1 ring-ink-100">
+              <div className="relative aspect-square w-full overflow-hidden">
+                <Image
+                  src={cover}
+                  alt="Cover of Milo and the Moonbeam Map — sample Inklings storybook"
+                  fill
+                  sizes="(max-width: 768px) 80vw, 360px"
+                  className="rounded-t-card object-contain"
+                />
+              </div>
               <p className="bg-cream-50 px-3 py-2 text-center text-xs font-medium text-ink-600">
                 8.5″ hardcover · ships to your door
               </p>
             </div>
-            <div className="flex gap-1 overflow-hidden rounded-card shadow-card ring-1 ring-ink-100">
-              <div className="relative flex-1">
+            <div className="grid grid-cols-2 gap-3 rounded-card p-1 shadow-card ring-1 ring-ink-100 sm:gap-4">
+              <div className="relative aspect-square min-h-0 overflow-hidden rounded-lg bg-white">
                 <Image
                   src={spreadLeft}
                   alt="Inside spread — left page with illustration and story text"
-                  width={512}
-                  height={512}
-                  className="aspect-square w-full object-cover"
+                  fill
+                  sizes="(max-width: 768px) 40vw, 220px"
+                  className="object-contain"
                 />
               </div>
-              <div className="w-px shrink-0 bg-ink-200" aria-hidden />
-              <div className="relative flex-1">
+              <div className="relative aspect-square min-h-0 overflow-hidden rounded-lg bg-white">
                 <Image
                   src={spreadRight}
                   alt="Inside spread — right page with illustration and story text"
-                  width={512}
-                  height={512}
-                  className="aspect-square w-full object-cover"
+                  fill
+                  sizes="(max-width: 768px) 40vw, 220px"
+                  className="object-contain"
                 />
               </div>
             </div>

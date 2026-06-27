@@ -16,6 +16,7 @@ datasource db {
 model User {
   id                 String         @id @default(cuid())
   email              String         @unique
+  passwordHash       String?
   name               String?
   stripeCustomerId   String?        @unique
   subscriptionTier   String         @default("free") // free | premium

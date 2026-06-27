@@ -24,7 +24,7 @@ export default async function PortalLayout({ children }: { children: React.React
 
   const NAV = [
     { href: "/portal", label: "Dashboard", icon: Sparkles },
-    { href: "/portal/approvals", label: "Approvals", icon: ShieldCheck, badge: pendingBooks },
+    { href: "/portal/approvals", label: "Approvals", icon: ShieldCheck, badge: pendingBooks, urgent: pendingBooks > 0 },
     { href: "/portal/orders", label: "Print", icon: ShoppingBag, badge: readyToPrint },
     { href: "/portal/children", label: "Children", icon: Users },
     { href: "/portal/settings", label: "Settings", icon: Settings },
@@ -43,14 +43,22 @@ export default async function PortalLayout({ children }: { children: React.React
             <Link
               key={it.href}
               href={it.href}
-              className="flex items-center justify-between gap-3 rounded-button px-3 py-2 text-sm font-medium text-ink-700 hover:bg-mint-100 hover:text-ink"
+              className={`flex items-center justify-between gap-3 rounded-button px-3 py-2 text-sm font-medium hover:bg-mint-100 hover:text-ink ${
+                it.urgent ? "bg-coral/10 text-ink ring-2 ring-coral/40" : "text-ink-700"
+              }`}
             >
               <span className="flex items-center gap-3">
                 <it.icon className="h-4 w-4" aria-hidden />
                 {it.label}
               </span>
               {it.badge && it.badge > 0 ? (
-                <span className="rounded-full bg-coral px-2 py-0.5 text-xs font-bold text-white">{it.badge}</span>
+                <span
+                  className={`rounded-full px-2.5 py-0.5 text-xs font-bold text-white ${
+                    it.urgent ? "animate-pulse bg-coral shadow-md" : "bg-coral"
+                  }`}
+                >
+                  {it.badge}
+                </span>
               ) : null}
             </Link>
           ))}
@@ -69,7 +77,25 @@ export default async function PortalLayout({ children }: { children: React.React
           </button>
         </form>
       </aside>
-      <main className="flex-1 p-6 lg:p-10">{children}</main>
+      <main className="flex-1 p-6 lg:p-10">
+        {pendingBooks > 0 && (
+          <div
+            className="mb-8 flex flex-wrap items-center justify-between gap-4 rounded-card border-2 border-coral bg-coral px-5 py-4 text-white shadow-lg"
+            role="alert"
+          >
+            <div>
+              <p className="text-lg font-bold">
+                {pendingBooks} stor{pendingBooks === 1 ? "y" : "ies"} waiting for you
+              </p>
+              <p className="mt-1 text-sm text-cream-100/90">Your child finished a book — review it before it goes live.</p>
+            </div>
+            <Link href="/portal/approvals" className="rounded-button bg-white px-5 py-2.5 text-sm font-bold text-coral shadow-sm hover:bg-cream-50">
+              Review now →
+            </Link>
+          </div>
+        )}
+        {children}
+      </main>
     </div>
   );
 }

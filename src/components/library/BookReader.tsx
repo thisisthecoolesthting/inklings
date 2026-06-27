@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { StoryPageCard } from "@/components/studio/StoryPageCard";
 
 interface Page {
   pageNumber: number;
@@ -25,21 +26,14 @@ export function BookReader({ title, pages }: { title: string; pages: Page[] }) {
         Page {idx + 1} of {pages.length}
       </p>
 
-      <article className="card-base mt-6 min-h-[420px] bg-cream-50">
-        {page.imageUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={page.imageUrl}
-            alt=""
-            className="mb-4 w-full rounded-card border border-ink-100"
-          />
-        ) : (
-          <div className="mb-4 flex h-48 items-center justify-center rounded-card bg-mint-100 text-sm text-ink-500">
-            Illustration coming soon
-          </div>
-        )}
-        <p className="text-lg leading-relaxed text-ink">{page.textContent}</p>
-      </article>
+      <div className="mt-6">
+        <StoryPageCard
+          pageNumber={page.pageNumber}
+          imageUrl={page.imageUrl}
+          text={page.textContent}
+          imageAlt={`Page ${page.pageNumber} illustration`}
+        />
+      </div>
 
       <div className="mt-6 flex justify-between gap-3">
         <button

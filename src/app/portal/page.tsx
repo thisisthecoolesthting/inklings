@@ -1,8 +1,10 @@
 import Link from "next/link";
-import { Sparkles, BookOpen, ShieldCheck, ShoppingBag, BookMarked } from "lucide-react";
+import { Sparkles, ShieldCheck, ShoppingBag, BookMarked } from "lucide-react";
 import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { PrintCheckoutForm } from "@/components/portal/PrintCheckoutForm";
+import { ensureDefaultSeries } from "@/lib/series-bootstrap";
+import { minCoreCastToPublish } from "@/lib/tier-limits";
 
 export default async function PortalHome({
   searchParams,
@@ -14,8 +16,9 @@ export default async function PortalHome({
   if (!session) return null;
 
   const user = await prisma.user.findUnique({ where: { id: session.userId } });
-  const [children, pendingBooks, readyToPrint, totalReadyToPrint, orders] = await Promise.all([
+  const [children, childProfiles, pendingBooks, readyToPrint, totalReadyToPrint, orders] = await Promise.all([
     prisma.childProfile.count({ where: { parentId: session.userId } }),
+    prisma.childProfile.findMany({ where: { parentId: session.userId }, select: { id: true, activeSeriesId: true } }),
     prisma.book.count({
       where: { status: "awaiting_parent", child: { parentId: session.userId } },
     }),
@@ -39,6 +42,14 @@ export default async function PortalHome({
     prisma.order.count({ where: { userId: session.userId } }),
   ]);
 
+  let needsCharacterSetup = false;
+  for (const c of childProfiles) {
+    const series = await ensureDefaultSeries(prisma, c.id);
+    if (!series) continue;
+    const core = await prisma.seriesCast.count({ where: { seriesId: series.id, role: "core" } });
+    if (core < minCoreCastToPublish()) needsCharacterSetup = true;
+  }
+
   const isPremium =
     user?.subscriptionTier === "premium" ||
     (user?.premiumUntil != null && user.premiumUntil > new Date());
@@ -60,18 +71,8 @@ export default async function PortalHome({
         </div>
       )}
 
-      {!isPremium && (
-        <div className="card-base mb-8 ring-2 ring-coral/40">
-          <h2 className="text-lg font-bold text-ink">Try Premium free for 14 days</h2>
-          <p className="mt-2 text-sm text-ink-700">Unlimited stories, HD print-ready PDFs, and series memory.</p>
-          <Link href="/api/billing/checkout?tier=premium" className="btn-primary mt-4 inline-flex">
-            Start free trial
-          </Link>
-        </div>
-      )}
-
       {pendingBooks > 0 && (
-        <div className="card-base mb-8 border-coral/30 bg-coral/5">
+        <div className="card-base mb-8 border-2 border-coral bg-coral/10 shadow-md lg:hidden">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <h2 className="text-lg font-bold text-ink">{pendingBooks} waiting for your approval</h2>
@@ -84,13 +85,44 @@ export default async function PortalHome({
         </div>
       )}
 
+      {needsCharacterSetup && children > 0 && (
+        <div className="card-base mb-8 border-2 border-mint-300 bg-mint-50">
+          <h2 className="text-lg font-bold text-ink">Set up your child&apos;s first story friends</h2>
+          <p className="mt-2 text-sm text-ink-700">
+            Before Sparky can write a book, assign at least {minCoreCastToPublish()} characters to their series. Open Kid
+            Studio and tap <strong>Quick start — Milo &amp; Pip</strong>, or create custom characters together.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <Link href="/studio" className="btn-primary">
+              Open Kid Studio
+            </Link>
+            <Link href="/portal/children" className="btn-secondary">
+              Manage children
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {!isPremium && (
+        <div className="card-base mb-8 ring-2 ring-coral/40">
+          <h2 className="text-lg font-bold text-ink">Try Premium free for 14 days</h2>
+          <p className="mt-2 text-sm text-ink-700">Unlimited stories, HD print-ready PDFs, and series memory.</p>
+          <Link href="/api/billing/checkout?tier=premium" className="btn-primary mt-4 inline-flex">
+            Start free trial
+          </Link>
+        </div>
+      )}
+
       {readyToPrint.length > 0 && (
         <div className="card-base mb-8">
           <h2 className="text-lg font-bold text-ink">Ready for a printed keepsake</h2>
           <p className="mt-1 text-sm text-ink-700">Turn an approved story into a hardcover book ($19.99).</p>
           <ul className="mt-4 space-y-3">
             {readyToPrint.map((b) => (
-              <li key={b.id} className="flex flex-wrap items-center justify-between gap-3 border-t border-ink-100 pt-3 first:border-0 first:pt-0">
+              <li
+                key={b.id}
+                className="flex flex-wrap items-center justify-between gap-3 border-t border-ink-100 pt-3 first:border-0 first:pt-0"
+              >
                 <span className="font-medium text-ink">{b.title}</span>
                 <PrintCheckoutForm bookId={b.id} className="btn-secondary text-sm" />
               </li>
@@ -106,15 +138,28 @@ export default async function PortalHome({
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[
-          { label: "Children", value: children, icon: Sparkles, href: "/portal/children" },
-          { label: "Awaiting approval", value: pendingBooks, icon: ShieldCheck, href: "/portal/approvals" },
-          { label: "Ready to print", value: readyToPrint.length, icon: BookMarked, href: "/portal/orders" },
-          { label: "Print orders", value: orders, icon: ShoppingBag, href: "/portal/orders" },
+          { label: "Children", value: children, icon: Sparkles, href: "/portal/children", highlight: false },
+          {
+            label: "Awaiting approval",
+            value: pendingBooks,
+            icon: ShieldCheck,
+            href: "/portal/approvals",
+            highlight: pendingBooks > 0,
+          },
+          { label: "Ready to print", value: readyToPrint.length, icon: BookMarked, href: "/portal/orders", highlight: false },
+          { label: "Print orders", value: orders, icon: ShoppingBag, href: "/portal/orders", highlight: false },
         ].map((s) => (
-          <Link key={s.label} href={s.href} className="card-base transition-shadow hover:shadow-md">
-            <s.icon className="h-6 w-6 text-coral" aria-hidden />
+          <Link
+            key={s.label}
+            href={s.href}
+            className={`card-base transition-shadow hover:shadow-md ${
+              s.highlight ? "border-2 border-coral bg-coral/5 ring-2 ring-coral/30" : ""
+            }`}
+          >
+            <s.icon className={`h-6 w-6 ${s.highlight ? "text-coral" : "text-coral"}`} aria-hidden />
             <div className="mt-3 text-3xl font-bold text-ink">{s.value}</div>
             <div className="text-sm text-ink-500">{s.label}</div>
+            {s.highlight && <p className="mt-2 text-xs font-semibold text-coral">Tap to review →</p>}
           </Link>
         ))}
       </div>

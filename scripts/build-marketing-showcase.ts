@@ -3,25 +3,46 @@
  * Build one complete demo story for marketing: text-free illustrations + readable typography.
  * Run on VPS: cd /var/www/inklings && npx tsx scripts/build-marketing-showcase.ts
  * Use --force to regenerate images even if files exist.
- * Use --recomposite to refresh typography only (reuses saved or extracted illustrations).
+ * Use --recomposite to refresh typography only (reuses saved raw illustrations).
  */
+import { readFileSync } from "node:fs";
 import { mkdir, readFile, writeFile, access } from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
 import { generatePreview, seedFromImageSeed } from "../src/lib/image-gen";
 
+/** tsx does not auto-load .env — load for --force image generation. */
+function loadEnvFile(): void {
+  try {
+    const raw = readFileSync(path.join(process.cwd(), ".env"), "utf8");
+    for (const line of raw.split("\n")) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith("#")) continue;
+      const eq = trimmed.indexOf("=");
+      if (eq === -1) continue;
+      const key = trimmed.slice(0, eq).trim();
+      let val = trimmed.slice(eq + 1).trim();
+      if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+        val = val.slice(1, -1);
+      }
+      if (!process.env[key]) process.env[key] = val;
+    }
+  } catch {
+    /* no .env */
+  }
+}
+loadEnvFile();
+
 const OUT_DIR = path.join(process.cwd(), "public", "images", "showcase", "milo-moonbeam");
 const SIZE = 1024;
-/** Illustration band — ~58% of page; generous text band below like a printed storybook. */
-const IMG_H = 600;
-const TEXT_H = SIZE - IMG_H;
-/** Typography tuned for full-width storybook readability at 1024px. */
-const PAD_X = 32;
-const FONT_SIZE = 40;
-const LINE_HEIGHT = 50;
-const MAX_LINES = 5;
-/** Prior composite layout — used when extracting art from existing pages. */
-const LEGACY_ILL_H = 660;
+const CREAM = { r: 255, g: 246, b: 229 };
+/** Minimum text band — story copy always fits below art, never overlaps it. */
+const MIN_TEXT_H = 240;
+const MAX_ART_H = SIZE - MIN_TEXT_H;
+const PAD_X = 36;
+const FONT_SIZE = 30;
+const LINE_HEIGHT = 38;
+const MAX_LINES = 4;
 
 const DEMO = {
   slug: "milo-moonbeam",
@@ -78,7 +99,7 @@ function escapeXml(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
 }
 
-function wrapLines(text: string, maxChars = 56): string[] {
+function wrapLines(text: string, maxChars = 52): string[] {
   const words = text.split(/\s+/);
   const lines: string[] = [];
   let line = "";
@@ -95,9 +116,9 @@ function wrapLines(text: string, maxChars = 56): string[] {
   return lines.slice(0, MAX_LINES);
 }
 
-function storyTextSvg(lines: string[], pageNum: number): Buffer {
+function storyTextSvg(lines: string[], pageNum: number, textH: number): Buffer {
   const blockH = lines.length * LINE_HEIGHT;
-  const startY = Math.round((TEXT_H - blockH) / 2) + Math.round(FONT_SIZE * 0.82);
+  const startY = Math.round((textH - blockH) / 2) + Math.round(FONT_SIZE * 0.82);
   const textX = PAD_X;
   const textW = SIZE - PAD_X * 2;
   const tspans = lines
@@ -107,7 +128,7 @@ function storyTextSvg(lines: string[], pageNum: number): Buffer {
     )
     .join("");
 
-  return Buffer.from(`<svg width="${SIZE}" height="${TEXT_H}" xmlns="http://www.w3.org/2000/svg">
+  return Buffer.from(`<svg width="${SIZE}" height="${textH}" xmlns="http://www.w3.org/2000/svg">
   <rect width="100%" height="100%" fill="#FFF6E5"/>
   <rect x="0" y="0" width="${SIZE}" height="3" fill="#E8B84A"/>
   <text
@@ -118,8 +139,34 @@ function storyTextSvg(lines: string[], pageNum: number): Buffer {
     font-weight="500"
     fill="#4A2545"
   >${tspans}</text>
-  <text font-family="Helvetica, Arial, sans-serif" font-size="16" fill="#7D506E" x="${SIZE / 2}" y="${TEXT_H - 22}" text-anchor="middle">${pageNum}</text>
+  <text font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#7D506E" x="${SIZE / 2}" y="${textH - 16}" text-anchor="middle">${pageNum}</text>
 </svg>`);
+}
+
+/** Scale illustration into a fixed zone — fit inside, centered, never crop. */
+async function centerInCanvas(jpeg: Buffer, width: number, height: number): Promise<Buffer> {
+  const resized = await sharp(jpeg)
+    .resize(width, height, { fit: "inside", background: CREAM })
+    .toBuffer();
+  const meta = await sharp(resized).metadata();
+  const w = meta.width ?? width;
+  const h = meta.height ?? height;
+  return sharp({
+    create: { width, height, channels: 3, background: CREAM },
+  })
+    .composite([
+      {
+        input: resized,
+        left: Math.round((width - w) / 2),
+        top: Math.round((height - h) / 2),
+      },
+    ])
+    .jpeg({ quality: 88 })
+    .toBuffer();
+}
+
+async function fitIllustration(illustrationJpeg: Buffer): Promise<Buffer> {
+  return centerInCanvas(illustrationJpeg, SIZE, MAX_ART_H);
 }
 
 async function compositePage(opts: {
@@ -127,43 +174,69 @@ async function compositePage(opts: {
   text: string;
   pageNum: number;
 }): Promise<Buffer> {
-  const ill = await sharp(opts.illustrationJpeg)
-    .resize(SIZE, IMG_H, { fit: "cover", position: "centre" })
-    .jpeg({ quality: 88 })
-    .toBuffer();
-
+  const art = await fitIllustration(opts.illustrationJpeg);
   const lines = wrapLines(opts.text);
-  const svg = storyTextSvg(lines, opts.pageNum);
+  const svg = storyTextSvg(lines, opts.pageNum, MIN_TEXT_H);
   const textBand = await sharp(svg).png().toBuffer();
 
   return sharp({
-    create: { width: SIZE, height: SIZE, channels: 3, background: { r: 255, g: 246, b: 229 } },
+    create: { width: SIZE, height: SIZE, channels: 3, background: CREAM },
   })
     .composite([
-      { input: ill, top: 0, left: 0 },
-      { input: textBand, top: IMG_H, left: 0 },
+      { input: art, top: 0, left: 0 },
+      { input: textBand, top: MAX_ART_H, left: 0 },
     ])
     .jpeg({ quality: 90 })
     .toBuffer();
 }
 
-async function compositeCover(illustrationJpeg: Buffer): Promise<Buffer> {
-  const bg = await sharp(illustrationJpeg)
-    .resize(SIZE, SIZE, { fit: "cover", position: "centre" })
-    .modulate({ brightness: 0.92 })
-    .blur(1)
-    .jpeg({ quality: 85 })
-    .toBuffer();
+const COVER_BAR_H = 180;
 
-  const svg = Buffer.from(`<svg width="${SIZE}" height="${SIZE}" xmlns="http://www.w3.org/2000/svg">
-  <rect width="100%" height="100%" fill="rgba(74,37,69,0.35)"/>
-  <text x="512" y="420" text-anchor="middle" font-family="Georgia, serif" font-size="52" font-weight="bold" fill="#FFF6E5">${escapeXml(DEMO.title)}</text>
-  <text x="512" y="480" text-anchor="middle" font-family="Georgia, serif" font-size="22" fill="#FAEACA">A Sparky Studio story</text>
-  <text x="512" y="920" text-anchor="middle" font-family="Helvetica, sans-serif" font-size="16" fill="#FAEACA">Inklings · inklings.shop</text>
+function coverTitleSvg(): Buffer {
+  const titleLines = wrapLines(DEMO.title, 26).slice(0, 2);
+  const titleSize = 34;
+  const lineH = 42;
+  const blockH = titleLines.length * lineH;
+  const titleY = Math.round(COVER_BAR_H * 0.42 - blockH / 2 + titleSize * 0.82);
+  const tspans = titleLines
+    .map(
+      (ln, i) =>
+        `<tspan x="512" dy="${i === 0 ? 0 : lineH}" text-anchor="middle">${escapeXml(ln)}</tspan>`,
+    )
+    .join("");
+
+  return Buffer.from(`<svg width="${SIZE}" height="${COVER_BAR_H}" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100%" height="100%" fill="#4A2545"/>
+  <rect y="0" width="100%" height="3" fill="#E8B84A"/>
+  <text
+    x="512"
+    y="${titleY}"
+    text-anchor="middle"
+    font-family="Georgia, 'Palatino Linotype', 'Times New Roman', serif"
+    font-size="${titleSize}"
+    font-weight="bold"
+    fill="#FFF6E5"
+  >${tspans}</text>
+  <text x="512" y="${COVER_BAR_H - 44}" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#E8B84A">A Sparky Studio story</text>
+  <text x="512" y="${COVER_BAR_H - 18}" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#FAEACA">Inklings · inklings.shop</text>
 </svg>`);
+}
 
-  const overlay = await sharp(svg).png().toBuffer();
-  return sharp(bg).composite([{ input: overlay, top: 0, left: 0 }]).jpeg({ quality: 90 }).toBuffer();
+async function compositeCover(illustrationJpeg: Buffer): Promise<Buffer> {
+  const artH = SIZE - COVER_BAR_H;
+  const art = await centerInCanvas(illustrationJpeg, SIZE, artH);
+
+  const bar = await sharp(coverTitleSvg()).png().toBuffer();
+
+  return sharp({
+    create: { width: SIZE, height: SIZE, channels: 3, background: CREAM },
+  })
+    .composite([
+      { input: art, top: 0, left: 0 },
+      { input: bar, top: artH, left: 0 },
+    ])
+    .jpeg({ quality: 90 })
+    .toBuffer();
 }
 
 async function fileExists(p: string): Promise<boolean> {
@@ -180,22 +253,35 @@ async function saveIllustration(n: number, jpeg: Buffer): Promise<void> {
   await writeFile(illPath, jpeg);
 }
 
-async function loadIllustration(n: number, compositePath: string): Promise<Buffer> {
+/** Raw illustration must be full uncropped source — reject legacy 660px extracts. */
+async function assertFullIllustration(jpeg: Buffer, label: string): Promise<void> {
+  const meta = await sharp(jpeg).metadata();
+  const h = meta.height ?? 0;
+  if (h < 700) {
+    throw new Error(
+      `${label} is only ${meta.width}x${h}px — looks like a cropped extract. Regenerate with --force.`,
+    );
+  }
+}
+
+async function loadIllustration(n: number): Promise<Buffer> {
   const illPath = path.join(OUT_DIR, `ill-${String(n).padStart(2, "0")}.jpg`);
-  if (await fileExists(illPath)) {
-    return readFile(illPath);
+  if (!(await fileExists(illPath))) {
+    throw new Error(`Missing raw illustration ill-${String(n).padStart(2, "0")}.jpg — run with --force`);
   }
-  if (await fileExists(compositePath)) {
-    const meta = await sharp(compositePath).metadata();
-    const h = Math.min(LEGACY_ILL_H, (meta.height ?? SIZE) - 80);
-    const extracted = await sharp(compositePath)
-      .extract({ left: 0, top: 0, width: SIZE, height: h })
-      .jpeg({ quality: 92 })
-      .toBuffer();
-    await writeFile(illPath, extracted);
-    return extracted;
+  const bytes = await readFile(illPath);
+  await assertFullIllustration(bytes, illPath);
+  return bytes;
+}
+
+async function loadCoverIllustration(): Promise<Buffer> {
+  const illCover = path.join(OUT_DIR, "ill-cover.jpg");
+  if (await fileExists(illCover)) {
+    const bytes = await readFile(illCover);
+    await assertFullIllustration(bytes, illCover);
+    return bytes;
   }
-  throw new Error(`No illustration source for page ${n}`);
+  throw new Error("Missing ill-cover.jpg — run with --force");
 }
 
 async function main() {
@@ -207,7 +293,9 @@ async function main() {
   const manifestPages: Array<{ n: number; file: string; text: string }> = [];
   const coverPath = `/images/showcase/${DEMO.slug}/cover.jpg`;
 
-  console.log(`Building showcase: ${DEMO.title} (seed ${seed})${recomposite ? " [recomposite]" : ""}`);
+  console.log(
+    `Building showcase: ${DEMO.title} (seed ${seed})${force ? " [force]" : ""}${recomposite ? " [recomposite]" : ""}`,
+  );
 
   for (let i = 0; i < DEMO.pages.length; i++) {
     const page = DEMO.pages[i]!;
@@ -216,9 +304,9 @@ async function main() {
     const outPath = path.join(OUT_DIR, filename);
     const publicPath = `/images/showcase/${DEMO.slug}/${filename}`;
 
-    if (recomposite) {
+    if (recomposite && !force) {
       console.log(`  recompositing ${filename}…`);
-      const illBytes = await loadIllustration(n, outPath);
+      const illBytes = await loadIllustration(n);
       await writeFile(
         outPath,
         await compositePage({ illustrationJpeg: illBytes, text: page.text, pageNum: n }),
@@ -258,7 +346,12 @@ async function main() {
   }
 
   const coverOut = path.join(OUT_DIR, "cover.jpg");
-  if (force || !(await fileExists(coverOut))) {
+  if (recomposite && !force) {
+    console.log("  recompositing cover.jpg…");
+    const illBytes = await loadCoverIllustration();
+    await writeFile(coverOut, await compositeCover(illBytes));
+    console.log("  wrote cover.jpg");
+  } else if (force || !(await fileExists(coverOut))) {
     const heroGen = await generatePreview(
       "Coral fox Milo and golden puppy Pip sitting together on a hill under stars, magical storybook cover art, warm watercolor, no text",
       seed,
@@ -269,6 +362,7 @@ async function main() {
     }
     const illPath = path.join(process.cwd(), "public", heroGen.url.replace(/^\//, ""));
     const illBytes = await readFile(illPath);
+    await writeFile(path.join(OUT_DIR, "ill-cover.jpg"), illBytes);
     await writeFile(coverOut, await compositeCover(illBytes));
     console.log("  wrote cover.jpg");
   }

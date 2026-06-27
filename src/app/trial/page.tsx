@@ -10,27 +10,28 @@ export const metadata: Metadata = {
 };
 
 const ERROR_MESSAGES: Record<string, string> = {
-  invalid: "Please double-check the email address and try again.",
-  exists: "An account with that email already exists. Try signing in.",
+  invalid: "Please check your email and password, then try again.",
+  exists: "An account with that email already exists.",
+  weak_password: "Password must be at least 8 characters.",
+  mismatch: "Passwords didn't match. Please try again.",
+  consent_required: "Parental consent is required to create an account.",
   server: "Something went wrong on our end. Please try again, or email hello@inklings.shop.",
+  rate_limited: "Too many attempts. Please wait a minute and try again.",
 };
 
 interface TrialSearchParams {
   error?: string;
-  ok?: string;
   tier?: string;
 }
 
 export default async function TrialPage(props: {
   searchParams?: Promise<TrialSearchParams>;
 }) {
-  // Defensive: handle both Promise (Next 15+) and plain object (Next 14 fallback) shapes.
   const params: TrialSearchParams = (await props?.searchParams) ?? {};
 
   const errorMsg = params.error
     ? ERROR_MESSAGES[params.error] ?? ERROR_MESSAGES.server
     : undefined;
-  const ok = params.ok === "1";
 
   return (
     <section className="hero-storybook">
@@ -39,7 +40,7 @@ export default async function TrialPage(props: {
           <span className="eyebrow">Start free</span>
           <h1 className="text-4xl font-bold text-ink md:text-5xl">Build a story universe.</h1>
           <p className="mt-4 text-lg text-ink-700">
-            We&apos;ll email you a sign-in link. No password, no credit card.
+            Create your parent account with email and password. No credit card required.
           </p>
 
           {errorMsg && (
@@ -61,17 +62,8 @@ export default async function TrialPage(props: {
               )}
             </div>
           )}
-          {ok && (
-            <div
-              role="alert"
-              className="mt-6 rounded-card border-2 px-4 py-3 text-sm"
-              style={{ background: "#F0FDF4", borderColor: "#BBF7D0", color: "#166534" }}
-            >
-              Check your email for a sign-in link from Inklings.
-            </div>
-          )}
 
-          <form action="/api/auth/login" method="POST" className="mt-8 space-y-4">
+          <form action="/api/auth/signup" method="POST" className="mt-8 space-y-4">
             {params.tier && <input type="hidden" name="tier" value={params.tier} />}
             <div>
               <label htmlFor="email" className="block text-sm font-semibold text-ink">
@@ -85,6 +77,35 @@ export default async function TrialPage(props: {
                 autoComplete="email"
                 className="mt-1 w-full rounded-button border-2 border-ink-100 bg-white px-4 py-3 text-base focus:border-coral focus:outline-none"
                 placeholder="parent@example.com"
+              />
+            </div>
+            <div>
+              <label htmlFor="password" className="block text-sm font-semibold text-ink">
+                Password
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                required
+                autoComplete="new-password"
+                minLength={8}
+                className="mt-1 w-full rounded-button border-2 border-ink-100 bg-white px-4 py-3 text-base focus:border-coral focus:outline-none"
+              />
+              <p className="mt-1 text-xs text-ink-500">At least 8 characters.</p>
+            </div>
+            <div>
+              <label htmlFor="password_confirm" className="block text-sm font-semibold text-ink">
+                Confirm password
+              </label>
+              <input
+                id="password_confirm"
+                name="password_confirm"
+                type="password"
+                required
+                autoComplete="new-password"
+                minLength={8}
+                className="mt-1 w-full rounded-button border-2 border-ink-100 bg-white px-4 py-3 text-base focus:border-coral focus:outline-none"
               />
             </div>
             <div className="space-y-1.5">
@@ -108,12 +129,22 @@ export default async function TrialPage(props: {
               </p>
             </div>
             <button type="submit" className="btn-primary btn-large btn-full">
-              Email me a sign-in link
+              Create account
             </button>
             <p className="text-xs text-ink-500">
-              By continuing you agree to our{" "}
-              <Link href="/legal/terms" className="underline">Terms</Link> and{" "}
-              <Link href="/legal/privacy" className="underline">Privacy Policy</Link>.
+              Already have an account?{" "}
+              <Link href="/login" className="underline">
+                Sign in
+              </Link>
+              . By continuing you agree to our{" "}
+              <Link href="/legal/terms" className="underline">
+                Terms
+              </Link>{" "}
+              and{" "}
+              <Link href="/legal/privacy" className="underline">
+                Privacy Policy
+              </Link>
+              .
             </p>
           </form>
         </div>

@@ -4,16 +4,32 @@ import { brand } from "@/lib/brand";
 import { PricingTiers } from "@/components/PricingTiers";
 import { FAQ } from "@/components/FAQ";
 import { FAQ_HOME } from "@/content/faq-data";
+import { BreadcrumbJsonLd, ProductOffersJsonLd } from "@/lib/jsonld";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: `Pricing — ${brand.name}`,
+export const metadata: Metadata = pageMetadata({
+  title: "Pricing — simple plans for families",
   description:
     "Free forever for one child and 3 stories a month. Premium $9.99/mo for unlimited stories and HD print export. Real printed keepsake books $19.99 each.",
-};
+  path: "/pricing",
+});
+
+const PRICING_OFFERS = [
+  { name: "Free", price: "0", description: "One child, 3 stories per month, parent approval included." },
+  { name: "Premium", price: "9.99", description: "Unlimited stories, HD illustrations, full character bible." },
+  { name: "Printed hardcover", price: "19.99", description: "One-time printed 8.5 inch hardcover per approved story." },
+];
 
 export default function PricingPage() {
   return (
     <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Pricing", path: "/pricing" },
+        ]}
+      />
+      <ProductOffersJsonLd offers={PRICING_OFFERS} />
       <section className="hero-storybook">
         <div className="container-ink section">
           <div className="mx-auto max-w-3xl text-center">

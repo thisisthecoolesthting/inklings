@@ -4,15 +4,10 @@ import { notFound } from "next/navigation";
 import { brand } from "@/lib/brand";
 import { FEATURES } from "@/content/feature-pages";
 import { BreadcrumbJsonLd } from "@/lib/jsonld";
+import { pageMetadata } from "@/lib/seo";
 
-// Slugs that have bespoke static pages under src/app/features/<slug>/page.tsx.
-// They must NOT be generated here too, or Next.js sees a route collision
-// (static page vs. this dynamic route) and resolution becomes build-order
-// dependent — the cause of the intermittent 404s on these three URLs.
 const STATIC_FEATURE_SLUGS = ["voice-first-studio", "character-bible", "parent-approval"];
 
-// Only serve the slugs we explicitly generate; everything else 404s (the
-// static pages own their three URLs by virtue of being more-specific segments).
 export const dynamicParams = false;
 
 export async function generateStaticParams() {
@@ -27,7 +22,11 @@ export async function generateMetadata({
   const { slug } = await params;
   const f = FEATURES.find((x) => x.slug === slug);
   if (!f) return { title: `Feature — ${brand.name}` };
-  return { title: `${f.title} — ${brand.name}`, description: f.summary };
+  return pageMetadata({
+    title: f.title,
+    description: f.summary,
+    path: `/features/${f.slug}`,
+  });
 }
 
 export default async function FeatureDynamic({
@@ -36,8 +35,7 @@ export default async function FeatureDynamic({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  // The 3 deep-dive pages take precedence; this route handles other entries in FEATURES.
-  if (["voice-first-studio", "character-bible", "parent-approval"].includes(slug)) notFound();
+  if (STATIC_FEATURE_SLUGS.includes(slug)) notFound();
   const f = FEATURES.find((x) => x.slug === slug);
   if (!f) notFound();
   return (
