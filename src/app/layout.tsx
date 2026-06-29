@@ -19,14 +19,14 @@ export const metadata: Metadata = {
     description:
       "A story universe studio for kids ages 5-8. Voice-first, parent-approved, where characters return in every story.",
     url: "/",
-    images: [{ url: "/images/site/og-default.svg", alt: `${brand.name} — A story universe your child runs` }],
+    images: [{ url: "/images/showcase/milo-moonbeam/cover.jpg", width: 1200, height: 630, alt: `${brand.name} — A story universe your child runs` }],
   },
   twitter: {
     card: "summary_large_image",
     title: `${brand.name} — Build a story universe your child runs`,
     description:
       "A story universe studio for kids ages 5-8. Characters return in every story.",
-    images: ["/images/site/og-default.svg"],
+    images: ["/images/showcase/milo-moonbeam/cover.jpg"],
   },
 };
 
