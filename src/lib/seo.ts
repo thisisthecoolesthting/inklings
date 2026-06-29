@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { brand } from "@/lib/brand";
 
+const OG_IMAGE = "/images/showcase/milo-moonbeam/cover.jpg";
+
 export function pageMetadata(opts: {
   title: string;
   description: string;
@@ -17,13 +19,13 @@ export function pageMetadata(opts: {
       title: fullTitle,
       description: opts.description,
       url: opts.path,
-      images: [{ url: "/images/site/og-default.svg", alt: fullTitle }],
+      images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: fullTitle }],
     },
     twitter: {
       card: "summary_large_image",
       title: fullTitle,
       description: opts.description,
-      images: ["/images/site/og-default.svg"],
+      images: [OG_IMAGE],
     },
   };
 }
