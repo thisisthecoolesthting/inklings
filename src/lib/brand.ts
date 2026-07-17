@@ -12,7 +12,7 @@ export const brand = {
   shortPitch:
     "A creative story studio for kids 5–8 — parent-approved, real printed books, characters that return every adventure.",
   primaryCta: "Create your first book free",
-  secondaryCta: "See how it works",
+  secondaryCta: "Gift for grandparents",
   trustStrip: "Free first book · Parent-approved · No ads · Real hardcovers",
 };
 
