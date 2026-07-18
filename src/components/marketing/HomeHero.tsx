@@ -74,7 +74,7 @@ export async function HomeHero() {
               {brand.heroSub}
             </p>
             <p className="mt-3 text-sm font-semibold text-ink-600">
-              Approve once → $19.99 hardcover ships in 7–10 days
+              Approve once → $19.99 softcover ships in 7–10 days
             </p>
             <TrustBadges className="mt-6" />
             <div className="mt-7 flex flex-wrap gap-3">

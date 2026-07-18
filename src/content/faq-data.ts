@@ -18,8 +18,8 @@ export const FAQ_HOME: FaqItem[] = [
     a: "Each character has a Character Bible — colors, outfit, personality, and a saved look — so the same puppy looks like the same puppy across every story your child writes. Series memory carries it forward over time.",
   },
   {
-    q: "Are the printed books real, hardcover books?",
-    a: "Yes. We print real 8.5\" × 8.5\" hardcover children's books — full color, professionally bound. Books ship in 7–10 days. Print orders are a one-time charge, available on any tier.",
+    q: "Are the printed books real softcover books?",
+    a: "Yes. We print real 8.5\" × 8.5\" softcover children's books — full color, professionally bound with a matte cover. Books ship in 7–10 days. Print orders are a one-time $19.99 charge, available on any tier.",
   },
   {
     q: "What happens to photos I upload?",

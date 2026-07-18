@@ -102,7 +102,7 @@ Assumes organic + modest paid ($500–5K/mo ads ramping), no viral breakout.
 | SKU | Gross | Net / margin (approx.) |
 |-----|-------|------------------------|
 | Premium | $9.99/mo | ~$9.70 after Stripe |
-| Print hardcover 8.5×8.5 | $19.99 | ~$9–11 after print+ship (Lulu) |
+| Print softcover 8.5×8.5 | $19.99 | ~$9–11 after print+ship (Lulu) |
 | Gift 1mo / 6mo / 12mo | $9.99 / $49.99 / $89.99 | Prepaid Premium access |
 
 ### Monthly trajectory (base)
@@ -124,7 +124,7 @@ Print is **~30–40% of revenue early**; Premium becomes majority by ~month 18 i
 |------|-------|------|
 | **Free** | $0 | Acquisition — 3 stories/mo, 1 child, watermarked PDF |
 | **Premium** | $9.99/mo (14-day trial) | Retention — unlimited + HD PDF + series |
-| **Print** | $19.99 one-time | **Conversion event** — hardcover 8.5×8.5, ships 7–10 days |
+| **Print** | $19.99 one-time | **Conversion event** — softcover 8.5×8.5, ships 7–10 days |
 | **Gift Premium** | 1mo $9.99 · 6mo $49.99 · 12mo $89.99 | Grandparent / birthday channel |
 
 ---
@@ -189,7 +189,7 @@ Build and optimize in this order:
 
 | Upgrade | Price idea | Priority |
 |---------|------------|----------|
-| Extra hardcover (duplicate for grandparent) | $14.99 add-on at checkout | **High** |
+| Extra softcover (duplicate for grandparent) | $14.99 add-on at checkout | **High** |
 | “Yearbook” annual print (all stories) | $49–79 | **High** for power users |
 | Grandparent gift box (Premium + print) | $59 / $129 | **High** (Variation D) |
 | Premium annual | $79/yr (2 mo free) | Medium — churn reduction |

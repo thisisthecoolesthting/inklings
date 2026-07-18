@@ -33,10 +33,10 @@ export default function HomePage() {
               <h2 className="text-2xl font-bold text-ink">Making, not watching</h2>
               <p className="mt-4 text-ink-700">
                 Your child picks what happens next. Sparky turns their choices into illustrated pages.
-                You review once — then order a hardcover that ships to your door.
+                You review once — then order a softcover that ships to your door.
               </p>
               <p className="mt-3 text-sm font-semibold text-ink-600">
-                Hardcover keepsake · $19.99 · ships in 7–10 days
+                Softcover keepsake · $19.99 · ships in 7–10 days
               </p>
             </div>
             <div className="card-base">
@@ -71,7 +71,7 @@ export default function HomePage() {
             <h2 className="section-title">Start free. Print when you&apos;re ready.</h2>
             <p className="section-subtitle">
               Try your first book free. Premium unlocks unlimited stories and HD export.
-              Printed hardcovers are a one-time add-on on any plan.
+              Printed softcovers are a one-time add-on on any plan.
             </p>
           </div>
           <PricingTiers />

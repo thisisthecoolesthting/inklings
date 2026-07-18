@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Check, Sparkles, BookOpen } from "lucide-react";
+import { Check } from "lucide-react";
 
 interface Tier {
   id: string;
@@ -52,18 +52,18 @@ const TIERS: Tier[] = [
   },
   {
     id: "printed_book",
-    name: "Printed Book",
+    name: "Softcover Book",
     currency: "$",
     amount: "19.99",
     period: "per book",
     features: [
-      "Real hardcover keepsake (8.5\" × 8.5\")",
+      "Real softcover keepsake (8.5&quot; × 8.5&quot;)",
+      "Full-color pages with a matte softcover",
       "Ships in 7–10 days to your door",
       "Up to 32 illustrated pages",
       "Available on any tier (one-time charge)",
-      "Bulk &amp; gift orders supported",
     ],
-    ctaLabel: "See sample book",
+    ctaLabel: "See how printing works",
     ctaHref: "/how-it-works#printed",
   },
 ];
@@ -75,7 +75,7 @@ export function PricingTiers() {
         <div
           key={tier.id}
           className={
-            "card-base flex flex-col " +
+            "card-base relative flex flex-col " +
             (tier.featured ? "ring-2 ring-coral" : "")
           }
         >

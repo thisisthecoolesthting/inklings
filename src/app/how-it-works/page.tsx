@@ -13,7 +13,7 @@ const STEPS = [
   { n: 2, title: "Your child meets Sparky", body: "Sparky greets them in the kid Studio. Voice-first, with giant tap-buttons. No reading needed." },
   { n: 3, title: "They build a character family", body: "Photograph a stuffed animal, draw a hero, or describe one out loud. Inklings turns each into a starring character with a saved look so they appear the same in every story." },
   { n: 4, title: "They write a five-act story", body: "Beginning, problem, adventure, resolution, celebration — Sparky walks through each act with simple branching choices. Never an empty text box." },
-  { n: 5, title: "You approve and print", body: "Every page comes to your portal for review. Approve, edit text, or regenerate art. Download a free PDF or order a real hardcover keepsake." },
+  { n: 5, title: "You approve and print", body: "Every page comes to your portal for review. Approve, edit text, or regenerate art. Download a free PDF or order a real softcover keepsake." },
 ];
 
 export default function HowPage() {
@@ -69,7 +69,7 @@ export default function HowPage() {
             <div className="p-6">
               <h2 className="text-xl font-bold text-ink">About the printed books</h2>
               <p className="mt-3 text-ink-700">
-                Hardcover, 8.5&quot; &times; 8.5&quot;, 24&ndash;32 pages, full-color throughout.
+                Softcover, 8.5&quot; &times; 8.5&quot;, 24&ndash;32 pages, full-color throughout.
                 Professionally printed and shipped directly to your door in 7&ndash;10 business days.
                 One-time charge on any tier &mdash; $19.99 per book.
               </p>

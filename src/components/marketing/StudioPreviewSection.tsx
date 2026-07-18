@@ -6,7 +6,7 @@ const STEPS = [
   "Your child taps choices with Sparky — no typing required.",
   "Illustrated pages appear as the story grows.",
   "You approve the finished book in your portal.",
-  "Order a printed hardcover when you are ready.",
+  "Order a printed softcover when you are ready.",
 ];
 
 function PageTile({ src, index }: { src: string; index: number }) {

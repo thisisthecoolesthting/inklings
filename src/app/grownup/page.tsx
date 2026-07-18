@@ -16,7 +16,7 @@ export default async function GrownupUnlockPage({
         {sp.intent === "print" ? (
           <p className="mt-3 text-ink-700">
             Your child finished a story and wants a <strong>real printed book</strong>!
-            Unlock below, approve their story, then order a hardcover from Approvals.
+            Unlock below, approve their story, then order a softcover from Approvals.
           </p>
         ) : (
           <p className="mt-3 text-ink-700">

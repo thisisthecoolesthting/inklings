@@ -10,10 +10,7 @@
 const LULU_TOKEN_PATH = "/auth/realms/glasstree/protocol/openid-connect/token";
 const TOKEN_REFRESH_BUFFER_MS = 60 * 1000;
 const DEFAULT_TOKEN_EXPIRES_IN_SECONDS = 3600;
-const HARDCOVER_PAGE_COUNT_THRESHOLD = 24;
-
 const POD_SQUARE_SOFTCOVER = "0850X0850.FC.PRE.SS.080CW444.GXX";
-const POD_SQUARE_HARDCOVER = "0850X0850.FC.PRE.CW.080CW444.GXX";
 
 let cachedAccessToken = null;
 let cachedAccessTokenExpiresAt = 0;
@@ -56,9 +53,8 @@ function selectPodPackageId(pageCount) {
     throw new Error("pageCount must be a positive number");
   }
 
-  return numericPageCount >= HARDCOVER_PAGE_COUNT_THRESHOLD
-    ? POD_SQUARE_HARDCOVER
-    : POD_SQUARE_SOFTCOVER;
+  // Always softcover — matches pricing / marketing product promise.
+  return POD_SQUARE_SOFTCOVER;
 }
 
 function mapShippingAddress(shipping) {

@@ -172,7 +172,7 @@ export function StudioStoryClient({
             <div className="card-base border-2 border-coral/30 bg-cream-50">
               <p className="text-lg font-bold text-ink">Want a real book in your hands?</p>
               <p className="mt-2 text-sm text-ink-600">
-                Ask a grown-up to help you order a hardcover version of your story!
+                Ask a grown-up to help you order a softcover version of your story!
               </p>
               <Link
                 href={`/grownup?intent=print${submittedBookId ? `&book=${submittedBookId}` : ""}`}

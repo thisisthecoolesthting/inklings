@@ -33,7 +33,7 @@ export default async function OrdersPage({
     <>
       <header className="mb-10">
         <h1 className="text-3xl font-bold text-ink">Print orders</h1>
-        <p className="mt-1 text-ink-700">Real hardcover keepsakes shipped to your door in 7–10 days.</p>
+        <p className="mt-1 text-ink-700">Real softcover keepsakes shipped to your door in 7–10 days.</p>
       </header>
 
       {sp.ordered === "1" && (
@@ -51,7 +51,7 @@ export default async function OrdersPage({
               <li key={b.id} className="card-base flex flex-wrap items-center justify-between gap-4">
                 <div>
                   <h3 className="text-lg font-bold text-ink">{b.title}</h3>
-                  <p className="text-sm text-ink-500">By {b.child.name} &middot; 8.5&quot; hardcover &middot; $19.99</p>
+                  <p className="text-sm text-ink-500">By {b.child.name} &middot; 8.5&quot; softcover &middot; $19.99</p>
                 </div>
                 <PrintCheckoutForm bookId={b.id} />
               </li>

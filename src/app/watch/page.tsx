@@ -19,7 +19,7 @@ export default function WatchPage() {
               Ten seconds — see Inklings.
             </h1>
             <p className="mt-4 text-lg text-ink-700">
-              Voice-first Studio · parent approval · real hardcover books.
+              Voice-first Studio · parent approval · real softcover books.
             </p>
           </div>
         </div>

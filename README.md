@@ -2,7 +2,7 @@
 
 > A storybook your child stars in.
 
-Inklings is an AI-guided storybook studio for kids ages 4 to 8. Children build a persistent character family, co-write a five-act story with **Sparky** (a bounded branching companion), and parents approve every page before it publishes. Real printed hardcover books ship via Amazon KDP.
+Inklings is an AI-guided storybook studio for kids ages 4 to 8. Children build a persistent character family, co-write a five-act story with **Sparky** (a bounded branching companion), and parents approve every page before it publishes. Real printed softcover books ship via Amazon KDP.
 
 **Live:** https://inklings.shop (deployment pending)
 **Repo:** https://github.com/thisisthecoolesthting/inklings

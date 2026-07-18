@@ -10,14 +10,18 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata: Metadata = pageMetadata({
   title: "Pricing — simple plans for families",
   description:
-    "Free forever for one child and 3 stories a month. Premium $9.99/mo for unlimited stories and HD print export. Real printed keepsake books $19.99 each.",
+    "Free forever for one child and 3 stories a month. Premium $9.99/mo for unlimited stories and HD print export. Real printed softcover books $19.99 each.",
   path: "/pricing",
 });
 
 const PRICING_OFFERS = [
   { name: "Free", price: "0", description: "One child, 3 stories per month, parent approval included." },
   { name: "Premium", price: "9.99", description: "Unlimited stories, HD illustrations, full character bible." },
-  { name: "Printed hardcover", price: "19.99", description: "One-time printed 8.5 inch hardcover per approved story." },
+  {
+    name: "Printed softcover",
+    price: "19.99",
+    description: "One-time printed 8.5 inch softcover per approved story.",
+  },
 ];
 
 export default function PricingPage() {
@@ -39,7 +43,8 @@ export default function PricingPage() {
             </h1>
             <p className="mt-6 text-lg text-ink-700">
               Free covers most weekend story-makers. Premium is for families
-              writing every week. Printed books are always a one-time charge.
+              writing every week. Printed softcovers are $19.99 each — one-time,
+              on any plan.
             </p>
           </div>
         </div>

@@ -16,7 +16,7 @@
     "Voice-first kid Studio (no reading required)",
     "Persistent character family with Character Bible",
     "Parent approval gate before anything publishes",
-    "Real printed hardcover books via KDP POD"
+    "Real printed softcover books via KDP POD"
   ],
   "tiers": [
     { "name": "Free", "price_cents": 0, "interval": "month", "limits": { "stories_per_month": 3, "watermark": true } },

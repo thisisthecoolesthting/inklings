@@ -67,7 +67,7 @@ export default async function ApprovalsPage({
       {readyToPrint.length > 0 && (
         <section className="mb-10 rounded-card border-2 border-coral/30 bg-coral/5 p-6">
           <h2 className="text-lg font-bold text-ink">Ready to print</h2>
-          <p className="mt-1 text-sm text-ink-700">These approved stories can become hardcover keepsakes ($19.99, ships in 7–10 days).</p>
+          <p className="mt-1 text-sm text-ink-700">These approved stories can become softcover keepsakes ($19.99, ships in 7–10 days).</p>
           <ul className="mt-4 space-y-3">
             {readyToPrint.map((b) => (
               <li key={b.id} className="flex flex-wrap items-center justify-between gap-3 rounded-button bg-white px-4 py-3">

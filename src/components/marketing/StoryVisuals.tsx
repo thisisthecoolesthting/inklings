@@ -74,7 +74,7 @@ export async function PrintShowcase() {
                 />
               </div>
               <p className="bg-cream-50 px-3 py-2 text-center text-xs font-medium text-ink-600">
-                8.5″ hardcover · ships to your door
+                8.5″ softcover · ships to your door
               </p>
             </div>
             <div className="grid grid-cols-2 gap-3 rounded-card p-1 shadow-card ring-1 ring-ink-100 sm:gap-4">
@@ -102,12 +102,12 @@ export async function PrintShowcase() {
             <span className="eyebrow">Real keepsakes</span>
             <h2 className="mt-2 text-3xl font-bold text-ink">Hold the universe in your hands</h2>
             <p className="mt-4 text-lg text-ink-700">
-              After you approve a story, order an 8.5″ hardcover — a real book your child can keep on the shelf
+              After you approve a story, order an 8.5″ softcover — a real book your child can keep on the shelf
               and read again and again. Every page pairs art with easy-to-read text.
             </p>
             <ul className="mt-6 space-y-2 text-sm text-ink-700">
               <li className="flex gap-2">
-                <span className="font-bold text-coral">✓</span> Professionally printed hardcover
+                <span className="font-bold text-coral">✓</span> Professionally printed softcover
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-coral">✓</span> Ships in 7–10 days

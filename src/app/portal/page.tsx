@@ -116,7 +116,7 @@ export default async function PortalHome({
       {readyToPrint.length > 0 && (
         <div className="card-base mb-8">
           <h2 className="text-lg font-bold text-ink">Ready for a printed keepsake</h2>
-          <p className="mt-1 text-sm text-ink-700">Turn an approved story into a hardcover book ($19.99).</p>
+          <p className="mt-1 text-sm text-ink-700">Turn an approved story into a softcover book ($19.99).</p>
           <ul className="mt-4 space-y-3">
             {readyToPrint.map((b) => (
               <li

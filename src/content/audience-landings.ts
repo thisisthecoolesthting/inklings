@@ -23,10 +23,10 @@ export const AUDIENCE_LANDINGS: AudienceLandingConfig[] = [
     eyebrow: "Gift a story universe",
     title: "Give a gift that grows all year — not just one book",
     subtitle:
-      "Grandparents love Inklings because it is simple to gift, easy to track from your portal, and every season your grandchild can turn a story into a printed hardcover keepsake.",
+      "Grandparents love Inklings because it is simple to gift, easy to track from your portal, and every season your grandchild can turn a story into a printed softcover keepsake.",
     metaTitle: "Story book gift for grandchildren ages 5–8",
     metaDescription:
-      "Gift Inklings Premium to grandchildren ages 5–8. They build characters and stories all year; you approve from your portal. Printed hardcover books ship to their door.",
+      "Gift Inklings Premium to grandchildren ages 5–8. They build characters and stories all year; you approve from your portal. Printed softcover books ship to their door.",
     bullets: [
       {
         title: "One gift, many stories",
@@ -38,7 +38,7 @@ export const AUDIENCE_LANDINGS: AudienceLandingConfig[] = [
       },
       {
         title: "Real books on the shelf",
-        body: "Order an 8.5″ hardcover after you approve a story. Ships in about 7–10 days — perfect for birthdays and holidays.",
+        body: "Order an 8.5″ softcover after you approve a story. Ships in about 7–10 days — perfect for birthdays and holidays.",
       },
     ],
     primaryCta: { href: "/gift", label: "See gift plans" },
@@ -54,7 +54,7 @@ export const AUDIENCE_LANDINGS: AudienceLandingConfig[] = [
       },
       {
         q: "Is the printed book extra?",
-        a: "Premium covers the digital studio. Printed hardcovers are a one-time $19.99 add-on whenever you approve a story worth keeping.",
+        a: "Premium covers the digital studio. Printed softcovers are a one-time $19.99 add-on whenever you approve a story worth keeping.",
       },
     ],
     related: [
@@ -85,13 +85,13 @@ export const AUDIENCE_LANDINGS: AudienceLandingConfig[] = [
       },
       {
         title: "Keepsake outcome",
-        body: "Each child leaves with a story they authored. Families can order a hardcover — a tangible win for open house or portfolio night.",
+        body: "Each child leaves with a story they authored. Families can order a softcover — a tangible win for open house or portfolio night.",
       },
     ],
     steps: [
       { title: "Introduce Sparky", body: "10 minutes: what is a character, what is a choice, demo one beat together." },
       { title: "Story sprint", body: "20 minutes: pairs or individuals tap through a short adventure in the Studio." },
-      { title: "Share & print", body: "Parents approve at home; optional class set of hardcovers for a fundraiser or celebration." },
+      { title: "Share & print", body: "Parents approve at home; optional class set of softcovers for a fundraiser or celebration." },
     ],
     primaryCta: { href: "/contact", label: "Request classroom info" },
     secondaryCta: { href: "/trial", label: "Try Sparky free" },
@@ -106,7 +106,7 @@ export const AUDIENCE_LANDINGS: AudienceLandingConfig[] = [
       },
       {
         q: "Can we export stories?",
-        a: "Approved stories live in the family library as PDF-ready books. Printed hardcovers are optional.",
+        a: "Approved stories live in the family library as PDF-ready books. Printed softcovers are optional.",
       },
     ],
     related: [
@@ -172,7 +172,7 @@ export const AUDIENCE_LANDINGS: AudienceLandingConfig[] = [
       "Character design, plot choices, revision through parent approval, and a printed book at the end — language arts with a keepsake outcome.",
     metaTitle: "Homeschool creative writing for ages 5–8",
     metaDescription:
-      "Homeschool story-making with Inklings: voice-first writing, character continuity across books, parent approval, and optional printed hardcovers.",
+      "Homeschool story-making with Inklings: voice-first writing, character continuity across books, parent approval, and optional printed softcovers.",
     bullets: [
       {
         title: "Cross-session characters",
@@ -200,7 +200,7 @@ export const AUDIENCE_LANDINGS: AudienceLandingConfig[] = [
       },
       {
         q: "Do we need a printer?",
-        a: "No. Read on screen or order professional hardcovers shipped to you.",
+        a: "No. Read on screen or order professional softcovers shipped to you.",
       },
     ],
     related: [
