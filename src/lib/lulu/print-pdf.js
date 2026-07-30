@@ -1,5 +1,5 @@
 /**
- * print-pdf.js — Inklings Lulu-ready print PDF builder
+ * print-pdf.js — Inklings Lulu-ready print PDF builder (atelier edition)
  *
  * Exports TWO functions for Lulu's two-file submission requirement:
  *
@@ -9,74 +9,105 @@
  *   buildCoverPDF({ title, childName, blurb, coverImage, pageCount, binding })
  *     → Promise<Uint8Array>   — wraparound single-page cover (back|spine|front)
  *
+ * Design language (matches inklings.shop): warm cream paper, plum ink, coral
+ * and gold accents; Zilla Slab for display, Gentium Book Plus for story text
+ * (both OFL, bundled at assets/fonts/, Liberation fallback); matted art
+ * plates, drop caps, star ornaments, hairline rules.
+ *
+ * Interior page order:
+ *   1. Title / dedication page
+ *   2. "This book belongs to" bookplate page
+ *   3…N+2. Story pages (matted plate + drop cap + ornament divider)
+ *   N+3. "The End" colophon page
+ *   …    activity page / star blank appended to reach a multiple of 4
+ *
  * ─────────────────────────────────────────────────────────────────────────────
  * ASSUMPTIONS — confirm all against Lulu's current file-prep guide before use:
- *
- *   [1] Trim size       : 8.5 in × 8.5 in  square book
- *                         (TODO: confirm Lulu supports 8.5×8.5 — may need 8×8)
- *   [2] Bleed           : 0.125 in on ALL four edges
- *                         (TODO: confirm — Lulu sometimes uses 0.125 or 0.1875)
- *   [3] Safe zone       : 0.5 in inside trim edge for all text
- *                         (TODO: verify Lulu's minimum safe zone recommendation)
- *   [4] Even page rule  : Lulu requires an even total interior page count
- *                         (TODO: verify — some Lulu products are odd-OK)
- *   [5] Spine formula   : hardcover → pageCount × 0.0025 in per page
- *                         softcover → 0 spine (thin/saddle-stitch)
- *                         (TODO: confirm with Lulu's spine-width calculator;
- *                          actual formula depends on paper type and page count)
- *   [6] PDF color space : sRGB used here; Lulu may prefer CMYK for print
- *                         (TODO: check Lulu's color-space requirements)
- *   [7] Resolution      : images should be embedded at ≥300 DPI before passing
- *                         as buffers — this module does not resample
+ *   [1] Trim 8.5×8.5 in, bleed 0.125 in all edges, safe 0.5 in for text
+ *   [2] Saddle-stitch / thin softcover page count should be a multiple of 4
+ *   [3] Spine formula hardcover → pageCount × 0.0025 in; softcover → 0
+ *   [4] sRGB used here; images should be ≥300 DPI before being passed in
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
 "use strict";
 
-const { PDFDocument, StandardFonts, rgb, degrees } = require("pdf-lib");
+const { PDFDocument, rgb, degrees } = require("pdf-lib");
 const fs = require("fs");
+const path = require("path");
 const fontkit = require("@pdf-lib/fontkit");
-const FONT_DIR = "/usr/share/fonts/truetype/liberation/";
-const FONT = { serif: FONT_DIR+"LiberationSerif-Regular.ttf", serifBold: FONT_DIR+"LiberationSerif-Bold.ttf", serifItalic: FONT_DIR+"LiberationSerif-Italic.ttf", sans: FONT_DIR+"LiberationSans-Regular.ttf" };
+
+/* ─────────────────────────────────────────────
+   BRAND FONTS — bundled OFL faces, system fallback
+───────────────────────────────────────────── */
+const BUNDLED_FONT_DIR = path.join(process.cwd(), "assets", "fonts");
+const LIBERATION_DIR = "/usr/share/fonts/truetype/liberation/";
+
+const FONT_FILES = {
+  display:   { bundled: "ZillaSlab-Bold.ttf",          fallback: LIBERATION_DIR + "LiberationSerif-Bold.ttf" },
+  label:     { bundled: "ZillaSlab-SemiBold.ttf",      fallback: LIBERATION_DIR + "LiberationSerif-Bold.ttf" },
+  labelMed:  { bundled: "ZillaSlab-Medium.ttf",        fallback: LIBERATION_DIR + "LiberationSans-Regular.ttf" },
+  body:      { bundled: "GentiumBookPlus-Regular.ttf", fallback: LIBERATION_DIR + "LiberationSerif-Regular.ttf" },
+  bodyItalic:{ bundled: "GentiumBookPlus-Italic.ttf",  fallback: LIBERATION_DIR + "LiberationSerif-Italic.ttf" },
+  bodyBold:  { bundled: "GentiumBookPlus-Bold.ttf",    fallback: LIBERATION_DIR + "LiberationSerif-Bold.ttf" },
+};
+
+function readFontBytes(role) {
+  const dir = process.env.INK_FONT_DIR
+    ? { bundled: path.join(process.env.INK_FONT_DIR, FONT_FILES[role].bundled), fallback: FONT_FILES[role].fallback }
+    : { bundled: path.join(BUNDLED_FONT_DIR, FONT_FILES[role].bundled), fallback: FONT_FILES[role].fallback };
+  for (const p of [dir.bundled, dir.fallback]) {
+    try { return fs.readFileSync(p); } catch (_) { /* try next */ }
+  }
+  throw new Error("no usable font for role " + role);
+}
+
+async function embedBrandFonts(doc) {
+  doc.registerFontkit(fontkit);
+  const out = {};
+  for (const role of Object.keys(FONT_FILES)) {
+    out[role] = await doc.embedFont(readFontBytes(role), { subset: true });
+  }
+  return out;
+}
 
 /* ─────────────────────────────────────────────
    PHYSICAL CONSTANTS  (inches → points at 72pt/in)
-   TODO: confirm TRIM_IN and BLEED_IN against Lulu spec before submission
 ───────────────────────────────────────────── */
 const PT_PER_IN        = 72;
 
-const TRIM_IN          = 8.5;        // TODO confirm against Lulu spec
-const BLEED_IN         = 0.125;      // TODO confirm against Lulu spec
-const SAFE_IN          = 0.5;        // minimum text inset from trim edge
+const TRIM_IN          = 8.5;
+const BLEED_IN         = 0.125;
+const SAFE_IN          = 0.5;
 
-// Derived point values
 const TRIM_PT          = TRIM_IN  * PT_PER_IN;   // 612 pt
 const BLEED_PT         = BLEED_IN * PT_PER_IN;   //   9 pt
 const SAFE_PT          = SAFE_IN  * PT_PER_IN;   //  36 pt
+const PAGE_PT          = (TRIM_IN + 2 * BLEED_IN) * PT_PER_IN;  // 630 pt
 
-// Physical page size for interior pages (trim + bleed on all four sides)
-const PAGE_PT          = (TRIM_IN + 2 * BLEED_IN) * PT_PER_IN;  // 630 pt = 8.75 in
+const SPINE_PER_PAGE_IN = 0.0025;
+const SPINE_MIN_FOR_TEXT_IN = 0.25;
 
-// Spine constants
-const SPINE_PER_PAGE_IN = 0.0025;   // TODO confirm Lulu spine formula
-const SPINE_MIN_FOR_TEXT_IN = 0.25; // only print title on spine if this wide or wider
+const TEXT_INSET = BLEED_PT + SAFE_PT;           // 45 pt — text stays inside this
 
 /* ─────────────────────────────────────────────
-   COLOR PALETTE  (mirrors storybook-pdf.js)
+   PALETTE — Inklings brand, tuned for print
 ───────────────────────────────────────────── */
-const INK   = rgb(0.13, 0.11, 0.24);
-const CREAM = rgb(0.992, 0.973, 0.937);
-const CREAM2= rgb(0.965, 0.925, 0.851);
-const GOLD  = rgb(1.0,  0.83, 0.475);
-const MUTE  = rgb(0.42, 0.39, 0.52);
+const PAPER      = rgb(1.0,   0.965, 0.898);  // #FFF6E5 warm cream
+const CARD       = rgb(1.0,   0.996, 0.976);  // #FFFEF9 plate white
+const PLUM       = rgb(0.29,  0.145, 0.27);   // #4A2545 brand ink
+const PLUM_DEEP  = rgb(0.137, 0.067, 0.129);  // #231121 cover depth
+const CORAL      = rgb(0.878, 0.373, 0.208);  // #E05F35 print-safe coral
+const GOLD       = rgb(0.831, 0.647, 0.455);  // #D4A574
+const MUTE       = rgb(0.49,  0.31,  0.43);   // #7D506E
 
 /* ─────────────────────────────────────────────
-   HELPERS  (identical API to storybook-pdf.js)
+   TEXT HELPERS
 ───────────────────────────────────────────── */
 
 /** Word-wrap `text` to fit within `maxW` points at `size`. */
 function wrap(text, font, size, maxW) {
-  const words = String(text).split(/\s+/);
+  const words = String(text).split(/\s+/).filter(Boolean);
   const lines = [];
   let line = "";
   for (const w of words) {
@@ -92,7 +123,98 @@ function wrap(text, font, size, maxW) {
   return lines;
 }
 
-/** Embed image bytes as JPG (PNG fallback). Returns null on failure. */
+/** Greedy wrap where each line index can have its own max width (drop-cap slot). */
+function wrapWithWidths(text, font, size, widthForLine) {
+  const words = String(text).split(/\s+/).filter(Boolean);
+  const lines = [];
+  let line = "";
+  const idx = lines.length;
+  let maxW = widthForLine(idx);
+  for (const w of words) {
+    const candidate = line ? line + " " + w : w;
+    if (font.widthOfTextAtSize(candidate, size) > maxW && line) {
+      lines.push(line);
+      line = "";
+      maxW = widthForLine(lines.length);
+    }
+    line = line ? line + " " + w : w;
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+
+/** Centered text: returns the y it drew at (baseline). */
+function centerText(pg, text, font, size, cx, y, color, opacity) {
+  const w = font.widthOfTextAtSize(text, size);
+  pg.drawText(text, { x: cx - w / 2, y, size, font, color, opacity: opacity ?? 1 });
+  return y;
+}
+
+/* ─────────────────────────────────────────────
+   ORNAMENTS — vector sparkle stars + rules
+───────────────────────────────────────────── */
+
+/** 4-point sparkle star, centered on (0,0) at radius 10. Symmetric under flip. */
+const STAR_PATH =
+  "M 0 -10 C 1.5 -2.5, 2.5 -1.5, 10 0 C 2.5 1.5, 1.5 2.5, 0 10 " +
+  "C -1.5 2.5, -2.5 1.5, -10 0 C -2.5 -1.5, -1.5 -2.5, 0 -10 Z";
+
+function drawStar(pg, cx, cy, r, color, opacity) {
+  pg.drawSvgPath(STAR_PATH, {
+    x: cx, y: cy,
+    scale: r / 10,
+    color, opacity: opacity ?? 1,
+  });
+}
+
+/** Classic trio: one larger star flanked by two smaller ones. */
+function drawStarCluster(pg, cx, cy, scale, color) {
+  drawStar(pg, cx, cy, 9 * scale, color);
+  drawStar(pg, cx - 26 * scale, cy - 4 * scale, 5 * scale, color, 0.85);
+  drawStar(pg, cx + 26 * scale, cy - 4 * scale, 5 * scale, color, 0.85);
+}
+
+/** Hairline — star — hairline, centered at (cx, y). */
+function drawDivider(pg, cx, y, color) {
+  const half = 74;
+  const gap = 14;
+  pg.drawLine({
+    start: { x: cx - half, y }, end: { x: cx - gap, y },
+    thickness: 0.9, color, opacity: 0.9,
+  });
+  pg.drawLine({
+    start: { x: cx + gap, y }, end: { x: cx + half, y },
+    thickness: 0.9, color, opacity: 0.9,
+  });
+  drawStar(pg, cx, y, 7, color);
+}
+
+/** Rounded-rect svg path (for borders only — no fill). */
+function roundedRectPath(x, y, w, h, r) {
+  return (
+    `M ${x + r} ${y} L ${x + w - r} ${y} Q ${x + w} ${y} ${x + w} ${y + r} ` +
+    `L ${x + w} ${y + h - r} Q ${x + w} ${y + h} ${x + w - r} ${y + h} ` +
+    `L ${x + r} ${y + h} Q ${x} ${y + h} ${x} ${y + h - r} ` +
+    `L ${x} ${y + r} Q ${x} ${y} ${x + r} ${y} Z`
+  );
+}
+
+/** Double-rule frame inset `inset` from the physical page edge. */
+function drawDoubleFrame(pg, inset, w, h, color) {
+  pg.drawRectangle({
+    x: inset, y: inset, width: w - 2 * inset, height: h - 2 * inset,
+    borderColor: color, borderWidth: 1.6, borderOpacity: 0.85,
+  });
+  pg.drawRectangle({
+    x: inset + 6, y: inset + 6, width: w - 2 * (inset + 6), height: h - 2 * (inset + 6),
+    borderColor: color, borderWidth: 0.7, borderOpacity: 0.7,
+  });
+}
+
+/* ─────────────────────────────────────────────
+   IMAGES
+───────────────────────────────────────────── */
+
 async function embedImage(doc, bytes) {
   if (!bytes) return null;
   try { return await doc.embedJpg(bytes); }
@@ -103,21 +225,26 @@ async function embedImage(doc, bytes) {
 }
 
 /**
- * Draw an image inside a box using aspect-preserving CONTAIN fit.
- * Fills the box with `bg` first, then centers the scaled image inside it.
- * (Identical to the helper in storybook-pdf.js.)
+ * Draw an image as a matted plate: near-white card, gold hairline, then the
+ * image contain-fit inside with even padding. (x,y) = lower-left of plate.
  */
-function drawContain(pg, img, x, y, w, h, bg) {
-  pg.drawRectangle({ x, y, width: w, height: h, color: bg });
+function drawPlate(pg, img, x, y, w, h) {
+  pg.drawRectangle({ x, y, width: w, height: h, color: CARD });
+  pg.drawRectangle({
+    x: x + 0.5, y: y + 0.5, width: w - 1, height: h - 1,
+    borderColor: GOLD, borderWidth: 1, borderOpacity: 0.8,
+  });
   if (!img) return;
-  const scale = Math.min(w / img.width, h / img.height);
-  const dw = img.width  * scale;
+  const pad = 12;
+  const iw = w - pad * 2;
+  const ih = h - pad * 2;
+  const scale = Math.min(iw / img.width, ih / img.height);
+  const dw = img.width * scale;
   const dh = img.height * scale;
   pg.drawImage(img, {
     x: x + (w - dw) / 2,
     y: y + (h - dh) / 2,
-    width:  dw,
-    height: dh,
+    width: dw, height: dh,
   });
 }
 
@@ -127,15 +254,6 @@ function drawContain(pg, img, x, y, w, h, bg) {
 
 /**
  * Build the Lulu-ready INTERIOR PDF (no front cover — Lulu prints that separately).
- *
- * Physical page: PAGE_PT × PAGE_PT = 630 pt × 630 pt (8.75 in square)
- * Trim lives 9 pt (0.125 in) inside each physical edge.
- * All text is kept ≥ BLEED_PT + SAFE_PT = 45 pt from the physical page edge.
- *
- * Page order:
- *   1. Title / dedication page
- *   2…N. Story pages (one per `pages[i]`, illustrated with `pageImages[i]`)
- *   N+1. Blank page appended if total count is odd (Lulu even-page requirement)
  *
  * @param {object}              opts
  * @param {string}              opts.title
@@ -149,118 +267,236 @@ async function buildInteriorPDF({ title, childName, pages, pageImages }) {
   doc.setTitle(title + " — Interior");
   doc.setAuthor("Inklings");
   doc.setSubject("Inklings personalized storybook — interior file for Lulu");
-  doc.setProducer("Inklings print-pdf.js");
+  doc.setProducer("Inklings print-pdf.js (atelier)");
 
-  doc.registerFontkit(fontkit);
-  const serif       = await doc.embedFont(fs.readFileSync(FONT.serif), { subset: true });
-  const serifBold   = await doc.embedFont(fs.readFileSync(FONT.serifBold), { subset: true });
-  const serifItalic = await doc.embedFont(fs.readFileSync(FONT.serifItalic), { subset: true });
-  const sans        = await doc.embedFont(fs.readFileSync(FONT.sans), { subset: true });
-
-  // Safe text inset from physical page edge = bleed + safe zone
-  const TEXT_INSET = BLEED_PT + SAFE_PT;   // 45 pt from physical edge
-
-  // Usable text width (between safe zones on left and right)
+  const F = await embedBrandFonts(doc);
+  const CX = PAGE_PT / 2;
   const TEXT_W = PAGE_PT - TEXT_INSET * 2;
 
-  /* ───── TITLE / DEDICATION PAGE ───── */
-  {
+  function newPaperPage() {
     const pg = doc.addPage([PAGE_PT, PAGE_PT]);
-    pg.drawRectangle({ x: 0, y: 0, width: PAGE_PT, height: PAGE_PT, color: CREAM });
+    pg.drawRectangle({ x: 0, y: 0, width: PAGE_PT, height: PAGE_PT, color: PAPER });
+    return pg;
+  }
 
-    // Small star ornament, centered, near top
-    pg.drawCircle({ x: PAGE_PT / 2, y: PAGE_PT - BLEED_PT - 100, size: 3, color: GOLD });
+  /* ───── PAGE 1 · TITLE / DEDICATION ───── */
+  {
+    const pg = newPaperPage();
+    drawDoubleFrame(pg, BLEED_PT + 15, PAGE_PT, PAGE_PT, GOLD);
 
-    // Title, centered
-    const titleLines = wrap(title, serifBold, 30, TEXT_W);
-    let y = PAGE_PT - BLEED_PT - 180;
+    drawStarCluster(pg, CX, PAGE_PT - BLEED_PT - 118, 1.0, GOLD);
+
+    const titleSize = 33;
+    const titleLines = wrap(title, F.display, titleSize, TEXT_W - 30);
+    let y = PAGE_PT - BLEED_PT - 190;
     for (const ln of titleLines) {
-      const lw = serifBold.widthOfTextAtSize(ln, 30);
-      pg.drawText(ln, { x: (PAGE_PT - lw) / 2, y, size: 30, font: serifBold, color: INK });
-      y -= 38;
+      centerText(pg, ln, F.display, titleSize, CX, y, PLUM);
+      y -= titleSize + 10;
     }
 
-    // Dedication line
-    const ded = "Written and illustrated especially for " + childName + ".";
-    const dedLines = wrap(ded, serifItalic, 15, TEXT_W);
-    y -= 20;
-    for (const ln of dedLines) {
-      const lw = serifItalic.widthOfTextAtSize(ln, 15);
-      pg.drawText(ln, { x: (PAGE_PT - lw) / 2, y, size: 15, font: serifItalic, color: MUTE });
-      y -= 22;
-    }
+    y -= 6;
+    drawDivider(pg, CX, y, GOLD);
+
+    y -= 44;
+    centerText(pg, "Written and illustrated especially for", F.bodyItalic, 15, CX, y, MUTE);
+    y -= 30;
+    centerText(pg, childName, F.label, 21, CX, y, CORAL);
+
+    centerText(pg, "I N K L I N G S", F.labelMed, 9.5, CX, TEXT_INSET + 4, MUTE, 0.85);
+  }
+
+  /* ───── PAGE 2 · "THIS BOOK BELONGS TO" BOOKPLATE ───── */
+  {
+    const pg = newPaperPage();
+    drawDoubleFrame(pg, BLEED_PT + 15, PAGE_PT, PAGE_PT, GOLD);
+
+    const plateW = PAGE_PT - (BLEED_PT + 84) * 2;
+    const plateH = 300;
+    const plateX = (PAGE_PT - plateW) / 2;
+    const plateY = (PAGE_PT - plateH) / 2 + 10;
+
+    drawStarCluster(pg, CX, plateY + plateH + 46, 0.8, GOLD);
+
+    pg.drawSvgPath(roundedRectPath(plateX, plateY, plateW, plateH, 14), {
+      x: 0, y: 0, borderColor: GOLD, borderWidth: 1.4, borderOpacity: 0.9,
+    });
+    pg.drawSvgPath(roundedRectPath(plateX + 7, plateY + 7, plateW - 14, plateH - 14, 10), {
+      x: 0, y: 0, borderColor: GOLD, borderWidth: 0.6, borderOpacity: 0.7,
+    });
+
+    let y = plateY + plateH - 58;
+    centerText(pg, "This book belongs to", F.label, 17, CX, y, PLUM);
+
+    // ruled name line
+    const lineW = plateW - 130;
+    y -= 62;
+    pg.drawLine({
+      start: { x: CX - lineW / 2, y }, end: { x: CX + lineW / 2, y },
+      thickness: 0.9, color: MUTE, opacity: 0.75,
+    });
+    drawStar(pg, CX, y + 40, 6, GOLD, 0.9);
+
+    y -= 48;
+    centerText(pg, "and their big imagination", F.bodyItalic, 13.5, CX, y, MUTE);
+
+    centerText(pg, "made with love · inklings.shop", F.labelMed, 9.5, CX, plateY - 34, MUTE, 0.8);
   }
 
   /* ───── STORY PAGES ───── */
   const hasImages = Array.isArray(pageImages) && pageImages.some((b) => !!b);
 
   for (let i = 0; i < pages.length; i++) {
-    const para  = pages[i];
-    const bg    = i % 2 === 0 ? CREAM : CREAM2;
-    const pg    = doc.addPage([PAGE_PT, PAGE_PT]);
-
-    pg.drawRectangle({ x: 0, y: 0, width: PAGE_PT, height: PAGE_PT, color: bg });
+    const pg = newPaperPage();
+    const para = String(pages[i] ?? "").trim();
 
     if (hasImages) {
-      const rawImg = Array.isArray(pageImages) ? pageImages[i] : null;
-      const img    = await embedImage(doc, rawImg || null);
+      const img = await embedImage(doc, Array.isArray(pageImages) ? pageImages[i] : null);
 
-      // Image band: top ~75% of PAGE, clipped to bleed region at top
-      const imgH = PAGE_PT * 0.75;
-      drawContain(pg, img, 0, PAGE_PT - imgH, PAGE_PT, imgH, bg);
+      // Matted art plate, centered, upper page. Sized so the text block
+      // below (up to 4 lines + folio) always clears the trim edge.
+      const plateSize = PAGE_PT - (BLEED_PT + 86) * 2;   // 440 pt plate
+      const plateX = (PAGE_PT - plateSize) / 2;
+      const plateY = PAGE_PT - BLEED_PT - 24 - plateSize;
 
-      // Gold separator rule
       if (img) {
-        pg.drawRectangle({ x: 0, y: PAGE_PT - imgH - 2, width: PAGE_PT, height: 2, color: GOLD });
+        drawPlate(pg, img, plateX, plateY, plateSize, plateSize);
+      } else {
+        // no art for this page — empty plate with a star
+        drawPlate(pg, null, plateX, plateY, plateSize, plateSize);
+        drawStar(pg, CX, plateY + plateSize / 2, 18, GOLD, 0.5);
       }
 
-      // Text band: between separator and safe-zone bottom
-      const textAreaTop  = PAGE_PT - imgH - 10;
-      const textAreaBot  = TEXT_INSET + 20;          // above page-number zone
-      const textSize     = 17;
-      const lineStep     = textSize + 8;
-      const storyLines   = wrap(para, serif, textSize, TEXT_W);
+      const dividerY = plateY - 26;
+      drawDivider(pg, CX, dividerY, GOLD);
 
-      let ty = textAreaTop - textSize;
-      for (const ln of storyLines) {
-        if (ty < textAreaBot) break;                 // don't overflow into bleed
-        pg.drawText(ln, { x: TEXT_INSET, y: ty, size: textSize, font: serif, color: INK });
+      // Story text with drop cap. Auto-shrinks: 3 lines at full size, up to
+      // 4 lines at the smallest sizes; pathological overflow is truncated.
+      let size = 15.5;
+      let maxLines = 3;
+      let lines = [];
+      let capChar = "";
+      let rest = para;
+      if (rest.length > 0) { capChar = rest[0]; rest = rest.slice(1).trimStart(); }
+
+      for (const [candidate, cap] of [[15.5, 3], [14, 3], [12.75, 4], [11.5, 4]]) {
+        size = candidate;
+        maxLines = cap;
+        const capW = rest ? F.display.widthOfTextAtSize(capChar, size * 2.15) : 0;
+        const slot = capW > 0 ? capW + 12 : 0;
+        lines = wrapWithWidths(rest, F.body, size, (ln) =>
+          TEXT_W - (ln < 2 ? slot : 0),
+        );
+        if (lines.length <= cap) break;
+      }
+
+      const lineStep = size + 6.5;
+      const capSize = size * 2.15;
+      const capW = capChar ? F.display.widthOfTextAtSize(capChar, capSize) : 0;
+      const slot = capW > 0 ? capW + 12 : 0;
+      const textTop = dividerY - 26;
+
+      if (capChar) {
+        pg.drawText(capChar, {
+          x: TEXT_INSET, y: textTop - (lineStep - 5) - (capSize - size) * 0.35,
+          size: capSize, font: F.display, color: CORAL,
+        });
+      }
+      let ty = textTop;
+      for (let li = 0; li < lines.length && li < maxLines; li++) {
+        pg.drawText(lines[li], {
+          x: TEXT_INSET + (li < 2 ? slot : 0), y: ty,
+          size, font: F.body, color: PLUM,
+        });
         ty -= lineStep;
       }
     } else {
-      // Text-only fallback: vertically centered text block
-      const textSize  = 21;
-      const lineStep  = textSize + 10;
-      const storyLines = wrap(para, serif, textSize, TEXT_W);
-      const blockH    = storyLines.length * lineStep;
-      let ty = (PAGE_PT + blockH) / 2 - textSize;
+      // Text-only page: centered block with ornaments + drop cap
+      drawStarCluster(pg, CX, PAGE_PT - BLEED_PT - 120, 0.85, GOLD);
+      const size = 18;
+      const lineStep = size + 9;
+      let capChar = "";
+      let rest = para;
+      if (rest.length > 0) { capChar = rest[0]; rest = rest.slice(1).trimStart(); }
+      const capSize = size * 2.1;
+      const capW = capChar ? F.display.widthOfTextAtSize(capChar, capSize) : 0;
+      const slot = capW > 0 ? capW + 12 : 0;
+      const lines = wrapWithWidths(rest, F.body, size, (ln) => TEXT_W - (ln < 2 ? slot : 0));
+      const blockH = lines.length * lineStep;
+      let ty = (PAGE_PT + blockH) / 2 - size - 20;
 
-      for (const ln of storyLines) {
-        pg.drawText(ln, { x: TEXT_INSET, y: ty, size: textSize, font: serif, color: INK });
+      if (capChar) {
+        pg.drawText(capChar, {
+          x: TEXT_INSET, y: ty - (lineStep - 5) - (capSize - size) * 0.35,
+          size: capSize, font: F.display, color: CORAL,
+        });
+      }
+      for (const ln of lines) {
+        pg.drawText(ln, {
+          x: TEXT_INSET + (ty > (PAGE_PT + blockH) / 2 - size - 20 - lineStep * 2 ? slot : 0),
+          y: ty, size, font: F.body, color: PLUM,
+        });
         ty -= lineStep;
       }
+      drawDivider(pg, CX, TEXT_INSET + 60, GOLD);
     }
 
-    // Page number — inside safe zone, bottom-center
+    // Page number — flanked by tiny stars, inside safe zone
     const num = String(i + 1);
-    const nw  = sans.widthOfTextAtSize(num, 12);
-    pg.drawText(num, {
-      x: (PAGE_PT - nw) / 2,
-      y: TEXT_INSET - 14,    // just below the safe-zone floor, still above bleed
-      size: 12, font: sans, color: MUTE,
-    });
+    const nw = F.label.widthOfTextAtSize(num, 11);
+    const ny = TEXT_INSET - 6;
+    centerText(pg, num, F.label, 11, CX, ny, MUTE);
+    drawStar(pg, CX - nw / 2 - 14, ny + 4, 4.5, GOLD, 0.9);
+    drawStar(pg, CX + nw / 2 + 14, ny + 4, 4.5, GOLD, 0.9);
   }
 
-  /* ───── EVEN-PAGE PADDING ─────
-     Lulu requires an even total interior page count.
-     Count = 1 (dedication) + pages.length; append blank if odd.
-     TODO: confirm this requirement for your specific Lulu product type.
-  ─────────────────────────────── */
-  const totalPages = 1 + pages.length;
-  const target = Math.ceil(totalPages / 4) * 4;   // saddle-stitch requires a multiple of 4
-  for (let k = totalPages; k < target; k++) {
-    const blank = doc.addPage([PAGE_PT, PAGE_PT]);
-    blank.drawRectangle({ x: 0, y: 0, width: PAGE_PT, height: PAGE_PT, color: CREAM });
+  /* ───── "THE END" COLOPHON ───── */
+  {
+    const pg = newPaperPage();
+    drawDoubleFrame(pg, BLEED_PT + 15, PAGE_PT, PAGE_PT, GOLD);
+
+    drawStarCluster(pg, CX, PAGE_PT / 2 + 108, 1.0, GOLD);
+    centerText(pg, "The End", F.display, 40, CX, PAGE_PT / 2 + 34, PLUM);
+    drawDivider(pg, CX, PAGE_PT / 2 - 6, GOLD);
+
+    const colophon = `Made with Inklings — every page dreamed up by ${childName} and approved by their grown-up.`;
+    const lines = wrap(colophon, F.bodyItalic, 13, TEXT_W - 80);
+    let y = PAGE_PT / 2 - 44;
+    for (const ln of lines) {
+      centerText(pg, ln, F.bodyItalic, 13, CX, y, MUTE);
+      y -= 19;
+    }
+    centerText(pg, "inklings.shop", F.labelMed, 11, CX, y - 12, GOLD);
+  }
+
+  /* ───── PAD TO MULTIPLE OF 4 (activity page, then star blank) ───── */
+  const totalPages = 3 + pages.length;   // title + belongs + story + end
+  const target = Math.ceil(totalPages / 4) * 4;
+  const fillers = target - totalPages;
+
+  if (fillers >= 1) {
+    const pg = newPaperPage();
+    drawDoubleFrame(pg, BLEED_PT + 15, PAGE_PT, PAGE_PT, GOLD);
+
+    drawStarCluster(pg, CX, PAGE_PT - BLEED_PT - 118, 0.85, GOLD);
+    centerText(pg, "Draw your own ending", F.display, 27, CX, PAGE_PT - BLEED_PT - 168, PLUM);
+    centerText(pg, "What happens next in your story?", F.bodyItalic, 13.5, CX, PAGE_PT - BLEED_PT - 198, MUTE);
+
+    const boxX = BLEED_PT + 64;
+    const boxY = BLEED_PT + 88;
+    const boxW = PAGE_PT - boxX * 2;
+    const boxH = PAGE_PT - BLEED_PT - 240 - boxY + 60;
+    pg.drawSvgPath(roundedRectPath(boxX, boxY, boxW, boxH, 12), {
+      x: 0, y: 0, borderColor: GOLD, borderWidth: 1.2, borderOpacity: 0.85,
+    });
+    drawStar(pg, boxX + 16, boxY + 16, 5, GOLD, 0.7);
+    drawStar(pg, boxX + boxW - 16, boxY + 16, 5, GOLD, 0.7);
+    drawStar(pg, boxX + 16, boxY + boxH - 16, 5, GOLD, 0.7);
+    drawStar(pg, boxX + boxW - 16, boxY + boxH - 16, 5, GOLD, 0.7);
+  }
+
+  if (fillers >= 2) {
+    const pg = newPaperPage();
+    drawStar(pg, CX, PAGE_PT / 2, 8, GOLD, 0.4);
   }
 
   return doc.save();
@@ -270,150 +506,130 @@ async function buildInteriorPDF({ title, childName, pages, pageImages }) {
    COVER PDF
 ───────────────────────────────────────────── */
 
+/** Deterministic starfield for the back cover (fractions of panel). */
+const BACK_STARS = [
+  [0.14, 0.86, 5, 1], [0.30, 0.93, 3, 0.8], [0.52, 0.88, 4, 0.9], [0.71, 0.93, 3, 0.7],
+  [0.87, 0.84, 5, 1], [0.10, 0.62, 3, 0.7], [0.90, 0.60, 3, 0.8], [0.16, 0.38, 4, 0.8],
+  [0.85, 0.36, 4, 0.7], [0.08, 0.16, 3, 0.7], [0.24, 0.10, 4, 0.85], [0.76, 0.12, 3, 0.7],
+  [0.90, 0.18, 4, 0.8], [0.42, 0.95, 3, 0.6], [0.62, 0.06, 3, 0.6], [0.36, 0.07, 3, 0.6],
+];
+
 /**
  * Build the Lulu-ready WRAPAROUND COVER PDF (single landscape page).
- *
  * Layout (left → right): [ back cover | spine | front cover ]
  *
- * Height    = trim + 2 * bleed  =  8.75 in  =  630 pt
- * Width     = 2 * (trim + bleed) + spineWidth
- *           = 2 * (8.5 + 0.125) + spineWidth in
- *
- * Spine width:
- *   hardcover → pageCount × SPINE_PER_PAGE_IN  (TODO: confirm formula with Lulu)
- *   softcover → 0  (thin saddle-stitch; Lulu may still require a minimal spine)
- *
  * @param {object}       opts
- * @param {string}       opts.title        — book title
- * @param {string}       opts.childName    — child's name
+ * @param {string}       opts.title
+ * @param {string}       opts.childName
  * @param {string}       opts.blurb        — one-liner shown on back cover
  * @param {Buffer}       opts.coverImage   — JPEG (or PNG) for the front cover
- * @param {number}       opts.pageCount    — total interior page count (after even-padding)
- * @param {string}       opts.binding      — 'hardcover' | 'softcover' (default: 'softcover')
+ * @param {number}       opts.pageCount    — total interior page count (after padding)
+ * @param {string}       opts.binding      — 'hardcover' | 'softcover'
  * @returns {Promise<Uint8Array>}
  */
 async function buildCoverPDF({ title, childName, blurb, coverImage, pageCount, binding = "softcover" }) {
-  // Compute spine width
-  const spineW_in = binding === "hardcover"
-    ? pageCount * SPINE_PER_PAGE_IN    // TODO confirm Lulu spine formula
-    : 0;                               // softcover / saddle-stitch: no spine
+  const spineW_in = binding === "hardcover" ? pageCount * SPINE_PER_PAGE_IN : 0;
   const spineW_pt = spineW_in * PT_PER_IN;
 
-  // Full wraparound cover dimensions
-  const coverH_pt = PAGE_PT;                                     // 630 pt (8.75 in)
-  const panelW_pt = (TRIM_IN + BLEED_IN) * PT_PER_IN;           // one cover panel = 612 pt (8.625 in)
-  const coverW_pt = 2 * panelW_pt + spineW_pt;                  // total width
+  const coverH_pt = PAGE_PT;                                  // 630 pt
+  const panelW_pt = (TRIM_IN + BLEED_IN) * PT_PER_IN;         // 621 pt per panel
+  const coverW_pt = 2 * panelW_pt + spineW_pt;
 
-  // X-offsets for each region
-  const backX   = 0;
-  const spineX  = panelW_pt;
-  const frontX  = panelW_pt + spineW_pt;
+  const backX = 0;
+  const spineX = panelW_pt;
+  const frontX = panelW_pt + spineW_pt;
 
   const doc = await PDFDocument.create();
   doc.setTitle(title + " — Cover (wraparound)");
   doc.setAuthor("Inklings");
   doc.setSubject("Inklings personalized storybook — cover file for Lulu");
-  doc.setProducer("Inklings print-pdf.js");
+  doc.setProducer("Inklings print-pdf.js (atelier)");
 
-  doc.registerFontkit(fontkit);
-  const serif       = await doc.embedFont(fs.readFileSync(FONT.serif), { subset: true });
-  const serifBold   = await doc.embedFont(fs.readFileSync(FONT.serifBold), { subset: true });
-  const serifItalic = await doc.embedFont(fs.readFileSync(FONT.serifItalic), { subset: true });
-  const sans        = await doc.embedFont(fs.readFileSync(FONT.sans), { subset: true });
-
+  const F = await embedBrandFonts(doc);
   const pg = doc.addPage([coverW_pt, coverH_pt]);
-
-  // Safe text inset within each panel (from physical outer/top/bottom edges)
-  const TEXT_INSET = BLEED_PT + SAFE_PT;    // 45 pt
 
   /* ─── FRONT COVER (right panel) ─── */
   {
-    const fw = panelW_pt;
     const fx = frontX;
+    const fw = panelW_pt;
 
-    // Cover image: contain-fit fills the entire front panel
+    pg.drawRectangle({ x: fx, y: 0, width: fw, height: coverH_pt, color: PLUM_DEEP });
+
+    // Cover art as a matted plate, upper ~2/3 of panel
     const img = await embedImage(doc, coverImage);
-    drawContain(pg, img, fx, 0, fw, coverH_pt, INK);
-
-    // Semi-transparent title bar at bottom of front panel
-    const barH = 120;
-    pg.drawRectangle({ x: fx, y: 0, width: fw, height: barH, color: INK, opacity: 0.88 });
-
-    // Title
-    const titleSafe = TEXT_INSET;
-    const titleW    = fw - TEXT_INSET * 2;
-    const titleLines = wrap(title, serifBold, 26, titleW);
-    let ty = barH - 36;
-    for (const ln of titleLines) {
-      pg.drawText(ln, {
-        x: fx + TEXT_INSET, y: ty,
-        size: 26, font: serifBold, color: CREAM,
-      });
-      ty -= 32;
+    const plateMaxW = fw - TEXT_INSET * 2 - 30;
+    const plateMaxH = coverH_pt * 0.62;
+    const plateSize = Math.min(plateMaxW, plateMaxH);
+    const plateX = fx + (fw - plateSize) / 2;
+    const plateY = coverH_pt - BLEED_PT - 34 - plateSize;
+    if (img) {
+      drawPlate(pg, img, plateX, plateY, plateSize, plateSize);
+    } else {
+      drawPlate(pg, null, plateX, plateY, plateSize, plateSize);
+      drawStar(pg, fx + fw / 2, plateY + plateSize / 2, 22, GOLD, 0.6);
     }
 
-    // "Made for {childName}"
-    const sub = "Made for " + childName;
-    pg.drawText(sub, {
-      x: fx + TEXT_INSET, y: TEXT_INSET - 2,
-      size: 14, font: serifItalic, color: GOLD,
-    });
+    // Title composition under the plate
+    let y = plateY - 44;
+    const titleSize = 25;
+    const titleLines = wrap(title, F.display, titleSize, fw - TEXT_INSET * 2);
+    for (const ln of titleLines.slice(0, 2)) {
+      centerText(pg, ln, F.display, titleSize, fx + fw / 2, y, PAPER);
+      y -= titleSize + 7;
+    }
+
+    y -= 4;
+    drawDivider(pg, fx + fw / 2, y, GOLD);
+
+    y -= 30;
+    centerText(pg, "Made for " + childName, F.bodyItalic, 14.5, fx + fw / 2, y, GOLD);
   }
 
   /* ─── BACK COVER (left panel) ─── */
   {
     const bw = panelW_pt;
+    pg.drawRectangle({ x: backX, y: 0, width: bw, height: coverH_pt, color: PLUM_DEEP });
 
-    // Solid INK background
-    pg.drawRectangle({ x: backX, y: 0, width: bw, height: coverH_pt, color: INK });
-
-    // Blurb text, centered vertically in the back panel
-    const blurbW     = bw - TEXT_INSET * 2;
-    const blurbLines = wrap(blurb || "", serifItalic, 18, blurbW);
-    const blurbBlockH = blurbLines.length * 26;
-    let by = (coverH_pt + blurbBlockH) / 2 - 18;
-    for (const ln of blurbLines) {
-      pg.drawText(ln, {
-        x: backX + TEXT_INSET, y: by,
-        size: 18, font: serifItalic, color: CREAM,
-      });
-      by -= 26;
+    // starfield
+    for (const [fxs, fys, r, o] of BACK_STARS) {
+      drawStar(pg, backX + fxs * bw, fys * coverH_pt, r, GOLD, o);
     }
 
-    // Inklings.com URL near bottom of back panel
-    const urlText = "Inklings.com";
-    const urlW    = sans.widthOfTextAtSize(urlText, 13);
-    pg.drawText(urlText, {
-      x: backX + (bw - urlW) / 2,
-      y: TEXT_INSET - 4,
-      size: 13, font: sans, color: GOLD, opacity: 0.9,
-    });
+    // blurb, centered
+    const blurbW = bw - TEXT_INSET * 2 - 40;
+    const blurbLines = wrap(blurb || "", F.bodyItalic, 16.5, blurbW);
+    let by = coverH_pt / 2 + (blurbLines.length * 24) / 2 + 20;
+    for (const ln of blurbLines) {
+      centerText(pg, ln, F.bodyItalic, 16.5, backX + bw / 2, by, PAPER);
+      by -= 24;
+    }
+
+    drawDivider(pg, backX + bw / 2, by - 6, GOLD);
+
+    centerText(
+      pg,
+      "Parent-approved · No ads · A keepsake they made themselves",
+      F.labelMed, 10.5, backX + bw / 2, by - 34, PAPER, 0.75,
+    );
+
+    // imprint
+    drawStar(pg, backX + bw / 2, TEXT_INSET + 34, 6, GOLD, 0.9);
+    centerText(pg, "inklings.shop", F.labelMed, 11.5, backX + bw / 2, TEXT_INSET + 8, GOLD);
   }
 
-  /* ─── SPINE (center strip, only if wide enough) ─── */
-  if (spineW_pt >= SPINE_MIN_FOR_TEXT_IN * PT_PER_IN) {
-    // Fill spine with INK
-    pg.drawRectangle({ x: spineX, y: 0, width: spineW_pt, height: coverH_pt, color: INK });
-
-    // Vertical title text, rotated 90° CCW, centered on spine
-    const spineTitle  = title;
-    const spineFontSz = Math.min(12, spineW_pt * 0.65);          // scale to spine width
-    const spineTW     = serifBold.widthOfTextAtSize(spineTitle, spineFontSz);
-    const spineCenterX = spineX + spineW_pt / 2;
-    const spineCenterY = coverH_pt / 2;
-
-    // pdf-lib rotates around the x,y anchor — place text so center lands on spine center
-    pg.drawText(spineTitle, {
-      x: spineCenterX - spineFontSz / 2,   // horizontally center the rotated baseline
-      y: spineCenterY - spineTW / 2,
-      size: spineFontSz,
-      font: serifBold,
-      color: GOLD,
-      rotate: degrees(90),
-    });
-  } else if (spineW_pt > 0) {
-    // Spine exists but too narrow for text — just fill with INK
-    pg.drawRectangle({ x: spineX, y: 0, width: spineW_pt, height: coverH_pt, color: INK });
+  /* ─── SPINE ─── */
+  if (spineW_pt > 0) {
+    pg.drawRectangle({ x: spineX, y: 0, width: spineW_pt, height: coverH_pt, color: PLUM_DEEP });
+    if (spineW_pt >= SPINE_MIN_FOR_TEXT_IN * PT_PER_IN) {
+      const spineFontSz = Math.min(12, spineW_pt * 0.65);
+      const spineTW = F.display.widthOfTextAtSize(title, spineFontSz);
+      pg.drawText(title, {
+        x: spineX + spineW_pt / 2 - spineFontSz / 2,
+        y: coverH_pt / 2 - spineTW / 2,
+        size: spineFontSz, font: F.display, color: GOLD,
+        rotate: degrees(90),
+      });
+    }
   }
 
   return doc.save();
