@@ -1,9 +1,26 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
+import { Fraunces, Nunito } from "next/font/google";
 import "./globals.css";
 import { brand } from "@/lib/brand";
 import { SiteChrome } from "@/components/SiteChrome";
 import { OrganizationJsonLd } from "@/lib/jsonld";
+
+// Self-hosted at build time by next/font — premium type with zero runtime
+// FOUT and no third-party font requests from the visitor's browser.
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  axes: ["opsz"],
+  variable: "--font-fraunces",
+  display: "swap",
+});
+
+const nunito = Nunito({
+  subsets: ["latin"],
+  variable: "--font-nunito",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: `${brand.name} — Build a story universe your child runs`,
@@ -43,7 +60,7 @@ const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${fraunces.variable} ${nunito.variable}`}>
       <body className="flex min-h-screen flex-col font-sans">
         {GA_ID && (
           <>

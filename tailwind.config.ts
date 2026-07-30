@@ -51,16 +51,17 @@ const config: Config = {
         },
       },
       fontFamily: {
-        // System font stack per spine §3 — no Google Fonts (FOUT, privacy)
+        // Nunito (self-hosted via next/font at build — no runtime FOUT/privacy cost)
         sans: [
+          "var(--font-nunito)",
           "-apple-system",
           "BlinkMacSystemFont",
           "'Segoe UI'",
           "Roboto",
           "sans-serif",
         ],
-        // Reserved for kid-facing display only — to be loaded as woff2 later
-        display: ["'Quicksand Variable'", "sans-serif"],
+        // Fraunces — premium storybook serif for display headlines
+        display: ["var(--font-fraunces)", "Georgia", "'Times New Roman'", "serif"],
       },
       maxWidth: {
         "section": "72rem", // hero sections
@@ -73,6 +74,43 @@ const config: Config = {
       boxShadow: {
         card: "0 4px 14px rgba(74, 37, 69, 0.08)",
         cardHover: "0 8px 24px rgba(74, 37, 69, 0.14)",
+        book: "0 1px 2px rgba(35, 17, 33, 0.18), 0 12px 28px rgba(35, 17, 33, 0.22), 0 32px 64px rgba(35, 17, 33, 0.18)",
+        page: "0 2px 6px rgba(74, 37, 69, 0.10), 0 18px 40px rgba(74, 37, 69, 0.16)",
+        "glow-coral": "0 12px 44px rgba(244, 129, 92, 0.38)",
+        "glow-gold": "0 10px 40px rgba(212, 165, 116, 0.35)",
+      },
+      transitionTimingFunction: {
+        silk: "cubic-bezier(0.22, 1, 0.36, 1)",
+      },
+      keyframes: {
+        "float-y": {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-12px)" },
+        },
+        "float-y-soft": {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-7px)" },
+        },
+        twinkle: {
+          "0%, 100%": { opacity: "0.15", transform: "scale(0.8)" },
+          "50%": { opacity: "1", transform: "scale(1.15)" },
+        },
+        "drift-slow": {
+          "0%, 100%": { transform: "translate(0, 0) rotate(0deg)" },
+          "33%": { transform: "translate(6px, -10px) rotate(1.5deg)" },
+          "66%": { transform: "translate(-5px, -4px) rotate(-1deg)" },
+        },
+        "cue-bounce": {
+          "0%, 100%": { transform: "translateY(0)", opacity: "0.7" },
+          "50%": { transform: "translateY(6px)", opacity: "1" },
+        },
+      },
+      animation: {
+        "float-y": "float-y 7s ease-in-out infinite",
+        "float-y-soft": "float-y-soft 9s ease-in-out infinite",
+        twinkle: "twinkle 3.4s ease-in-out infinite",
+        "drift-slow": "drift-slow 14s ease-in-out infinite",
+        "cue-bounce": "cue-bounce 1.8s ease-in-out infinite",
       },
     },
   },

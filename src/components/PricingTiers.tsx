@@ -76,18 +76,20 @@ export function PricingTiers() {
           key={tier.id}
           className={
             "card-base relative flex flex-col " +
-            (tier.featured ? "ring-2 ring-coral" : "")
+            (tier.featured
+              ? "bg-white ring-2 ring-coral shadow-[0_24px_64px_rgba(244,129,92,0.30)] lg:-translate-y-3 lg:scale-[1.02]"
+              : "")
           }
         >
           {tier.badge && (
-            <div className="absolute right-6 top-6 rounded-full bg-coral px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white">
+            <div className="absolute right-6 top-6 rounded-full bg-gradient-to-r from-coral to-coral-600 px-3 py-1 text-xs font-bold uppercase tracking-wider text-white shadow-glow-coral">
               {tier.badge}
             </div>
           )}
-          <h3 className="text-2xl font-bold text-ink">{tier.name}</h3>
+          <h3 className="font-display text-2xl font-semibold text-ink">{tier.name}</h3>
           <div className="mt-4 flex items-baseline gap-1">
             <span className="text-lg text-ink-500">{tier.currency}</span>
-            <span className="text-5xl font-bold text-ink">{tier.amount}</span>
+            <span className="font-display text-5xl font-semibold text-ink">{tier.amount}</span>
             <span className="ml-1 text-sm text-ink-500">{tier.period}</span>
           </div>
           <ul className="mt-6 flex-1 space-y-3 text-sm text-ink-700">

@@ -5,9 +5,11 @@ import { FAQ } from "@/components/FAQ";
 import { PricingTiers } from "@/components/PricingTiers";
 import { FAQ_HOME } from "@/content/faq-data";
 import { FaqPageJsonLd } from "@/lib/jsonld";
-import { AUDIENCE_LANDINGS } from "@/content/audience-landings";
-import { StudioPreviewSection } from "@/components/marketing/StudioPreviewSection";
 import { HomeHero } from "@/components/marketing/HomeHero";
+import { StorybookJourneySection } from "@/components/marketing/StorybookJourneySection";
+import { PrinciplesBand } from "@/components/marketing/PrinciplesBand";
+import { CraftSection } from "@/components/marketing/CraftSection";
+import { FinalCta } from "@/components/marketing/FinalCta";
 import { pageMetadata } from "@/lib/seo";
 
 /** Top FAQ only — full list lives on /faq */
@@ -26,50 +28,25 @@ export default function HomePage() {
       <FaqPageJsonLd items={FAQ_TEASERS} />
       <HomeHero />
 
-      <section className="section bg-cream-100">
-        <div className="container-ink">
-          <div className="grid gap-6 md:grid-cols-2">
-            <div className="card-base">
-              <h2 className="text-2xl font-bold text-ink">Making, not watching</h2>
-              <p className="mt-4 text-ink-700">
-                Your child picks what happens next. Sparky turns their choices into illustrated pages.
-                You review once — then order a softcover that ships to your door.
-              </p>
-              <p className="mt-3 text-sm font-semibold text-ink-600">
-                Softcover keepsake · $19.99 · ships in 7–10 days
-              </p>
-            </div>
-            <div className="card-base">
-              <h2 className="text-2xl font-bold text-ink">Who it&apos;s for</h2>
-              <p className="mt-4 text-ink-700">
-                Parents and grandparents of children ages 5 to 8 — especially families who want a
-                keepsake, not another passive app.
-              </p>
-              <ul className="mt-4 flex flex-wrap gap-2">
-                {AUDIENCE_LANDINGS.map((l) => (
-                  <li key={l.path}>
-                    <Link
-                      href={l.path}
-                      className="rounded-full bg-mint-100 px-3 py-1 text-sm font-medium text-ink-700 hover:bg-mint-200"
-                    >
-                      {l.breadcrumbLabel}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
+      <StorybookJourneySection />
 
-      <StudioPreviewSection />
+      <PrinciplesBand />
 
-      <section className="section bg-cream-100">
-        <div className="container-ink">
+      <CraftSection />
+
+      <section className="section paper-grain relative overflow-hidden bg-cream-100">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute left-1/2 top-0 h-72 w-[52rem] max-w-none -translate-x-1/2 rounded-full bg-gold/15 blur-3xl"
+        />
+        <div className="container-ink relative">
           <div className="section-header-center">
             <span className="eyebrow">Simple pricing</span>
-            <h2 className="section-title">Start free. Print when you&apos;re ready.</h2>
-            <p className="section-subtitle">
+            <h2 className="font-display text-3xl font-semibold leading-tight tracking-tight text-ink sm:text-4xl">
+              Start free. Print when you&apos;re ready.
+            </h2>
+            <div className="gold-rule" />
+            <p className="section-subtitle mt-4">
               Try your first book free. Premium unlocks unlimited stories and HD export.
               Printed softcovers are a one-time add-on on any plan.
             </p>
@@ -78,49 +55,25 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section">
+      <section className="section bg-white">
         <div className="container-ink mx-auto max-w-3xl">
           <div className="section-header-center">
             <span className="eyebrow">Questions parents ask first</span>
-            <h2 className="section-title">FAQ</h2>
+            <h2 className="font-display text-3xl font-semibold leading-tight tracking-tight text-ink sm:text-4xl">
+              Fair questions, straight answers.
+            </h2>
+            <div className="gold-rule" />
           </div>
           <FAQ items={FAQ_TEASERS} />
           <p className="mt-6 text-center">
-            <Link href="/faq" className="font-semibold text-coral hover:underline">
+            <Link href="/faq" className="font-bold text-coral hover:underline">
               More answers →
             </Link>
           </p>
         </div>
       </section>
 
-      <section className="hero-final-cta py-24">
-        <div className="container-ink mx-auto max-w-3xl text-center">
-          <span className="eyebrow-on-dark">A book they can hold</span>
-          <h2 className="text-3xl font-bold tracking-tight text-cream-100 md:text-4xl">
-            Their first book is about twenty minutes away.
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-cream-200/85">
-            Free to try. No credit card. You approve before anything publishes.
-          </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link href="/trial" className="btn-primary btn-large">
-              {brand.primaryCta}
-            </Link>
-            <Link
-              href="/for-grandparents"
-              className="btn-ghost btn-large border-cream-200/60 text-cream-100 hover:bg-cream-100/10"
-            >
-              Gift for grandparents
-            </Link>
-            <Link
-              href="/gift"
-              className="btn-ghost btn-large border-cream-200/60 text-cream-100 hover:bg-cream-100/10"
-            >
-              Gift Premium
-            </Link>
-          </div>
-        </div>
-      </section>
+      <FinalCta />
     </>
   );
 }
