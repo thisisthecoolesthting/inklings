@@ -1,34 +1,27 @@
 import Link from "next/link";
-import Image from "next/image";
+import { ChevronDown } from "lucide-react";
 import { brand } from "@/lib/brand";
 import { TrustBadges } from "@/components/marketing/TrustBadges";
+import { StarField } from "@/components/marketing/StarField";
+import { HeroStage } from "@/components/marketing/HeroStage";
 import { getShowcaseCoverUrl, getShowcasePageUrls } from "@/lib/marketing-showcase";
 import { getSampleUploads } from "@/components/marketing/StoryVisuals";
 
-/** Subtle tilt per tile — playful stack, no overlap. */
-const TILE_TILT = ["-rotate-2", "rotate-2"] as const;
-
-function ShowcaseCard({
-  src,
-  alt,
-  priority,
-}: {
-  src: string;
-  alt: string;
-  priority?: boolean;
-}) {
+function SwashWord({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative aspect-square w-full overflow-hidden rounded-xl border-[3px] border-white bg-cream-50 shadow-[0_10px_28px_rgba(74,37,69,0.14)]">
-      <Image
-        src={src}
-        alt={alt}
-        fill
-        priority={priority}
-        loading={priority ? undefined : "lazy"}
-        sizes="(max-width: 640px) 42vw, (max-width: 1024px) 22vw, 280px"
-        className="object-contain"
-      />
-    </div>
+    <span className="swash-underline font-display italic text-gradient-warm">
+      {children}
+      <svg viewBox="0 0 120 12" preserveAspectRatio="none" aria-hidden>
+        <path
+          d="M3 9 C 30 3, 55 11, 78 6 S 110 4, 117 7"
+          fill="none"
+          stroke="#F4815C"
+          strokeWidth="3.2"
+          strokeLinecap="round"
+          opacity="0.85"
+        />
+      </svg>
+    </span>
   );
 }
 
@@ -46,73 +39,70 @@ export async function HomeHero() {
   if (pages.length < 1) pages = ["/images/site/hero-storybook.jpg"];
 
   const cover = coverHint ?? pages[0]!;
-  const second =
-    pages.find((p) => p !== cover) ??
-    "/images/marketing/open-storybook-pages.jpg";
-
-  const gridItems = [
-    { src: cover, alt: "Sample storybook cover — Milo and the Moonbeam Map", priority: true },
-    {
-      src: second,
-      alt: "Open storybook page — illustration with readable text below",
-      priority: false,
-    },
-  ];
+  const floaters = pages.filter((p) => p !== cover).slice(0, 2);
+  if (floaters.length === 0) floaters.push("/images/marketing/open-storybook-pages.jpg");
 
   return (
-    <section className="hero-storybook">
-      <div className="container-ink section pb-12 pt-10 md:pb-16 md:pt-14">
-        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
+    <section className="hero-storybook paper-grain relative overflow-hidden">
+      <StarField />
+      {/* oversized soft glows for depth */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-40 -top-40 h-[34rem] w-[34rem] rounded-full bg-coral/10 blur-3xl"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -bottom-48 -left-40 h-[30rem] w-[30rem] rounded-full bg-mint/20 blur-3xl"
+      />
+
+      <div className="container-ink relative flex flex-col justify-center pb-16 pt-8 md:pt-12 lg:min-h-[calc(100dvh-4.5rem)] lg:pb-20 lg:pt-14">
+        <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_1fr] lg:gap-8">
           <div className="max-w-xl lg:max-w-none">
-            <span className="eyebrow">Story studio for kids 5–8</span>
-            <h1 className="mt-3 text-4xl font-bold leading-[1.08] tracking-tight text-ink md:text-5xl lg:text-[3.25rem]">
-              Your kid is the{" "}
-              <span className="text-coral">author</span>
-              {" — "}not just the hero.
+            <span className="inline-flex items-center gap-2 rounded-full border border-gold/50 bg-white/70 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-ink-600 backdrop-blur-sm">
+              <span className="h-1.5 w-1.5 rounded-full bg-coral" aria-hidden />
+              The storybook atelier · ages 5–8
+            </span>
+
+            <h1 className="mt-5 font-display text-[2.6rem] font-semibold leading-[1.05] tracking-tight text-ink sm:text-6xl lg:mt-6 lg:text-[4.4rem]">
+              Your kid is the <SwashWord>author</SwashWord>
+              <span className="text-ink-400"> — </span>
+              not just the hero.
             </h1>
-            <p className="mt-5 text-lg leading-relaxed text-ink-700 md:text-xl">
+
+            <p className="mt-5 max-w-lg text-lg leading-relaxed text-ink-700 md:text-xl lg:mt-6">
               {brand.heroSub}
             </p>
-            <p className="mt-3 text-sm font-semibold text-ink-600">
-              Approve once → $19.99 softcover ships in 7–10 days
-            </p>
-            <TrustBadges className="mt-6" />
-            <div className="mt-7 flex flex-wrap gap-3">
-              <Link href="/trial" className="btn-primary btn-large">
+
+            <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-ink/[0.06] px-4 py-2 text-sm font-bold text-ink-700 lg:mt-5">
+              Approve once <span aria-hidden className="text-coral">→</span> $19.99 softcover ships in 7–10 days
+            </div>
+
+            <div className="mt-6 flex flex-wrap items-center gap-3 lg:mt-8">
+              <Link
+                href="/trial"
+                className="btn-primary btn-large shadow-glow-coral hover:shadow-[0_18px_54px_rgba(244,129,92,0.5)]"
+              >
                 {brand.primaryCta}
               </Link>
-              <Link href="/for-grandparents" className="btn-ghost btn-large">
+              <Link href="/for-grandparents" className="btn-ghost btn-large bg-white/60 backdrop-blur-sm">
                 Gift for grandparents
               </Link>
             </div>
-            <p className="mt-5 text-sm font-medium text-ink-500">{brand.trustStrip}</p>
+
+            <TrustBadges className="mt-7" />
+            <p className="mt-4 text-sm font-medium text-ink-500">{brand.trustStrip}</p>
           </div>
 
-          <div className="w-full lg:max-w-none">
-            <div
-              className="rounded-[2rem] bg-gradient-to-br from-mint-100/90 via-cream-100 to-coral/15 p-4 shadow-inner sm:p-5 lg:p-6"
-              aria-label="Sample story pages from Inklings"
-            >
-              <div className="grid grid-cols-2 gap-3 overflow-visible p-1 sm:gap-4 sm:p-2">
-                {gridItems.map((item, i) => (
-                  <div
-                    key={`${item.src}-${i}`}
-                    className={`transform transition-transform duration-300 hover:rotate-0 ${TILE_TILT[i] ?? "rotate-0"}`}
-                  >
-                    <ShowcaseCard
-                      src={item.src}
-                      alt={item.alt}
-                      priority={item.priority}
-                    />
-                  </div>
-                ))}
-              </div>
-              <p className="mt-3 text-center text-xs font-semibold text-ink-600 sm:mt-4">
-                Real story · art on top, readable text below every page
-              </p>
-            </div>
-          </div>
+          <HeroStage coverSrc={cover} pageSrcs={floaters} />
         </div>
+
+        <Link
+          href="#story-journey"
+          className="group absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-1 text-xs font-bold uppercase tracking-[0.18em] text-ink-500 transition-colors hover:text-coral md:flex"
+        >
+          Watch a real story unfold
+          <ChevronDown className="h-4 w-4 animate-cue-bounce" aria-hidden />
+        </Link>
       </div>
     </section>
   );

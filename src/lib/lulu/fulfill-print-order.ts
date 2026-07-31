@@ -95,7 +95,8 @@ export async function fulfillPrintOrder(
     pages: pageTexts,
     pageImages,
   });
-  const pageCount = Math.ceil((1 + pageTexts.length) / 4) * 4;
+  // Interior = title + bookplate + story + end pages (3 + N), padded to a multiple of 4.
+  const pageCount = Math.ceil((3 + pageTexts.length) / 4) * 4;
   // Product promise: we sell softcovers only (Lulu square softcover POD).
   const binding = "softcover";
   const blurb = `A personalized illustrated storybook made just for ${childName}.`;

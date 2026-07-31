@@ -17,6 +17,14 @@ const NAV = [
  */
 export function Header() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   useEffect(() => {
     if (open) {
@@ -35,11 +43,17 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full border-b border-cream-200/60 bg-cream-100/95 backdrop-blur-xl">
+      <header
+        className={`sticky top-0 z-40 w-full border-b transition-all duration-500 ease-silk ${
+          scrolled
+            ? "border-cream-200 bg-cream-100/90 shadow-[0_10px_36px_rgba(74,37,69,0.12)] backdrop-blur-xl"
+            : "border-transparent bg-cream-100/60 backdrop-blur-md"
+        }`}
+      >
         <nav className="container-ink flex items-center justify-between py-4" aria-label="Primary">
           <Link href="/" className="flex items-center gap-2 text-ink" onClick={() => setOpen(false)}>
             <Sparkles className="h-7 w-7 text-coral" aria-hidden />
-            <span className="text-xl font-bold tracking-tight">{brand.name}</span>
+            <span className="font-display text-xl font-semibold tracking-tight">{brand.name}</span>
           </Link>
           <ul className="hidden items-center gap-8 lg:flex">
             {NAV.map((it) => (
