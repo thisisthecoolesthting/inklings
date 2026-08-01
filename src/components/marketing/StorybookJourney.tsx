@@ -85,9 +85,12 @@ export function JourneyStage({
         <div className="container-ink flex h-full flex-col pb-8 pt-20">
           <JourneyHeading childName={childName} compact={progress > 0.04} />
 
-          {/* the book */}
-          <div className="relative mx-auto mt-2 w-full max-w-[min(88vw,54dvh)] flex-1">
-            <div className="absolute inset-x-0 top-1/2 aspect-square -translate-y-1/2">
+          {/* the book â€” sized from the space the heading and caption actually
+              leave behind (88% of this stage, capped by viewport width) rather
+              than a flat slice of the viewport, so the plate can never sit on
+              top of the copy on a short window. */}
+          <div className="relative mt-2 min-h-0 flex-1">
+            <div className="absolute left-1/2 top-1/2 aspect-square h-[min(88%,88vw)] -translate-x-1/2 -translate-y-1/2">
               {/* open-book base */}
               <div
                 aria-hidden
