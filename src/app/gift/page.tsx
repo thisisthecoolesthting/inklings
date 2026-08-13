@@ -29,7 +29,7 @@ const GIFTS = [
 export const metadata: Metadata = pageMetadata({
   title: "Gift Premium story studio for kids",
   description:
-    "Gift Inklings Premium to creative kids ages 5–8. Characters, unlimited stories, and optional printed softcover keepsakes. Redeem by email.",
+    "Gift Inklings Premium to creative kids ages 4 and up. Characters, unlimited stories, and optional printed softcover keepsakes. Redeem by email.",
   path: "/gift",
 });
 
@@ -48,7 +48,7 @@ export default function GiftPage() {
             <span className="eyebrow">Gift a story universe</span>
             <h1 className="section-title">Give Premium — not just one book</h1>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-ink-700">
-              Inklings Premium lets creative kids 5–8 build characters and worlds all year — then turn their
+              Inklings Premium lets creative kids 4 and up build characters and worlds all year — then turn their
               best stories into printed keepsakes.{" "}
               <Link href="/for-grandparents" className="text-coral underline">
                 See our guide for grandparents

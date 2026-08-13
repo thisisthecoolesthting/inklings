@@ -8,7 +8,7 @@
   "vps_path": "/var/www/inklings",
   "vps_port": 3400,
   "audience": {
-    "primary": "parents and grandparents of children ages 4-8",
+    "primary": "parents and grandparents of children ages 4 and up",
     "also": ["homeschool families", "consignment & gift shoppers"],
     "never": "marketed to kids directly"
   },

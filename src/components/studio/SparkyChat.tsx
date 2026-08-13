@@ -31,12 +31,14 @@ export function SparkyChat({
   waiting = false,
   pageNumber = 1,
   isFirstPage = false,
+  stepLabel,
 }: {
   beat: SparkyBeat;
   onChoose: (choice: SparkyChoice) => void;
   waiting?: boolean;
   pageNumber?: number;
   isFirstPage?: boolean;
+  stepLabel?: string;
 }) {
   const { state, setState, lastResult, start, isSupported } = useVoiceRecognition();
   const [matchedChoiceId, setMatchedChoiceId] = useState<string | null>(null);
@@ -66,13 +68,15 @@ export function SparkyChat({
 
   return (
     <div className="mx-auto max-w-2xl">
-      <div className="card-base flex items-start gap-4">
-        <div className="flex h-12 w-12 flex-none items-center justify-center rounded-full bg-coral text-white">
-          <Sparkles className="h-7 w-7" aria-hidden />
+      <div className="flex items-start gap-3 rounded-3xl border-2 border-coral/30 bg-white p-4 shadow-card">
+        <div className="flex h-14 w-14 flex-none items-center justify-center rounded-full bg-coral text-white">
+          <Sparkles className="h-8 w-8" aria-hidden />
         </div>
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-coral">Sparky</p>
-          <p className="mt-1 text-2xl font-bold text-ink">{beat.sparkyLine}</p>
+          <p className="text-sm font-bold uppercase tracking-wider text-coral">
+            Sparky{stepLabel ? ` · ${stepLabel}` : ""}
+          </p>
+          <p className="mt-1 text-2xl font-bold leading-snug text-ink sm:text-3xl">{beat.sparkyLine}</p>
         </div>
       </div>
 
@@ -80,41 +84,42 @@ export function SparkyChat({
         <SparkyLoadingGame pageNumber={pageNumber} isFirstPage={isFirstPage} />
       ) : (
         <>
-          <div className="mt-6 flex flex-col items-center">
-            <button
-              type="button"
-              onClick={start}
-              disabled={!isSupported || state === "listening" || state === "denied"}
-              aria-label="Tap and talk"
-              className={`relative flex h-[88px] w-[88px] items-center justify-center rounded-full bg-coral text-white shadow-card transition-all hover:bg-coral-600 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 md:h-[72px] md:w-[72px] ${state === "listening" ? "mic-listening" : ""} ${shaking ? "mic-shake" : ""}`}
-            >
-              {!isSupported || state === "denied" ? (
-                <MicOff className="h-10 w-10 md:h-8 md:w-8" aria-hidden />
-              ) : (
-                <Mic className="h-10 w-10 md:h-8 md:w-8" aria-hidden />
-              )}
-            </button>
-            <p className="mt-3 text-sm text-ink-500">Or tap one of the choices below!</p>
-            {state === "no-match" && (
-              <p className="mt-3 text-sm font-medium text-coral">Sparky didn&apos;t catch that. Tap a choice below.</p>
-            )}
-          </div>
-          <div className="mt-6 grid gap-3 sm:grid-cols-2">
+          <p className="mt-5 text-center text-lg font-semibold text-ink-700">Tap your pick!</p>
+          <div className="mt-3 grid gap-3 sm:grid-cols-2">
             {beat.choices.map((c) => (
               <button
                 key={c.id}
                 type="button"
                 onClick={() => onChoose(c)}
-                className={`sparky-chip justify-start text-left transition-all ${matchedChoiceId === c.id ? "scale-105 ring-4 ring-coral" : ""}`}
+                className={`sparky-chip-kid ${matchedChoiceId === c.id ? "scale-105 ring-4 ring-coral" : ""}`}
               >
                 {c.emoji && (
-                  <span className="text-2xl" aria-hidden>
+                  <span className="text-3xl" aria-hidden>
                     {c.emoji}
                   </span>
                 )}
                 <span>{c.label}</span>
               </button>
             ))}
+          </div>
+          <div className="mt-6 flex flex-col items-center">
+            <button
+              type="button"
+              onClick={start}
+              disabled={!isSupported || state === "listening" || state === "denied"}
+              aria-label="Say it out loud"
+              className={`relative flex h-14 w-14 items-center justify-center rounded-full border-2 border-ink-200 bg-white text-ink-600 transition-all hover:bg-cream-200 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 ${state === "listening" ? "mic-listening" : ""} ${shaking ? "mic-shake" : ""}`}
+            >
+              {!isSupported || state === "denied" ? (
+                <MicOff className="h-6 w-6" aria-hidden />
+              ) : (
+                <Mic className="h-6 w-6" aria-hidden />
+              )}
+            </button>
+            <p className="mt-2 text-sm text-ink-500">Or say it out loud</p>
+            {state === "no-match" && (
+              <p className="mt-2 text-sm font-medium text-coral">Sparky didn&apos;t catch that. Tap a picture instead.</p>
+            )}
           </div>
         </>
       )}

@@ -207,10 +207,10 @@ export function buildScenePrompt(opts: {
   scene: string;
   worldName?: string | null;
 }): string {
-  const world = opts.worldName ? ` in ${opts.worldName}` : "";
+  const world = opts.worldName ? `Home world: ${opts.worldName}. ` : "";
   return (
-    `${opts.childName}${world}, ${opts.scene}. ` +
-    `Characters: ${opts.characters}. ` +
-    "Focus on action and setting; keep characters consistent with prior pages."
+    `${world}Picture-book scene: ${opts.scene}. ` +
+    `Same recurring characters every page (do not change colors, clothes, or species): ${opts.characters}. ` +
+    "One clear action, warm lighting, characters fully in frame, no text."
   );
 }

@@ -49,8 +49,8 @@ export default async function LibraryPage({
   return (
     <>
       <header className="mb-8 text-center">
-        <h1 className="text-3xl font-bold text-ink">My collection</h1>
-        <p className="mt-2 text-ink-600">Pick a series shelf to read your books.</p>
+        <h1 className="text-3xl font-bold text-ink">My books</h1>
+        <p className="mt-2 text-lg text-ink-600">Tap a shelf to read.</p>
         {children.length > 1 && (
           <div className="mt-4 flex flex-wrap justify-center gap-2">
             {children.map((c) => (
@@ -97,7 +97,7 @@ export default async function LibraryPage({
       </ul>
 
       <div className="mt-10 text-center">
-        <Link href={`/studio/story?child=${childId}`} className="btn-primary">Make a new story</Link>
+        <Link href={`/studio/story?child=${childId}`} className="big-button mt-2 inline-flex">Make another book</Link>
       </div>
     </>
   );

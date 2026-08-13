@@ -64,7 +64,7 @@ export async function HomeHero() {
       <div className="container-ink section pb-12 pt-10 md:pb-16 md:pt-14">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
           <div className="max-w-xl lg:max-w-none">
-            <span className="eyebrow">Story studio for kids 5–8</span>
+            <span className="eyebrow">For kids {brand.ageAudience}</span>
             <h1 className="mt-3 text-4xl font-bold leading-[1.08] tracking-tight text-ink md:text-5xl lg:text-[3.25rem]">
               Your kid is the{" "}
               <span className="text-coral">author</span>

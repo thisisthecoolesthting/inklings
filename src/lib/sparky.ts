@@ -5,9 +5,8 @@
  *  1. Studio calls /api/sparky/beat with { beatId, choiceId, ctx }
  *  2. That route calls askSparky() here
  *  3. askSparky() builds a tightly constrained Anthropic prompt — system
- *     message LOCKS Sparky to (a) 1-2 short sentences in storybook voice,
- *     (b) reference at least one character by name, (c) NEVER ask a
- *     question or break character, (d) never use forbidden words
+ *     message LOCKS Sparky to picture-book prose, series memory, and
+ *     the character look bible
  *  4. Response runs through lib/safety.ts moderateAiText; on fail, fallback
  *     to deterministic stub
  *  5. If ANTHROPIC_API_KEY is missing OR the call errors, fallback stub
@@ -16,57 +15,61 @@
 import type { SparkyBeat } from "@/content/sparky-prompts";
 import { moderateAiText } from "@/lib/safety";
 import { buildScenePrompt } from "./image-gen";
+import {
+  characterLookLine,
+  rosterLines,
+  stubStoryPage,
+  type CharacterLook,
+  type SeriesChoice,
+} from "./series-bible";
 
 export interface SparkyContext {
   childName: string;
   childAge: number;
-  characters: Array<{ name: string; species?: string | null; personalityTraits?: string[] | null; imageSeed?: string | null }>;
+  characters: CharacterLook[];
   worldName?: string | null;
-  storyState: Array<{ beatId: string; choiceId: string }>;
+  seriesTitle?: string | null;
+  bookNumber?: number;
+  lastBookRecap?: string | null;
+  pagesSoFar?: string[];
+  storyState: Array<SeriesChoice>;
 }
 
 export interface SparkyResponse {
-  paragraph: string;       // The story sentence(s) to render on the page
-  imagePrompt: string;     // For Flux: locked style + Character Bible traits
+  paragraph: string;
+  imagePrompt: string;
   nextBeat: SparkyBeat | null;
-  audioCue?: string;       // Optional one-liner Sparky says aloud
-  source: "live" | "stub" | "moderation_fallback"; // for logging + analytics
+  audioCue?: string;
+  source: "live" | "stub" | "moderation_fallback";
 }
 
-/** Sparky's system prompt — the entire bounding mechanism. */
+function ageNote(age: number): string {
+  if (age <= 5) return "preschool reading level (very simple words, short sentences)";
+  if (age <= 7) return "early reader level (short sentences, friendly rhythm, a few new words is ok)";
+  return "confident early-reader level (clear picture-book prose, still simple)";
+}
+
 function buildSystemPrompt(ctx: SparkyContext): string {
-  const ageNote =
-    ctx.childAge <= 5
-      ? "preschool reading level (very simple words, no complex grammar)"
-      : "early reader level (one or two clauses per sentence, friendly rhythm)";
-  const characterRoster =
-    ctx.characters.length > 0
-      ? ctx.characters
-          .map(
-            (c) =>
-              `- ${c.name}${c.species ? ` (a ${c.species})` : ""}${
-                c.personalityTraits && c.personalityTraits.length > 0
-                  ? `, ${c.personalityTraits.slice(0, 3).join(", ")}`
-                  : ""
-              }`,
-          )
-          .join("\n")
-      : `- ${ctx.childName} (the child themselves)`;
+  const bookN = ctx.bookNumber && ctx.bookNumber > 1 ? `Book ${ctx.bookNumber} in the series` : "the first book in a new series";
   return [
-    "You are Sparky, a gentle storyteller writing a single beat of a children's storybook.",
+    "You are Sparky, a gentle storyteller writing ONE page of a children's picture book.",
     "",
     "HARD RULES (cannot be broken):",
-    "- Output exactly 1 to 2 short sentences. No questions. No bullet points. No asides.",
-    `- Use ${ageNote}.`,
-    "- Reference at least one character by name from the roster below.",
+    "- Output exactly 2 to 3 short sentences. No questions. No bullet points. No asides.",
+    `- Use ${ageNote(ctx.childAge)}.`,
+    "- Name at least one character from the roster. Keep every named character looking like the bible (colors, outfit, species).",
     "- Stay in storybook narrative voice. Do not address the reader. Do not include 'The end' unless the beat is celebration.",
+    "- Continue the SAME story. Do not restart. Do not invent a new hero.",
     "- Never use: weapon, gun, knife, blood, kill, murder, scary, nightmare, monster, scared (use 'a little nervous' if needed).",
     "- Never include real-world brands, locations, or copyrighted names.",
     "- No emoji.",
     "",
-    "Character roster:",
-    characterRoster,
-    ctx.worldName ? `Setting: ${ctx.worldName}` : "",
+    `This is ${bookN}${ctx.seriesTitle ? ` called "${ctx.seriesTitle}"` : ""}.`,
+    ctx.worldName ? `Home world (keep returning here): ${ctx.worldName}` : "",
+    ctx.lastBookRecap ? `Series memory: ${ctx.lastBookRecap}` : "",
+    "",
+    "Character bible (looks MUST match every page):",
+    rosterLines(ctx.characters),
     "",
     "Output only the prose. Nothing else.",
   ]
@@ -74,33 +77,25 @@ function buildSystemPrompt(ctx: SparkyContext): string {
     .join("\n");
 }
 
-function buildUserMessage(beat: SparkyBeat, choiceId: string, prior: SparkyContext["storyState"]): string {
+function buildUserMessage(beat: SparkyBeat, choiceId: string, ctx: SparkyContext): string {
   const choiceLabel = beat.choices.find((c) => c.id === choiceId)?.label ?? choiceId;
-  const priorJson = prior.length > 0 ? `\n\nStory so far:\n${JSON.stringify(prior)}` : "";
+  const pages = (ctx.pagesSoFar ?? []).filter(Boolean);
+  const priorChoices = ctx.storyState
+    .map((s) => `${s.beatId}: ${s.label || s.choiceId}`)
+    .join(" → ");
+  const soFar = pages.length
+    ? `\n\nStory so far (do not repeat; continue):\n${pages.map((p, i) => `Page ${i + 1}: ${p}`).join("\n")}`
+    : "";
   return [
     `Beat: ${beat.id} (${beat.act})`,
     `Sparky asked: "${beat.sparkyLine}"`,
     `Child chose: "${choiceLabel}"`,
-    "Write the next 1-2 sentence(s) of the story.",
-    priorJson,
-  ].join("\n");
-}
-
-/** Deterministic fallback — used when no API key, on error, or on moderation fail. */
-function stubResponse(ctx: SparkyContext, beat: SparkyBeat, choiceId: string): string {
-  const last = beat.choices.find((c) => c.id === choiceId);
-  const heroName = ctx.characters[0]?.name ?? ctx.childName;
-  const friendName = ctx.characters[1]?.name;
-  const stub: Record<string, string> = {
-    where_are_we: `${heroName} woke up in ${last?.label}. The light was soft and gold.`,
-    mood: `It felt like ${last?.label?.toLowerCase()} — the kind of day where anything could happen.`,
-    problem: `Then something changed. ${last?.label}.`,
-    adventure_where: `${heroName}${friendName ? ` and ${friendName}` : ""} headed ${last?.label?.toLowerCase()}.`,
-    obstacle: `Suddenly — ${last?.label?.toLowerCase()}!`,
-    solve: `${heroName} chose ${last?.label?.toLowerCase()}. It was exactly what was needed.`,
-    celebrate: `That night they had ${last?.label?.toLowerCase()}, and ${heroName} fell asleep smiling.`,
-  };
-  return stub[beat.id] ?? `${heroName} kept going.`;
+    priorChoices ? `Choices so far: ${priorChoices}` : "",
+    "Write the next picture-book page (2-3 short sentences).",
+    soFar,
+  ]
+    .filter(Boolean)
+    .join("\n");
 }
 
 interface AnthropicMessage {
@@ -125,8 +120,8 @@ async function callAnthropic(
       },
       body: JSON.stringify({
         model,
-        max_tokens: 200,
-        temperature: 0.8,
+        max_tokens: 280,
+        temperature: 0.75,
         system,
         messages: [{ role: "user", content: user }],
       }),
@@ -154,58 +149,51 @@ export async function askSparky(
   choiceId: string,
 ): Promise<SparkyResponse> {
   const last = beat.choices.find((c) => c.id === choiceId);
-  const stubText = stubResponse(ctx, beat, choiceId);
-  const imagePrompt = buildImagePrompt(ctx, last?.label ?? "");
+  const stubText = stubStoryPage(ctx, beat, choiceId);
 
   const system = buildSystemPrompt(ctx);
-  const user = buildUserMessage(beat, choiceId, ctx.storyState);
+  const user = buildUserMessage(beat, choiceId, ctx);
   const live = await callAnthropic(system, user);
+
+  let paragraph = stubText;
+  let source: SparkyResponse["source"] = "stub";
 
   if ("error" in live) {
     if (process.env.NODE_ENV !== "production") {
       console.warn(`[sparky] live call failed (${live.error}) — falling back to stub`);
     }
-    return {
-      paragraph: stubText,
-      imagePrompt,
-      nextBeat: null,
-      audioCue: beat.sparkyLine,
-      source: "stub",
-    };
+  } else {
+    const moderation = moderateAiText(live.text);
+    if (!moderation.ok) {
+      if (process.env.NODE_ENV !== "production") {
+        console.warn(`[sparky] moderation blocked: ${moderation.reason} — falling back to stub`);
+      }
+      source = "moderation_fallback";
+    } else {
+      paragraph = live.text;
+      source = "live";
+    }
   }
 
-  const moderation = moderateAiText(live.text);
-  if (!moderation.ok) {
-    if (process.env.NODE_ENV !== "production") {
-      console.warn(`[sparky] moderation blocked: ${moderation.reason} — falling back to stub`);
-    }
-    return {
-      paragraph: stubText,
-      imagePrompt,
-      nextBeat: null,
-      audioCue: beat.sparkyLine,
-      source: "moderation_fallback",
-    };
-  }
+  const imagePrompt = buildImagePrompt(ctx, last?.label ?? "", paragraph);
 
   return {
-    paragraph: live.text,
+    paragraph,
     imagePrompt,
     nextBeat: null,
     audioCue: beat.sparkyLine,
-    source: "live",
+    source,
   };
 }
 
-/** Locked illustration-prompt template per spine §13 / Inklings handoff. */
-export function buildImagePrompt(ctx: SparkyContext, scene: string): string {
-  const traits = ctx.characters
-    .map((c) => `${c.name} (${c.species ?? "character"}, ${(c.personalityTraits ?? []).join(", ")})`)
-    .join("; ");
+/** Locked illustration-prompt template — character looks + this page's action. */
+export function buildImagePrompt(ctx: SparkyContext, scene: string, paragraph?: string): string {
+  const looks = ctx.characters.map((c) => characterLookLine(c)).join("; ");
+  const action = (paragraph && paragraph.slice(0, 280)) || scene;
   return buildScenePrompt({
     childName: ctx.childName,
-    characters: traits,
-    scene,
+    characters: looks || ctx.childName,
+    scene: action,
     worldName: ctx.worldName,
   });
 }
