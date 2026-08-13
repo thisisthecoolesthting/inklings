@@ -5,8 +5,8 @@ import { KID_CHARACTER_PICKS } from "@/lib/series-bible";
 import { createCharacter } from "./actions";
 
 export function CharacterMaker({ childId, childName }: { childId: string; childName: string }) {
-  const [species, setSpecies] = useState(KID_CHARACTER_PICKS.species[0].id);
-  const [color, setColor] = useState(KID_CHARACTER_PICKS.colors[0].id);
+  const [species, setSpecies] = useState<string>(KID_CHARACTER_PICKS.species[0].id);
+  const [color, setColor] = useState<string>(KID_CHARACTER_PICKS.colors[0].id);
   const [traits, setTraits] = useState<string[]>(["kind"]);
   const [pending, setPending] = useState(false);
 
