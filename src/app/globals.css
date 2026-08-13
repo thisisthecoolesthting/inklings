@@ -101,8 +101,12 @@ body {
     @apply inline-flex items-center gap-2 rounded-full bg-mint-100 px-5 py-3 text-base font-semibold text-ink-700 ring-2 ring-mint-400 transition-all hover:bg-mint-500 hover:scale-105 active:scale-95;
     min-height: 56px;
   }
+  .sparky-chip-kid {
+    @apply flex w-full items-center gap-3 rounded-3xl bg-white px-5 py-4 text-left text-xl font-bold text-ink shadow-card ring-2 ring-mint-400 transition-all hover:bg-mint-100 hover:scale-[1.02] active:scale-95;
+    min-height: 88px;
+  }
 
-  /* Big-button — the primary kid-facing tap target. 4-8 yo finger-friendly. */
+  /* Big-button — the primary kid-facing tap target. Ages 4 and up, finger-friendly. */
   .big-button {
     @apply flex w-full items-center justify-center gap-3 rounded-card bg-coral px-8 py-6 text-2xl font-bold text-white shadow-card transition-all hover:bg-coral-600 hover:shadow-cardHover active:scale-95;
     min-height: 88px;
@@ -128,14 +132,14 @@ body {
   }
   .mic-shake { animation: sparky-mic-shake 0.4s ease-in-out; }
 
-  /* Wait-game progress bar — matches ~4.5s minimum beat pause */
+  /* Wait-game progress bar — matches ~2.8s minimum beat pause */
   @keyframes sparky-wait-fill {
     from { width: 0%; }
     to { width: 100%; }
   }
   .sparky-wait-bar {
     width: 0%;
-    animation: sparky-wait-fill 4.5s linear forwards;
+    animation: sparky-wait-fill 2.8s linear forwards;
   }
 }
 

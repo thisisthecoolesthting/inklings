@@ -52,9 +52,9 @@ export default async function LibrarySeriesPage({
 
       {books.length === 0 ? (
         <div className="card-base mx-auto max-w-md text-center">
-          <p className="text-ink-700">No finished books on this shelf yet.</p>
-          <Link href={`/studio/story?child=${series.childId}&series=${series.id}`} className="btn-primary mt-6 inline-flex">
-            Start a story
+          <p className="text-xl text-ink-700">No books on this shelf yet. Let&apos;s make one!</p>
+          <Link href={`/studio/story?child=${series.childId}&series=${series.id}`} className="big-button mt-6 inline-flex">
+            Make a book
           </Link>
         </div>
       ) : (
@@ -73,12 +73,18 @@ export default async function LibrarySeriesPage({
                     )}
                   </div>
                   <h2 className="mt-3 font-bold text-ink">{b.title}</h2>
+                  {b.subtitle && <p className="text-sm text-ink-500">{b.subtitle}</p>}
                 </Link>
               </li>
             );
           })}
         </ul>
       )}
+      <div className="mt-10 text-center">
+        <Link href={`/studio/story?child=${series.childId}&series=${series.id}`} className="big-button inline-flex">
+          Make the next book
+        </Link>
+      </div>
     </>
   );
 }

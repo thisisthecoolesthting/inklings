@@ -6,6 +6,7 @@ import { z } from "zod";
 import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { generateHd } from "@/lib/image-gen";
+import { assignCharacterToSeries } from "@/lib/series-bootstrap";
 
 const IdSchema = z.object({ id: z.string().min(8).max(40) });
 
@@ -35,6 +36,13 @@ export async function approveCharacter(formData: FormData) {
     where: { id: ch.id },
     data: { sandboxMode: false, parentApprovedAt: new Date() },
   });
+  const series = await prisma.series.findFirst({
+    where: { childId: ch.childId },
+    orderBy: { isDefault: "desc" },
+  });
+  if (series) {
+    await assignCharacterToSeries(prisma, series.id, ch.id);
+  }
   revalidateAll();
   redirect("/portal/approvals?characterApproved=1");
 }

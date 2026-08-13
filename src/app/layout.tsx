@@ -8,7 +8,7 @@ import { OrganizationJsonLd } from "@/lib/jsonld";
 export const metadata: Metadata = {
   title: `${brand.name} — Build a story universe your child runs`,
   description:
-    "Inklings lets kids ages 5-8 build a story universe where their characters return across every story. Voice-first, parent-approved, real printed books.",
+    "Inklings lets kids ages 4 and up build a story universe where their characters return across every story. Voice-first, parent-approved, real printed books.",
   applicationName: brand.name,
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "https://inklings.shop"),
   icons: { icon: "/favicon.svg" },
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     siteName: brand.name,
     title: `${brand.name} — Build a story universe your child runs`,
     description:
-      "A story universe studio for kids ages 5-8. Voice-first, parent-approved, where characters return in every story.",
+      "A story universe studio for kids ages 4 and up. Voice-first, parent-approved, where characters return in every story.",
     url: "/",
     images: [{ url: "/images/showcase/milo-moonbeam/cover.jpg", width: 1200, height: 630, alt: `${brand.name} — A story universe your child runs` }],
   },
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${brand.name} — Build a story universe your child runs`,
     description:
-      "A story universe studio for kids ages 5-8. Characters return in every story.",
+      "A story universe studio for kids ages 4 and up. Characters return in every story.",
     images: ["/images/showcase/milo-moonbeam/cover.jpg"],
   },
 };

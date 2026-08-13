@@ -7,7 +7,7 @@
 0. **Product & business decisions:** read `NORTH-STAR.md` first — vision, financial model, KPIs, and build priority order.
 1. Before any non-trivial UI/route/component change, read `docs/SOLUTIONSTORE_SAAS_SPINE.md` (cloned from PriceScout) and `docs/INKLINGS_SPINE_DEVIATIONS.md`.
 2. Push to `origin` = `https://github.com/thisisthecoolesthting/inklings.git`, branch `main` (LIVE 2026-05-07) (PRs from `feat/<slug>`).
-3. Audience is **parents of children ages 4-8** plus grandparents and homeschool families. Never marketing copy aimed at kids — kids see only the Studio.
+3. Audience is **parents of children ages 4 and up** plus grandparents and homeschool families. Never marketing copy aimed at kids — kids see only the Studio.
 4. Two product surfaces: **(1) Kid Studio** at `/studio` — voice-first, parent-launched. **(2) Parent Portal** at `/portal` — approval queue, orders, settings.
 5. Visual tokens: cream `#FFF6E5`, ink `#4A2545`, coral `#F4815C`, mint `#A8DDB5`, gold `#D4A574`. Section padding 80/56. Button radius 12px. No new colors without operator approval.
 

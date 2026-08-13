@@ -24,9 +24,9 @@ export const AUDIENCE_LANDINGS: AudienceLandingConfig[] = [
     title: "Give a gift that grows all year — not just one book",
     subtitle:
       "Grandparents love Inklings because it is simple to gift, easy to track from your portal, and every season your grandchild can turn a story into a printed softcover keepsake.",
-    metaTitle: "Story book gift for grandchildren ages 5–8",
+    metaTitle: "Story book gift for grandchildren ages 4 and up",
     metaDescription:
-      "Gift Inklings Premium to grandchildren ages 5–8. They build characters and stories all year; you approve from your portal. Printed softcover books ship to their door.",
+      "Gift Inklings Premium to grandchildren ages 4 and up. They build characters and stories all year; you approve from your portal. Printed softcover books ship to their door.",
     bullets: [
       {
         title: "One gift, many stories",
@@ -46,7 +46,7 @@ export const AUDIENCE_LANDINGS: AudienceLandingConfig[] = [
     faq: [
       {
         q: "Can my grandchild use it without reading?",
-        a: "Yes. Sparky is voice-first with big tap buttons — ages 5–8 never need to type or read menus.",
+        a: "Yes. Sparky is voice-first with big tap buttons — kids 4 and up never need to type or read menus.",
       },
       {
         q: "Do I need to be tech-savvy?",
@@ -71,7 +71,7 @@ export const AUDIENCE_LANDINGS: AudienceLandingConfig[] = [
     title: "Reluctant writers become authors in one lesson",
     subtitle:
       "Inklings turns oral storytelling into illustrated pages kids can read back — voice-first, no login maze, parent approval built in for take-home books.",
-    metaTitle: "Classroom storytelling tool for ages 5–8",
+    metaTitle: "Classroom storytelling tool for ages 4 and up",
     metaDescription:
       "Voice-first digital storytelling for elementary classrooms. Kids tap choices with Sparky, get illustrated pages, and parents approve printed keepsake books.",
     bullets: [
@@ -123,9 +123,9 @@ export const AUDIENCE_LANDINGS: AudienceLandingConfig[] = [
     title: "For kids who say “I can't write” — including ADHD & dyslexia",
     subtitle:
       "Sparky asks one question at a time. Your child taps or talks. Illustrated pages appear as the story grows — confidence before handwriting pressure.",
-    metaTitle: "Writing app for reluctant readers & ADHD kids 5–8",
+    metaTitle: "Writing app for reluctant readers & ADHD kids 4 and up",
     metaDescription:
-      "Story-making without blank-page stress. Voice-first choices, instant illustrations, parent-approved books. Built for ages 5–8 who struggle with traditional writing.",
+      "Story-making without blank-page stress. Voice-first choices, instant illustrations, parent-approved books. Built for ages 4 and up who struggle with traditional writing.",
     bullets: [
       {
         title: "Tap or talk — never type",
@@ -145,7 +145,7 @@ export const AUDIENCE_LANDINGS: AudienceLandingConfig[] = [
     faq: [
       {
         q: "Is this only for ADHD?",
-        a: "No — any child ages 5–8 who hates blank pages benefits. We hear especially strong results from ADHD, dyslexia, and ESL families.",
+        a: "No — any child ages 4 and up who hates blank pages benefits. We hear especially strong results from ADHD, dyslexia, and ESL families.",
       },
       {
         q: "Will it feel like homework?",
@@ -170,7 +170,7 @@ export const AUDIENCE_LANDINGS: AudienceLandingConfig[] = [
     title: "One curriculum block they'll actually beg to repeat",
     subtitle:
       "Character design, plot choices, revision through parent approval, and a printed book at the end — language arts with a keepsake outcome.",
-    metaTitle: "Homeschool creative writing for ages 5–8",
+    metaTitle: "Homeschool creative writing for ages 4 and up",
     metaDescription:
       "Homeschool story-making with Inklings: voice-first writing, character continuity across books, parent approval, and optional printed softcovers.",
     bullets: [

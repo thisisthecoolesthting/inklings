@@ -4,18 +4,20 @@ import Link from "next/link";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { SparkyChat } from "@/components/studio/SparkyChat";
 import { StoryPageCard } from "@/components/studio/StoryPageCard";
+import { StoryActProgress } from "@/components/studio/StoryActProgress";
 import type { SparkyBeat, SparkyChoice } from "@/content/sparky-prompts";
 import type { SparkyContext } from "@/lib/sparky";
+import { titleFromChoices, type SeriesChoice } from "@/lib/series-bible";
 import { submitStoryForApproval } from "./actions";
 
 interface PersistedPage {
   text: string;
   imagePrompt: string;
   imageUrl: string | null;
+  act: string;
 }
 
-/** Kids need time to discover and play the wait game before the next beat. */
-const MIN_WAIT_MS = 4500;
+const MIN_WAIT_MS = 2800;
 
 function sleep(ms: number) {
   return new Promise<void>((resolve) => setTimeout(resolve, ms));
@@ -36,15 +38,18 @@ export function StudioStoryClient({
 }) {
   const [beatIdx, setBeatIdx] = useState(0);
   const [pages, setPages] = useState<PersistedPage[]>([]);
+  const [choices, setChoices] = useState<SeriesChoice[]>([]);
   const [pendingPage, setPendingPage] = useState<PersistedPage | null>(null);
   const [showGame, setShowGame] = useState(false);
   const [submitState, setSubmitState] = useState<"idle" | "submitting" | "submitted" | "error">("idle");
   const [submittedBookId, setSubmittedBookId] = useState<string | null>(null);
+  const [savedTitle, setSavedTitle] = useState<string | null>(null);
   const [, startTransition] = useTransition();
   const pagesEndRef = useRef<HTMLDivElement>(null);
 
   const beat = flow[beatIdx];
   const done = beatIdx >= flow.length;
+  const currentAct = beat?.act ?? "celebration";
 
   useEffect(() => {
     pagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -58,9 +63,12 @@ export function StudioStoryClient({
       text: "Sparky is writing this page…",
       imagePrompt: "",
       imageUrl: null,
+      act: beat.act,
     });
     setShowGame(true);
 
+    const nextChoice: SeriesChoice = { beatId: beat.id, choiceId: choice.id, label: choice.label };
+    const nextChoices = [...choices, nextChoice];
     let newPage: PersistedPage | null = null;
     try {
       const res = await fetch("/api/sparky/beat", {
@@ -70,7 +78,11 @@ export function StudioStoryClient({
           beatId: beat.id,
           choiceId: choice.id,
           variantKey,
-          ctx: { ...ctx, storyState: ctx.storyState.concat({ beatId: beat.id, choiceId: choice.id }) },
+          ctx: {
+            ...ctx,
+            pagesSoFar: pages.map((p) => p.text),
+            storyState: nextChoices,
+          },
         }),
       });
       if (res.ok) {
@@ -83,6 +95,7 @@ export function StudioStoryClient({
           text: data.paragraph,
           imagePrompt: data.imagePrompt,
           imageUrl: data.imageUrl ?? null,
+          act: beat.act,
         };
         setPendingPage(newPage);
       }
@@ -95,6 +108,7 @@ export function StudioStoryClient({
       await sleep(MIN_WAIT_MS - elapsed);
     }
 
+    setChoices(nextChoices);
     if (newPage) {
       setPages((p) => [...p, newPage!]);
     }
@@ -106,24 +120,31 @@ export function StudioStoryClient({
   function handleSubmit() {
     setSubmitState("submitting");
     const hero = ctx.characters[0]?.name ?? ctx.childName;
-    const friend = ctx.characters[1]?.name;
-    const title = friend ? `${hero} and ${friend}` : `${hero}'s Adventure`;
+    const pal = ctx.characters[1]?.name;
+    const title = titleFromChoices({
+      hero,
+      friend: pal,
+      choices,
+      bookNumber: ctx.bookNumber,
+    });
     startTransition(async () => {
       const result = await submitStoryForApproval({
         childId,
         seriesId,
         variantKey,
         title,
+        choices,
         pages: pages.map((p) => ({
           text: p.text,
           imagePrompt: p.imagePrompt,
           imageUrl: p.imageUrl,
-          act: "story",
+          act: p.act,
         })),
       });
       if ("ok" in result && result.ok) {
         setSubmitState("submitted");
         setSubmittedBookId(result.bookId);
+        setSavedTitle(result.title);
       } else {
         setSubmitState("error");
       }
@@ -133,12 +154,16 @@ export function StudioStoryClient({
   if (done) {
     return (
       <div className="mx-auto max-w-2xl text-center">
-        <h2 className="text-3xl font-bold text-ink">The end!</h2>
-        <p className="mt-3 text-ink-700">
-          {submitState === "submitted"
-            ? "Sparky sent your story to your grown-up to look over."
-            : "Tap the button to send your story to your grown-up."}
+        <p className="text-5xl" aria-hidden>
+          🎉
         </p>
+        <h2 className="mt-3 text-3xl font-bold text-ink">The end!</h2>
+        <p className="mt-3 text-xl text-ink-700">
+          {submitState === "submitted"
+            ? `“${savedTitle}” is ready for a grown-up to look at.`
+            : "Tap the big button so a grown-up can see your book."}
+        </p>
+        <StoryActProgress currentAct="celebration" className="mt-6" />
         <ol className="mt-8 space-y-6 text-left">
           {pages.map((p, i) => (
             <li key={i}>
@@ -153,56 +178,42 @@ export function StudioStoryClient({
           ))}
         </ol>
         {submitState === "idle" && (
-          <button onClick={handleSubmit} className="btn-primary btn-large mt-10 inline-flex">
-            Show grown-up
+          <button onClick={handleSubmit} className="big-button mt-10">
+            Show a grown-up
           </button>
         )}
         {submitState === "submitting" && (
-          <button disabled className="btn-primary btn-large mt-10 inline-flex opacity-60">
+          <button disabled className="big-button mt-10 opacity-60">
             Sending…
           </button>
         )}
         {submitState === "submitted" && (
           <div className="mt-10 space-y-4">
-            <div className="card-base inline-block bg-mint-100">
-              <p className="text-ink-700">
-                Ask your grown-up to open their <strong>Approvals</strong> page — your book is waiting there!
+            <div className="card-base bg-mint-100">
+              <p className="text-lg text-ink-700">
+                Ask a grown-up to open <strong>Approvals</strong>. Your book is waiting!
               </p>
             </div>
-            <div className="card-base border-2 border-coral/30 bg-cream-50">
-              <p className="text-lg font-bold text-ink">Want a real book in your hands?</p>
-              <p className="mt-2 text-sm text-ink-600">
-                Ask a grown-up to help you order a softcover version of your story!
-              </p>
-              <Link
-                href={`/grownup?intent=print${submittedBookId ? `&book=${submittedBookId}` : ""}`}
-                className="btn-secondary mt-4 inline-flex"
-              >
-                Get a grown-up to help
-              </Link>
-            </div>
+            <Link href={`/studio/story?child=${childId}`} className="big-button">
+              Make book {(ctx.bookNumber ?? 1) + 1}
+            </Link>
           </div>
         )}
         {submitState === "error" && (
           <div className="mt-8 card-base border-coral/20 bg-coral-50">
-            <p className="font-bold text-ink">Oh no! Sparky had a little trouble saving your story.</p>
-            <button onClick={() => setSubmitState("idle")} className="btn-primary mt-4">
+            <p className="text-lg font-bold text-ink">Oops — Sparky couldn&apos;t save it. Try again!</p>
+            <button onClick={() => setSubmitState("idle")} className="big-button mt-4">
               Try again
             </button>
           </div>
         )}
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link href="/studio" className="btn-ghost">
-            Back to Sparky
+            Home
           </Link>
           <Link href="/library" className="btn-ghost">
-            My collection
+            My books
           </Link>
-          {submitState === "submitted" && (
-            <Link href={`/studio/story?child=${childId}`} className="btn-primary">
-              Start another story
-            </Link>
-          )}
         </div>
       </div>
     );
@@ -215,6 +226,7 @@ export function StudioStoryClient({
 
   return (
     <>
+      <StoryActProgress currentAct={currentAct} className="mb-4" />
       {(displayPages.length > 0 || showGame) && (
         <div className="mx-auto mb-8 max-w-2xl space-y-4">
           {displayPages.map(({ page, pending, key }, i) => (
@@ -238,6 +250,7 @@ export function StudioStoryClient({
         waiting={showGame}
         pageNumber={pages.length + (pendingPage ? 1 : 0)}
         isFirstPage={pages.length === 0 && showGame}
+        stepLabel={`${beatIdx + 1} of ${flow.length}`}
       />
     </>
   );

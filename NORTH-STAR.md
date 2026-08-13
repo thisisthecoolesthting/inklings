@@ -16,7 +16,7 @@
 
 ## Vision
 
-Inklings is a **creative studio** for children ages 5–8, not a one-click gift checkout.
+Inklings is a **creative studio** for children ages 4 and up, not a one-click gift checkout.
 
 | | StoryFawn (sibling product) | Inklings |
 |---|---|---|
@@ -51,13 +51,13 @@ The biggest levers are **print attach at parent approval** and **grandparent gif
 
 | Segment | Who | Why they convert | Print likelihood |
 |--------|-----|------------------|------------------|
-| **Weekend storyteller** | Parent, 1 kid 5–7, free tier | Rainy-day activity, low commitment | 5–10% ever |
+| **Weekend storyteller** | Parent, 1 kid 4 and up, free tier | Rainy-day activity, low commitment | 5–10% ever |
 | **Creative family** | 2+ kids, reads aloud nightly | Unlimited stories + series memory | 25–40% / year |
 | **Grandparent gifters** | Buys for grandkids | Physical book = shareable proof | 60–80% gift includes print |
 | **Homeschool / teacher** | Classroom or co-op | Portfolio of kid work | Bulk print 2–4×/year |
 | **Holiday buyer** | Nov–Dec spike | “Better than another toy” | 1 print minimum |
 
-**Addressable pool (English, ages 5–8):** ~22M kids · ~16M households · ~4M “creative parent” skew.
+**Addressable pool (English, ages 4 and up):** ~22M kids · ~16M households · ~4M “creative parent” skew.
 
 **Serviceable market (year 1–2, no TV budget):** Wonderbly / Hooray Heroes buyers + AI-curious parents on Instagram/TikTok — **~800K–2M US households** reachable with content + paid social.
 

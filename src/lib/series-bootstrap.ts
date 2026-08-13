@@ -1,4 +1,5 @@
 import type { PrismaClient } from "@prisma/client";
+import { nextCastSlot } from "./series-bible";
 
 /** Bootstraps default world + series for a new child. */
 export async function bootstrapChildUniverse(prisma: PrismaClient, childId: string, childName: string) {
@@ -15,7 +16,7 @@ export async function bootstrapChildUniverse(prisma: PrismaClient, childId: stri
       childId,
       worldId: world.id,
       title: `${childName}'s Stories`,
-      description: "Adventures with their favorite characters.",
+      description: "Same friends, same world, a new adventure every book.",
       isDefault: true,
     },
   });
@@ -80,4 +81,28 @@ export async function getActiveSeriesContext(
       books: { where: { status: { not: "draft" } }, orderBy: { createdAt: "desc" }, take: 1 },
     },
   });
+}
+
+/** Put a character in the next empty core slot (max 3). Safe to call twice. */
+export async function assignCharacterToSeries(
+  prisma: PrismaClient,
+  seriesId: string,
+  characterId: string,
+): Promise<{ slot: number } | { full: true } | { already: true }> {
+  const existing = await prisma.seriesCast.findUnique({
+    where: { seriesId_characterId: { seriesId, characterId } },
+  });
+  if (existing) return { already: true };
+
+  const occupied = await prisma.seriesCast.findMany({
+    where: { seriesId },
+    select: { slot: true },
+  });
+  const slot = nextCastSlot(occupied.map((r) => r.slot));
+  if (slot == null) return { full: true };
+
+  await prisma.seriesCast.create({
+    data: { seriesId, characterId, slot, role: "core" },
+  });
+  return { slot };
 }

@@ -124,7 +124,7 @@ export default async function TrialPage(props: {
                 </label>
               </div>
               <p className="text-xs text-ink-500">
-                Inklings is designed for children ages 5–8 and is operated for parents. We never
+                Inklings is designed for children ages 4 and up and is operated for parents. We never
                 market to children directly.
               </p>
             </div>

@@ -2,7 +2,7 @@
   "name": "inklings",
   "version": "0.1.0",
   "private": true,
-  "description": "Inklings — AI-guided storybook studio for kids ages 4-8. Spawned from the SolutionStore SaaS spine.",
+  "description": "Inklings — AI-guided storybook studio for kids ages 4 and up. Spawned from the SolutionStore SaaS spine.",
   "scripts": {
     "dev": "next dev -p 3400",
     "build": "npx prisma generate && next build",

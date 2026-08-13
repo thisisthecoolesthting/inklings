@@ -7,6 +7,17 @@ import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { generatePreview, seedFromImageSeed } from "@/lib/image-gen";
 
+const CharacterSchema = z.object({
+  name: z.string(),
+  species: z.string().nullable().optional(),
+  role: z.string().nullable().optional(),
+  colors: z.array(z.string()).nullable().optional(),
+  outfit: z.string().nullable().optional(),
+  personalityTraits: z.array(z.string()).nullable().optional(),
+  imageSeed: z.string().nullable().optional(),
+  previewUrl: z.string().nullable().optional(),
+});
+
 const Schema = z.object({
   beatId: z.string(),
   choiceId: z.string(),
@@ -14,15 +25,19 @@ const Schema = z.object({
   ctx: z.object({
     childName: z.string(),
     childAge: z.number().int().min(2).max(14),
-    characters: z.array(z.object({
-      name: z.string(),
-      species: z.string().nullable().optional(),
-      personalityTraits: z.array(z.string()).nullable().optional(),
-      imageSeed: z.string().nullable().optional(),
-      previewUrl: z.string().nullable().optional(),
-    })),
+    characters: z.array(CharacterSchema),
     worldName: z.string().nullable().optional(),
-    storyState: z.array(z.object({ beatId: z.string(), choiceId: z.string() })),
+    seriesTitle: z.string().nullable().optional(),
+    bookNumber: z.number().int().min(1).max(999).optional(),
+    lastBookRecap: z.string().nullable().optional(),
+    pagesSoFar: z.array(z.string()).optional(),
+    storyState: z.array(
+      z.object({
+        beatId: z.string(),
+        choiceId: z.string(),
+        label: z.string().optional(),
+      }),
+    ),
   }),
 });
 
@@ -56,6 +71,7 @@ export async function POST(req: NextRequest) {
   }
 
   const safeName = sanitizeChildInput(ctx.childName).safe;
+  const choiceLabel = beat.choices.find((c) => c.id === choiceId)?.label ?? choiceId;
 
   if (beatId === "where_are_we") {
     const session = await getSession();
@@ -80,7 +96,15 @@ export async function POST(req: NextRequest) {
   }
 
   const sparky = await askSparky(
-    { ...ctx, childName: safeName, characters: ctx.characters as any },
+    {
+      ...ctx,
+      childName: safeName,
+      storyState: ctx.storyState.map((s) => ({
+        beatId: s.beatId,
+        choiceId: s.choiceId,
+        label: s.label ?? "",
+      })),
+    },
     beat,
     choiceId,
   );
@@ -97,19 +121,32 @@ export async function POST(req: NextRequest) {
       const used = await prisma.usageEvent.count({
         where: { userId: session.userId, kind: "image_generated", createdAt: { gte: since } },
       });
-      if (used >= limit) { canGenerate = false; imageGenSource = "quota_blocked"; }
+      if (used >= limit) {
+        canGenerate = false;
+        imageGenSource = "quota_blocked";
+      }
     }
 
     if (canGenerate && (process.env.OPENROUTER_API_KEY || process.env.TOGETHER_API_KEY)) {
       const charSeed = ctx.characters[0]?.imageSeed ?? null;
       const seed = seedFromImageSeed(charSeed);
-      const result = await generatePreview(sparky.imagePrompt, seed);
+      const referencePath =
+        ctx.characters.find((c) => c.previewUrl)?.previewUrl ??
+        ctx.characters[0]?.previewUrl ??
+        null;
+      const result = await generatePreview(sparky.imagePrompt, seed, referencePath);
       if (result.ok) {
         imageUrl = result.url;
         imageGenSource = "live";
         if (session) {
           await prisma.usageEvent
-            .create({ data: { userId: session.userId, kind: "image_generated", meta: { beatId, bytes: result.bytes, seed: result.seed } } })
+            .create({
+              data: {
+                userId: session.userId,
+                kind: "image_generated",
+                meta: { beatId, bytes: result.bytes, seed: result.seed, choice: choiceLabel },
+              },
+            })
             .catch(() => {});
         }
       } else {
