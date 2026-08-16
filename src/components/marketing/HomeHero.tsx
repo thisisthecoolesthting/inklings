@@ -1,119 +1,153 @@
-import Link from "next/link";
+"use client";
+
+import dynamic from "next/dynamic";
 import Image from "next/image";
+import Link from "next/link";
+import { ArrowDown, ArrowRight, BookOpen, MousePointer2, Sparkles } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { brand } from "@/lib/brand";
 import { TrustBadges } from "@/components/marketing/TrustBadges";
-import { getShowcaseCoverUrl, getShowcasePageUrls } from "@/lib/marketing-showcase";
-import { getSampleUploads } from "@/components/marketing/StoryVisuals";
 
-/** Subtle tilt per tile — playful stack, no overlap. */
-const TILE_TILT = ["-rotate-2", "rotate-2"] as const;
+const StorybookUniverse = dynamic(
+  () => import("@/components/marketing/StorybookUniverse").then((mod) => mod.StorybookUniverse),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="storybook-fallback" aria-hidden>
+        <Image
+          src="/images/showcase/milo-moonbeam/cover.jpg"
+          alt=""
+          fill
+          priority
+          sizes="(max-width: 1024px) 100vw, 56vw"
+          className="object-cover"
+        />
+      </div>
+    ),
+  },
+);
 
-function ShowcaseCard({
-  src,
-  alt,
-  priority,
-}: {
-  src: string;
-  alt: string;
-  priority?: boolean;
-}) {
+export function HomeHero() {
+  const [page, setPage] = useState(0);
+  const [sceneReady, setSceneReady] = useState(false);
+  const [staticScene, setStaticScene] = useState(true);
+  const [sceneActive, setSceneActive] = useState(true);
+  const stageRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const compact = window.matchMedia("(max-width: 720px)");
+    const coarsePointer = window.matchMedia("(pointer: coarse)");
+    const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+    const memory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? 8;
+    const supportsWebGL = (() => {
+      try {
+        const probe = document.createElement("canvas");
+        return Boolean(probe.getContext("webgl2") || probe.getContext("webgl"));
+      } catch {
+        return false;
+      }
+    })();
+    const updateMode = () => setStaticScene(!supportsWebGL || reduceMotion.matches || coarsePointer.matches || connection?.saveData === true || (compact.matches && memory <= 4));
+    updateMode();
+    reduceMotion.addEventListener("change", updateMode);
+    compact.addEventListener("change", updateMode);
+    coarsePointer.addEventListener("change", updateMode);
+    const timer = window.setTimeout(() => setSceneReady(true), 350);
+    return () => {
+      window.clearTimeout(timer);
+      reduceMotion.removeEventListener("change", updateMode);
+      compact.removeEventListener("change", updateMode);
+      coarsePointer.removeEventListener("change", updateMode);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!stageRef.current || staticScene) return;
+    const observer = new IntersectionObserver(([entry]) => setSceneActive(entry?.isIntersecting ?? true), { threshold: 0.08 });
+    observer.observe(stageRef.current);
+    return () => observer.disconnect();
+  }, [staticScene]);
+
   return (
-    <div className="relative aspect-square w-full overflow-hidden rounded-xl border-[3px] border-white bg-cream-50 shadow-[0_10px_28px_rgba(74,37,69,0.14)]">
-      <Image
-        src={src}
-        alt={alt}
-        fill
-        priority={priority}
-        loading={priority ? undefined : "lazy"}
-        sizes="(max-width: 640px) 42vw, (max-width: 1024px) 22vw, 280px"
-        className="object-contain"
-      />
-    </div>
-  );
-}
+    <section className="cinematic-hero">
+      <div className="cinematic-grain" aria-hidden />
+      <div className="cinematic-orb cinematic-orb-coral" aria-hidden />
+      <div className="cinematic-orb cinematic-orb-mint" aria-hidden />
 
-export async function HomeHero() {
-  const [showcase, coverHint] = await Promise.all([
-    getShowcasePageUrls(4),
-    getShowcaseCoverUrl(),
-  ]);
+      <div className="container-ink relative z-10 grid min-h-[calc(100svh-81px)] items-center gap-4 py-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-0 lg:py-0">
+        <div className="relative z-20 max-w-2xl pb-4 pt-4 lg:-mr-20 lg:pb-0">
+          <div className="hero-kicker">
+            <span className="hero-kicker-dot" aria-hidden />
+            A living storybook studio for ages {brand.ageAudience}
+          </div>
+          <h1 className="hero-display mt-6">
+            Your kid is the author.
+            <span className="hero-display-accent"> Not just the hero.</span>
+          </h1>
+          <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-700 md:text-xl">
+            Their imagination, bound forever. Your child invents the characters, chooses what happens, and builds a world that remembers them. You approve it. We turn it into a real book.
+          </p>
 
-  let pages = showcase;
-  if (pages.length < 3) {
-    const samples = await getSampleUploads(3);
-    if (samples.length >= 1) pages = samples;
-  }
-  if (pages.length < 1) pages = ["/images/site/hero-storybook.jpg"];
-
-  const cover = coverHint ?? pages[0]!;
-  const second =
-    pages.find((p) => p !== cover) ??
-    "/images/marketing/open-storybook-pages.jpg";
-
-  const gridItems = [
-    { src: cover, alt: "Sample storybook cover — Milo and the Moonbeam Map", priority: true },
-    {
-      src: second,
-      alt: "Open storybook page — illustration with readable text below",
-      priority: false,
-    },
-  ];
-
-  return (
-    <section className="hero-storybook">
-      <div className="container-ink section pb-12 pt-10 md:pb-16 md:pt-14">
-        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
-          <div className="max-w-xl lg:max-w-none">
-            <span className="eyebrow">For kids {brand.ageAudience}</span>
-            <h1 className="mt-3 text-4xl font-bold leading-[1.08] tracking-tight text-ink md:text-5xl lg:text-[3.25rem]">
-              Your kid is the{" "}
-              <span className="text-coral">author</span>
-              {" — "}not just the hero.
-            </h1>
-            <p className="mt-5 text-lg leading-relaxed text-ink-700 md:text-xl">
-              {brand.heroSub}
-            </p>
-            <p className="mt-3 text-sm font-semibold text-ink-600">
-              Approve once → $19.99 softcover ships in 7–10 days
-            </p>
-            <TrustBadges className="mt-6" />
-            <div className="mt-7 flex flex-wrap gap-3">
-              <Link href="/trial" className="btn-primary btn-large">
-                {brand.primaryCta}
-              </Link>
-              <Link href="/for-grandparents" className="btn-ghost btn-large">
-                Gift for grandparents
-              </Link>
-            </div>
-            <p className="mt-5 text-sm font-medium text-ink-500">{brand.trustStrip}</p>
+          <div className="mt-7 flex flex-wrap gap-3">
+            <Link href="/trial" className="btn-primary btn-large group">
+              {brand.primaryCta}
+              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
+            </Link>
+            <Link href="#inside-the-story" className="btn-story-ghost btn-large">
+              <BookOpen className="mr-2 h-4 w-4" aria-hidden />
+              Open the story
+            </Link>
           </div>
 
-          <div className="w-full lg:max-w-none">
-            <div
-              className="rounded-[2rem] bg-gradient-to-br from-mint-100/90 via-cream-100 to-coral/15 p-4 shadow-inner sm:p-5 lg:p-6"
-              aria-label="Sample story pages from Inklings"
-            >
-              <div className="grid grid-cols-2 gap-3 overflow-visible p-1 sm:gap-4 sm:p-2">
-                {gridItems.map((item, i) => (
-                  <div
-                    key={`${item.src}-${i}`}
-                    className={`transform transition-transform duration-300 hover:rotate-0 ${TILE_TILT[i] ?? "rotate-0"}`}
-                  >
-                    <ShowcaseCard
-                      src={item.src}
-                      alt={item.alt}
-                      priority={item.priority}
-                    />
-                  </div>
-                ))}
+          <TrustBadges className="mt-7" />
+          <p className="mt-5 text-sm font-semibold text-ink-500">
+            First story free · No credit card · Parent-approved · No ads
+          </p>
+        </div>
+
+        <div className="relative min-h-[500px] w-full lg:min-h-[calc(100svh-81px)]">
+          <div ref={stageRef} className={`storybook-stage ${sceneReady ? "storybook-stage-ready" : ""}`}>
+            {staticScene ? (
+              <div className="storybook-static-poster" role="img" aria-label="An illustrated Inklings book opening into a magical story world">
+                <Image
+                  src="/images/og.png"
+                  alt=""
+                  fill
+                  priority
+                  sizes="(max-width: 720px) 100vw, 56vw"
+                  className="object-cover"
+                />
               </div>
-              <p className="mt-3 text-center text-xs font-semibold text-ink-600 sm:mt-4">
-                Real story · art on top, readable text below every page
-              </p>
-            </div>
+            ) : (
+              <StorybookUniverse page={page} active={sceneActive} />
+            )}
           </div>
+
+          {!staticScene && <div className="story-scene-controls" aria-label="Interactive storybook controls">
+            <button
+              type="button"
+              className="story-scene-button"
+              onClick={() => setPage((value) => value + 1)}
+              aria-label="Turn the storybook page"
+            >
+              <MousePointer2 className="h-4 w-4" aria-hidden />
+              Turn the page
+              <span className="story-page-count">{(page % 3) + 1}/3</span>
+            </button>
+          </div>}
+
+          {!staticScene && <div className="story-scene-note" aria-hidden>
+            <Sparkles className="h-4 w-4 text-gold" />
+            Drag to explore
+          </div>}
         </div>
       </div>
+
+      <a href="#inside-the-story" className="hero-scroll-cue" aria-label="Continue to see how Inklings works">
+        <span>Follow the story</span>
+        <ArrowDown className="h-4 w-4" aria-hidden />
+      </a>
     </section>
   );
 }

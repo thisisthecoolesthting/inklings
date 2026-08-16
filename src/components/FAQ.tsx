@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { Plus } from "lucide-react";
 
 interface FaqItem {
@@ -20,6 +20,9 @@ export function FAQ({ items }: { items: FaqItem[] }) {
 
 function FAQRow({ item }: { item: FaqItem }) {
   const [open, setOpen] = useState(false);
+  const id = useId();
+  const buttonId = `faq-button-${id}`;
+  const panelId = `faq-panel-${id}`;
   return (
     <div
       className={`mb-4 overflow-hidden rounded-xl border transition-colors duration-300 ${
@@ -30,6 +33,8 @@ function FAQRow({ item }: { item: FaqItem }) {
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
+        aria-controls={panelId}
+        id={buttonId}
         className="flex w-full items-center justify-between gap-4 bg-white p-6 text-left transition-colors hover:bg-cream-100"
       >
         <h3 className="text-base font-semibold text-ink">{item.q}</h3>
@@ -41,6 +46,10 @@ function FAQRow({ item }: { item: FaqItem }) {
         />
       </button>
       <div
+        id={panelId}
+        role="region"
+        aria-labelledby={buttonId}
+        hidden={!open}
         className={`grid transition-all duration-300 ${
           open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
         }`}

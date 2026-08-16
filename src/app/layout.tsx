@@ -19,14 +19,14 @@ export const metadata: Metadata = {
     description:
       "A story universe studio for kids ages 4 and up. Voice-first, parent-approved, where characters return in every story.",
     url: "/",
-    images: [{ url: "/images/showcase/milo-moonbeam/cover.jpg", width: 1200, height: 630, alt: `${brand.name} — A story universe your child runs` }],
+    images: [{ url: "/images/og.png", width: 1728, height: 909, alt: `${brand.name} — Their imagination. Bound forever.` }],
   },
   twitter: {
     card: "summary_large_image",
     title: `${brand.name} — Build a story universe your child runs`,
     description:
       "A story universe studio for kids ages 4 and up. Characters return in every story.",
-    images: ["/images/showcase/milo-moonbeam/cover.jpg"],
+    images: ["/images/og.png"],
   },
 };
 
@@ -34,9 +34,6 @@ export const viewport: Viewport = {
   themeColor: "#FFF6E5",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  // ... more code ...
-  // (Note: The rest of the file remains unchanged, but I'll provide the full file as per instructions)
 };
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
@@ -45,6 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="flex min-h-screen flex-col font-sans">
+        <a href="#main-content" className="skip-link">Skip to main content</a>
         {GA_ID && (
           <>
             <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
@@ -58,7 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         )}
         <OrganizationJsonLd />
         <SiteChrome>
-          <main className="flex-1">{children}</main>
+          <main id="main-content" className="flex-1">{children}</main>
         </SiteChrome>
       </body>
     </html>
