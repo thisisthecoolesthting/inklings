@@ -1,74 +1,12 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowDown, ArrowRight, BookOpen, MousePointer2, Sparkles } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { ArrowDown, ArrowRight, BookOpen } from "lucide-react";
 import { brand } from "@/lib/brand";
 import { TrustBadges } from "@/components/marketing/TrustBadges";
 
-const StorybookUniverse = dynamic(
-  () => import("@/components/marketing/StorybookUniverse").then((mod) => mod.StorybookUniverse),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="storybook-fallback" aria-hidden>
-        <Image
-          src="/images/showcase/milo-moonbeam/cover.jpg"
-          alt=""
-          fill
-          priority
-          sizes="(max-width: 1024px) 100vw, 56vw"
-          className="object-cover"
-        />
-      </div>
-    ),
-  },
-);
-
 export function HomeHero() {
-  const [page, setPage] = useState(0);
-  const [sceneReady, setSceneReady] = useState(false);
-  const [staticScene, setStaticScene] = useState(true);
-  const [sceneActive, setSceneActive] = useState(true);
-  const stageRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const compact = window.matchMedia("(max-width: 720px)");
-    const coarsePointer = window.matchMedia("(pointer: coarse)");
-    const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
-    const memory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? 8;
-    const supportsWebGL = (() => {
-      try {
-        const probe = document.createElement("canvas");
-        return Boolean(probe.getContext("webgl2") || probe.getContext("webgl"));
-      } catch {
-        return false;
-      }
-    })();
-    const updateMode = () => setStaticScene(!supportsWebGL || reduceMotion.matches || coarsePointer.matches || connection?.saveData === true || (compact.matches && memory <= 4));
-    updateMode();
-    reduceMotion.addEventListener("change", updateMode);
-    compact.addEventListener("change", updateMode);
-    coarsePointer.addEventListener("change", updateMode);
-    const timer = window.setTimeout(() => setSceneReady(true), 350);
-    return () => {
-      window.clearTimeout(timer);
-      reduceMotion.removeEventListener("change", updateMode);
-      compact.removeEventListener("change", updateMode);
-      coarsePointer.removeEventListener("change", updateMode);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!stageRef.current || staticScene) return;
-    const observer = new IntersectionObserver(([entry]) => setSceneActive(entry?.isIntersecting ?? true), { threshold: 0.08 });
-    observer.observe(stageRef.current);
-    return () => observer.disconnect();
-  }, [staticScene]);
-
   return (
     <section className="cinematic-hero">
       <div className="cinematic-grain" aria-hidden />
@@ -107,40 +45,19 @@ export function HomeHero() {
         </div>
 
         <div className="relative min-h-[500px] w-full lg:min-h-[calc(100svh-81px)]">
-          <div ref={stageRef} className={`storybook-stage ${sceneReady ? "storybook-stage-ready" : ""}`}>
-            {staticScene ? (
-              <div className="storybook-static-poster" role="img" aria-label="An illustrated Inklings book opening into a magical story world">
-                <Image
-                  src="/images/og.png"
-                  alt=""
-                  fill
-                  priority
-                  sizes="(max-width: 720px) 100vw, 56vw"
-                  className="object-cover"
-                />
-              </div>
-            ) : (
-              <StorybookUniverse page={page} active={sceneActive} />
-            )}
+          <div className="storybook-stage storybook-stage-ready">
+            <div className="storybook-static-poster cinematic-story-poster" role="img" aria-label="A moonlit Inklings story emerging from an open book">
+              <Image
+                src="/images/hero-night.png"
+                alt=""
+                fill
+                priority
+                sizes="(max-width: 720px) 100vw, 60vw"
+                className="object-cover"
+              />
+              <div className="cinematic-story-glow" aria-hidden />
+            </div>
           </div>
-
-          {!staticScene && <div className="story-scene-controls" aria-label="Interactive storybook controls">
-            <button
-              type="button"
-              className="story-scene-button"
-              onClick={() => setPage((value) => value + 1)}
-              aria-label="Turn the storybook page"
-            >
-              <MousePointer2 className="h-4 w-4" aria-hidden />
-              Turn the page
-              <span className="story-page-count">{(page % 3) + 1}/3</span>
-            </button>
-          </div>}
-
-          {!staticScene && <div className="story-scene-note" aria-hidden>
-            <Sparkles className="h-4 w-4 text-gold" />
-            Drag to explore
-          </div>}
         </div>
       </div>
 

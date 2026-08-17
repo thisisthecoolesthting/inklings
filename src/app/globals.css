@@ -306,6 +306,31 @@ body {
   box-shadow: 0 35px 90px rgba(74,37,69,.2);
 }
 
+.cinematic-hero {
+  color: #fff7e8;
+  background:
+    radial-gradient(circle at 76% 32%, rgba(123,92,174,.25), transparent 30%),
+    radial-gradient(circle at 18% 78%, rgba(244,129,92,.15), transparent 28%),
+    linear-gradient(145deg, #070b18 0%, #10152d 58%, #24152f 100%);
+}
+.cinematic-hero::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, #070b18 0%, rgba(7,11,24,.88) 38%, transparent 65%);
+}
+.cinematic-hero .hero-kicker { color:#fff7e8; background:rgba(18,18,45,.72); border-color:rgba(255,255,255,.14); }
+.cinematic-hero .hero-display { color:#fff7e8; text-shadow:0 4px 30px rgba(0,0,0,.28); }
+.cinematic-hero .hero-display-accent { background:linear-gradient(100deg,#ff8063,#f3aa78 75%,#f6d68f); background-clip:text; -webkit-background-clip:text; }
+.cinematic-hero p { color:rgba(255,247,232,.78); }
+.cinematic-story-poster { inset:3% -8% 2% -4%; border:0; border-radius:0; box-shadow:none; }
+.cinematic-story-poster::after { content:""; position:absolute; inset:0; z-index:2; pointer-events:none; background:linear-gradient(90deg,#0b1021 0%,transparent 34%),linear-gradient(180deg,rgba(7,11,24,.38),transparent 24%,rgba(7,11,24,.32)); }
+.cinematic-story-poster img { object-position:70% 50%; transform:scale(1.12); animation:cinematic-poster-breathe 12s ease-in-out infinite alternate; }
+.cinematic-story-glow { position:absolute; z-index:3; right:12%; top:9%; width:55%; aspect-ratio:1; border-radius:50%; background:radial-gradient(circle,rgba(255,198,107,.14),transparent 68%); }
+@keyframes cinematic-poster-breathe { to { transform:scale(1.15) translate3d(-.6%,.25%,0); } }
+
 .story-scene-controls {
   position: absolute;
   right: 2%;
