@@ -1,0 +1,37 @@
+{
+  "dispatch_id": "INKLINGS-CINEMATIC-3D-016",
+  "branch": "feat/cinematic-3d-storybook",
+  "shipped_at": "2026-08-16",
+  "summary": "Rebuilt the parent-facing homepage as a cinematic interactive storybook experience with a real-time 3D open book, page turns, a persistent paper world, and an accessible static fallback.",
+  "experience": [
+    "React Three Fiber open-book hero using the existing Milo sample pages as textures",
+    "Interactive page turning and restrained desktop orbit controls",
+    "Cinematic author-first narrative, tactile storyboard, keepsake, safety, pricing, FAQ, and final CTA sections",
+    "Generated social and no-WebGL poster artwork in the approved Inklings visual language"
+  ],
+  "resilience": [
+    "Static poster for reduced motion, coarse pointers, data saver, low-memory compact devices, and unavailable WebGL",
+    "Offscreen 3D animation pauses through IntersectionObserver",
+    "Mobile avoids OrbitControls so the canvas cannot trap vertical touch scrolling",
+    "Pinch zoom restored and global focus-visible treatment added"
+  ],
+  "accessibility": [
+    "Accessible mobile dialog navigation with focus trap and focus restoration",
+    "Skip link and labelled main landmark",
+    "FAQ aria-controls and labelled panel relationships",
+    "Primary CTA contrast corrected to ink on coral"
+  ],
+  "verified": {
+    "browser_desktop": "PASS — live 3D scene and page-turn control rendered at localhost:3404",
+    "webgl_fallback": "PASS — explicit capability detection and static poster path",
+    "vitest": "PASS — 1 file, 8 tests",
+    "typecheck": "PASS after React 19 / R3F 9 dependency alignment; final rerun was interrupted by the Windows PTY wrapper after the child exited",
+    "next_build": "Production compilation reached optimized build; final rerun was interrupted by the Windows PTY wrapper after the child exited. GitHub CI remains the authoritative clean-run check."
+  },
+  "deployment": {
+    "target": "storybook.inklings.shop",
+    "mode": "isolated public marketing experience",
+    "production_inklings_shop_untouched": true,
+    "secrets_or_product_data_included": false
+  }
+}

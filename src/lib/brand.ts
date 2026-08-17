@@ -12,7 +12,7 @@ export const brand = {
     "Kids 4 and up invent characters and worlds with Sparky, page by page. You approve every story — then order a softcover keepsake that ships to your door. No kid login. No ads.",
   shortPitch:
     "A creative story studio for kids 4 and up — parent-approved, real printed softcover books, characters that return every adventure.",
-  primaryCta: "Create your first book free",
+  primaryCta: "Start a free story",
   secondaryCta: "Gift for grandparents",
   trustStrip: "Free first book · Parent-approved · No ads · Real softcovers",
 };
