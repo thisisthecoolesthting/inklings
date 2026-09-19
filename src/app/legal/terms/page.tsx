@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { brand } from "@/lib/brand";
+import { GOVERNING_LAW_JURISDICTION, OPERATOR_LEGAL_NAME } from "@/lib/legal-config";
 
 export const metadata: Metadata = {
   title: `Terms of service — ${brand.name}`,
@@ -12,7 +13,7 @@ export default function TermsPage() {
     <section className="section bg-cream-100">
       <article className="container-ink mx-auto max-w-3xl">
         <h1 className="text-4xl font-bold text-ink">Terms of service</h1>
-        <p className="text-sm text-ink-500">Last updated: June 2026</p>
+        <p className="text-sm text-ink-500">Last updated: September 2026</p>
 
         <h2 className="mt-8 text-2xl font-bold text-ink">Who can use Inklings</h2>
         <p className="mt-3 text-ink-700">
@@ -71,13 +72,33 @@ export default function TermsPage() {
 
         <h2 className="mt-8 text-2xl font-bold text-ink">Governing law</h2>
         <p className="mt-3 text-ink-700">
-          These terms are governed by the laws of {"{{GOVERNING_LAW_JURISDICTION}}"}, without
-          regard to conflict-of-law principles.
+          {GOVERNING_LAW_JURISDICTION ? (
+            <>
+              These terms are governed by the laws of {GOVERNING_LAW_JURISDICTION}, without regard
+              to conflict-of-law principles.
+            </>
+          ) : (
+            <>
+              Governing law: the laws applicable to the operator&apos;s principal place of business,
+              without regard to conflict-of-laws rules; contact{" "}
+              <a className="text-coral underline" href="mailto:hello@inklings.shop">hello@inklings.shop</a>{" "}
+              for specifics.
+            </>
+          )}
         </p>
 
         <h2 className="mt-8 text-2xl font-bold text-ink">The company</h2>
         <p className="mt-3 text-ink-700">
-          Inklings is operated by {"{{OPERATOR_LEGAL_NAME}}"}.
+          {OPERATOR_LEGAL_NAME ? (
+            <>Inklings is operated by {OPERATOR_LEGAL_NAME}.</>
+          ) : (
+            <>
+              Inklings (the &ldquo;operator&rdquo;) operates this service. For our legal entity name
+              and mailing address, write to{" "}
+              <a className="text-coral underline" href="mailto:hello@inklings.shop">hello@inklings.shop</a>{" "}
+              and we&apos;ll reply within 2 business days.
+            </>
+          )}
         </p>
 
         <h2 className="mt-8 text-2xl font-bold text-ink">Contact</h2>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { brand } from "@/lib/brand";
+import { OPERATOR_LEGAL_NAME, OPERATOR_MAILING_ADDRESS } from "@/lib/legal-config";
 
 export const metadata: Metadata = {
   title: `Privacy policy — ${brand.name}`,
@@ -15,7 +16,19 @@ export default function PrivacyPage() {
 
         <h2 className="mt-8 text-2xl font-bold text-ink">Who operates Inklings</h2>
         <p className="mt-3 text-ink-700">
-          Inklings is operated by {"{{OPERATOR_LEGAL_NAME}}"} ({"{{OPERATOR_MAILING_ADDRESS}}"}).
+          {OPERATOR_LEGAL_NAME ? (
+            <>
+              Inklings is operated by {OPERATOR_LEGAL_NAME}
+              {OPERATOR_MAILING_ADDRESS ? ` (${OPERATOR_MAILING_ADDRESS})` : ""}.{" "}
+            </>
+          ) : (
+            <>
+              Inklings (the &ldquo;operator&rdquo;) operates this service. For our legal entity name
+              and mailing address, write to{" "}
+              <a className="text-coral underline" href="mailto:hello@inklings.shop">hello@inklings.shop</a>{" "}
+              and we&apos;ll reply within 2 business days.{" "}
+            </>
+          )}
           For any privacy question, request, or concern, email{" "}
           <a className="text-coral underline" href="mailto:hello@inklings.shop">hello@inklings.shop</a>{" "}
           — we read every message ourselves.
