@@ -8,6 +8,9 @@ import { FaqPageJsonLd } from "@/lib/jsonld";
 import { AUDIENCE_LANDINGS } from "@/content/audience-landings";
 import { StudioPreviewSection } from "@/components/marketing/StudioPreviewSection";
 import { HomeHero } from "@/components/marketing/HomeHero";
+import { TasteOfSparky } from "@/components/marketing/TasteOfSparky";
+import { SafetyComparison } from "@/components/marketing/SafetyComparison";
+import { FullPageTrigger } from "@/components/marketing/FullPageLightbox";
 import { pageMetadata } from "@/lib/seo";
 
 /** Top FAQ only — full list lives on /faq */
@@ -25,6 +28,18 @@ export default function HomePage() {
     <>
       <FaqPageJsonLd items={FAQ_TEASERS} />
       <HomeHero />
+
+      <section className="section-mobile pb-0 md:pb-0">
+        <div className="container-ink">
+          <div className="mx-auto max-w-2xl text-center">
+            <span className="eyebrow">Try it right now</span>
+            <h2 className="section-title">A taste of Sparky — no account needed</h2>
+          </div>
+          <div className="mx-auto mt-8 max-w-2xl">
+            <TasteOfSparky />
+          </div>
+        </div>
+      </section>
 
       <section className="section bg-cream-100">
         <div className="container-ink">
@@ -64,6 +79,12 @@ export default function HomePage() {
 
       <StudioPreviewSection />
 
+      <div className="bg-cream-100 pb-16 pt-2">
+        <div className="container-ink flex justify-center">
+          <FullPageTrigger />
+        </div>
+      </div>
+
       <section className="section bg-cream-100">
         <div className="container-ink">
           <div className="section-header-center">
@@ -90,6 +111,24 @@ export default function HomePage() {
               More answers →
             </Link>
           </p>
+        </div>
+      </section>
+
+      <section className="section bg-cream-100">
+        <div className="container-ink">
+          <div className="mx-auto max-w-2xl text-center">
+            <span className="eyebrow">Not another chatbot</span>
+            <h2 className="section-title">Safety is the first feature</h2>
+            <p className="section-subtitle">
+              Sparky never hands a child an open text box.{" "}
+              <Link href="/security" className="text-coral underline">
+                See how Sparky is different →
+              </Link>
+            </p>
+          </div>
+          <div className="mt-10">
+            <SafetyComparison compact />
+          </div>
         </div>
       </section>
 
