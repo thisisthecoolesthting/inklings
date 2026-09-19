@@ -86,6 +86,7 @@ export default function PrivacyPage() {
           <li>
             <strong>Usage analytics:</strong> basic, IP-anonymized product analytics (see Cookies
             below) so we can see which pages and features are used, and fix what&apos;s broken.
+            Analytics run on the marketing site and parent pages, not inside the child Studio.
           </li>
         </ul>
 
@@ -135,7 +136,7 @@ export default function PrivacyPage() {
         <h2 className="mt-8 text-2xl font-bold text-ink">Cookies</h2>
         <ul className="mt-3 list-disc pl-6 text-ink-700">
           <li><strong><code>ink_session</code></strong> &mdash; a session cookie that keeps you signed in after a magic-link or password login. Required for the site to function; not used for tracking.</li>
-          <li><strong>Analytics cookies (Google Analytics 4)</strong> &mdash; set when our GA4 tag is enabled, with IP anonymization turned on. Used only in aggregate to understand traffic and usage.</li>
+          <li><strong>Analytics cookies (Google Analytics 4)</strong> &mdash; set when our GA4 tag is enabled, with IP anonymization turned on. Used only in aggregate to understand traffic and usage. Analytics run on the marketing site and parent pages, not inside the child Studio (the Studio, the kids&apos; library and the grown-up unlock screen load no analytics).</li>
         </ul>
 
         <h2 className="mt-8 text-2xl font-bold text-ink">What we don&apos;t do</h2>
