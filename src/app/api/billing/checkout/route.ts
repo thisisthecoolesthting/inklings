@@ -49,7 +49,11 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) return NextResponse.json({ error: "invalid_payload" }, { status: 400 });
 
   const session = await getSession();
-  if (!session) return NextResponse.redirect(new URL("/login?next=/pricing", getSiteUrl()), { status: 303 });
+  if (!session) {
+    // Send logged-out buyers back to the page they came from (gift buyers to /gift, not /pricing).
+    const next = parsed.data.tier === "gift" ? "/gift" : parsed.data.tier === "print" ? "/portal/orders" : "/pricing";
+    return NextResponse.redirect(new URL(`/login?next=${next}`, getSiteUrl()), { status: 303 });
+  }
 
   const user = await prisma.user.findUnique({ where: { id: session.userId } });
   if (!user) return NextResponse.json({ error: "user_not_found" }, { status: 404 });
