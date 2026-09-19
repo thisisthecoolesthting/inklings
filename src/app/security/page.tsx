@@ -4,7 +4,7 @@ import { brand } from "@/lib/brand";
 import { ShieldCheck, Lock, Eye, UserCheck, Image as ImageIcon, Key } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: `Safety &amp; privacy — ${brand.name}`,
+  title: `Safety & privacy — ${brand.name}`,
   description: "How Inklings protects kids and their data.",
 };
 
