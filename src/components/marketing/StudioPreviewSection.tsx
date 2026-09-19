@@ -39,7 +39,7 @@ export async function StudioPreviewSection() {
               A kid makes a book in about 20 minutes
             </h2>
             <p className="mt-4 text-lg text-ink-700">
-              These pages are from a complete demo story — art on top, clear story text below. No garbled AI words in the pictures.
+              These pages are from a complete demo story — art on top, clear story text below. We ask the illustrator to leave words out of the pictures.
             </p>
             <ol className="mt-8 space-y-4">
               {STEPS.map((step, i) => (

@@ -31,7 +31,7 @@ export default function TermsPage() {
         <p className="mt-3 text-ink-700">
           You and your child own the stories you create on Inklings. We require a license to host
           and process your content for the purpose of running the service (storage, illustration
-          generation, PDF export, print fulfillment).
+          generation, print fulfillment).
         </p>
 
         <h2 className="mt-8 text-2xl font-bold text-ink">AI-assisted illustrations</h2>
@@ -55,7 +55,7 @@ export default function TermsPage() {
         <ol className="mt-4 list-decimal space-y-2 pl-6 text-ink-700">
           <li>Sign in to your parent portal.</li>
           <li>Open <strong>Settings</strong>.</li>
-          <li>Click <strong>Manage billing</strong> — Stripe opens your subscription page.</li>
+          <li>Click <strong>Open billing portal</strong> — Stripe opens your subscription page.</li>
           <li>Click <strong>Cancel plan</strong>. Access continues until the end of the paid period.</li>
         </ol>
         <p className="mt-4 text-ink-700">

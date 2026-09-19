@@ -114,7 +114,7 @@ export async function HomeHero() {
                 ))}
               </div>
               <p className="mt-3 text-center text-xs font-semibold text-ink-600 sm:mt-4">
-                Real story · art on top, readable text below every page
+                Sample story · art on top, readable text below every page
               </p>
             </div>
           </div>

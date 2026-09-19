@@ -106,7 +106,7 @@ export default async function PortalHome({
       {!isPremium && (
         <div className="card-base mb-8 ring-2 ring-coral/40">
           <h2 className="text-lg font-bold text-ink">Try Premium free for 14 days</h2>
-          <p className="mt-2 text-sm text-ink-700">Unlimited stories, HD print-ready PDFs, and series memory.</p>
+          <p className="mt-2 text-sm text-ink-700">Unlimited stories and unlimited story worlds for each child.</p>
           <Link href="/api/billing/checkout?tier=premium" className="btn-primary mt-4 inline-flex">
             Start free trial
           </Link>

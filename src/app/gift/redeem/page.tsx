@@ -9,7 +9,7 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata = pageMetadata({
   title: "Redeem your gift code",
   description:
-    "Redeem your Inklings gift code to unlock Premium: unlimited stories, series memory, and print-ready books for a child in your family, ages 4-8.",
+    "Redeem your Inklings gift code to unlock Premium: unlimited stories and unlimited story worlds for a child in your family, ages 4-8.",
   path: "/gift/redeem",
 });
 
@@ -65,15 +65,15 @@ export default async function GiftRedeemPage({
             <ul className="mx-auto mt-8 max-w-sm space-y-2 text-left text-sm text-ink-700">
               <li className="flex gap-2">
                 <Sparkles className="mt-0.5 h-4 w-4 flex-none text-coral" aria-hidden />
-                Unlimited stories and characters
+                Unlimited stories
               </li>
               <li className="flex gap-2">
                 <Sparkles className="mt-0.5 h-4 w-4 flex-none text-coral" aria-hidden />
-                HD print-ready PDFs (no watermark)
+                Unlimited story worlds for each child
               </li>
               <li className="flex gap-2">
                 <Sparkles className="mt-0.5 h-4 w-4 flex-none text-coral" aria-hidden />
-                Series memory — characters return every story
+                Series memory — each new book picks up from the last
               </li>
             </ul>
             <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:justify-center">
@@ -97,7 +97,7 @@ export default async function GiftRedeemPage({
           <span className="eyebrow">Gift Premium</span>
           <h1 className="section-title mt-2">Redeem your gift code</h1>
           <p className="mx-auto mt-3 max-w-md text-ink-700">
-            Unlock {brand.name} Premium — unlimited stories, series memory, and print-ready books.
+            Unlock {brand.name} Premium — unlimited stories and unlimited story worlds.
           </p>
         </div>
 

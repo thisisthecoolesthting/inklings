@@ -56,7 +56,7 @@ export default function HomePage() {
               </p>
               <div className="mt-5">
                 <PrimaryCta href="#see-it-in-action" variant="secondary" microcopy={false}>
-                  See a real 20-minute book ↓
+                  See a sample book ↓
                 </PrimaryCta>
               </div>
             </div>
@@ -97,7 +97,7 @@ export default function HomePage() {
             <span className="eyebrow">Simple pricing</span>
             <h2 className="section-title">Start free. Print when you&apos;re ready.</h2>
             <p className="section-subtitle">
-              Try your first story free. Premium unlocks unlimited stories and HD export.
+              Try your first story free. Premium unlocks unlimited stories and more story worlds.
               Printed softcovers are a one-time add-on on any plan.
             </p>
           </div>

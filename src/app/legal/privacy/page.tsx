@@ -78,6 +78,12 @@ export default function PrivacyPage() {
             tied to your account, used to apply plan limits.
           </li>
           <li>
+            <strong>Sample-story requests:</strong> if you enter your email in the &ldquo;Email me a
+            sample story&rdquo; form, we store that address (with the form it came from and the
+            time) and email you a link to the sample story. To have it removed, email{" "}
+            <a className="text-coral underline" href="mailto:hello@inklings.shop">hello@inklings.shop</a>.
+          </li>
+          <li>
             <strong>Usage analytics:</strong> basic, IP-anonymized product analytics (see Cookies
             below) so we can see which pages and features are used, and fix what&apos;s broken.
           </li>

@@ -12,13 +12,13 @@ import { CtaBand } from "@/components/CtaBand";
 export const metadata: Metadata = pageMetadata({
   title: "Pricing — simple plans for families",
   description:
-    "Free forever for one child and 3 stories a month. Premium $9.99/mo for unlimited stories and HD print export. Real printed softcover books $19.99 each.",
+    "Free forever with 3 stories a month. Premium $9.99/mo for unlimited stories and more story worlds. Real printed softcover books $19.99 each.",
   path: "/pricing",
 });
 
 const PRICING_OFFERS = [
-  { name: "Free", price: "0", description: "One child, 3 stories per month, parent approval included." },
-  { name: "Premium", price: "9.99", description: "Unlimited stories, HD illustrations, full character bible." },
+  { name: "Free", price: "0", description: "3 stories per month, one story world per child, parent approval included." },
+  { name: "Premium", price: "9.99", description: "Unlimited stories and unlimited story worlds per child." },
   {
     name: "Printed softcover",
     price: "19.99",
@@ -61,7 +61,7 @@ export default function PricingPage() {
       <section className="section-mobile bg-cream-100">
         <div className="container-ink">
           <div className="mx-auto max-w-xl text-center">
-            <span className="eyebrow">What Premium&apos;s &quot;series memory&quot; looks like</span>
+            <span className="eyebrow">What a growing story world looks like</span>
             <h2 className="text-2xl font-bold text-ink">A shelf that keeps growing</h2>
           </div>
           <div className="mt-6">

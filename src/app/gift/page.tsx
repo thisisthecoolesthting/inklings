@@ -11,14 +11,14 @@ const GIFTS = [
     id: "gift_1m",
     name: "1 month of Premium",
     price: "$9.99",
-    blurb: "Perfect for trying the studio — unlimited stories for 30 days.",
+    blurb: "Perfect for trying the studio — unlimited stories for one month.",
   },
   {
     id: "gift_6m",
     name: "6 months of Premium",
     price: "$49.99",
     badge: "Popular",
-    blurb: "A semester of story-making — characters that return all season.",
+    blurb: "A semester of story-making — the same characters can return all season.",
   },
   {
     id: "gift_12m",
@@ -39,14 +39,14 @@ const GIFT_STEPS = [
   },
   {
     title: "They redeem it",
-    body: "The recipient enters the code at inklings.shop/gift/redeem and Premium switches on.",
+    body: "The recipient signs in to their own parent account, enters the code at inklings.shop/gift/redeem, and Premium switches on for that account.",
   },
 ];
 
 export const metadata: Metadata = pageMetadata({
   title: "Gift Premium story studio for kids",
   description:
-    "Gift Inklings Premium to creative kids ages 4-8: unlimited stories, characters that return every time, and optional printed keepsakes. Redeemed by email.",
+    "Gift Inklings Premium to creative kids ages 4-8: unlimited stories, characters that can return every time, and optional printed keepsakes. Redeemed with a code.",
   path: "/gift",
 });
 

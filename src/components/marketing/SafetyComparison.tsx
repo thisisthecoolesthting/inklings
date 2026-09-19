@@ -51,8 +51,8 @@ export function SafetyComparison({ compact = false }: { compact?: boolean }) {
           A bounded, branching guide
         </h3>
         <p className="mt-2 text-sm text-ink-600">
-          Kids never type freely to an open model. Every beat is a small set of
-          parent-safe, story-relevant choices Sparky offers.
+          Kids never chat with an open model. Every beat is a small set of
+          story-relevant choices Sparky offers.
         </p>
 
         {/* Real chip-button UI pattern */}

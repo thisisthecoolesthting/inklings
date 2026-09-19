@@ -168,7 +168,7 @@ export function TasteOfSparky({
               {showEmailOption && (
                 <p className="mt-3 text-sm text-ink-600">
                   <Link href="/contact?topic=sample-story" className="font-semibold text-coral underline underline-offset-4">
-                    Or email me this story as a PDF
+                    Ask us to send a sample story
                   </Link>
                 </p>
               )}

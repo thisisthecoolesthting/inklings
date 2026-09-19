@@ -25,10 +25,10 @@ export async function SampleStoryGallery() {
     <section className="section bg-cream-100">
       <div className="container-ink">
         <div className="section-header-center">
-          <span className="eyebrow">From a real Sparky story</span>
+          <span className="eyebrow">From a sample Sparky story</span>
           <h2 className="section-title">Pages with words kids can read</h2>
           <p className="section-subtitle mx-auto max-w-2xl">
-            Illustrations are generated without text — we set the story in a clear, readable typeface below each picture, just like the printed book.
+            Illustrations are requested without text — the story is set in a readable typeface below each picture, just like the printed book.
           </p>
         </div>
         <div className="grid gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 lg:gap-8">

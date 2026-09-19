@@ -98,7 +98,7 @@ export default async function ApprovalsPage({
             {pendingCharacters.map((ch) => (
               <li key={ch.id} className="card-base">
                 <span className="rounded-full bg-mint-100 px-3 py-1 text-xs font-semibold text-mint-600">
-                  Sandbox &mdash; only {ch.child.name} can see this
+                  Waiting for your approval
                 </span>
                 <h3 className="mt-3 text-lg font-bold text-ink">{ch.name}</h3>
                 <p className="text-sm text-ink-500">From {ch.child.name}</p>
