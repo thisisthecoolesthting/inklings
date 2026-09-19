@@ -95,7 +95,7 @@ export default function HomePage() {
               Printed softcovers are a one-time add-on on any plan.
             </p>
           </div>
-          <PricingTiers />
+          <PricingTiers headingLevel="h3" />
         </div>
       </section>
 

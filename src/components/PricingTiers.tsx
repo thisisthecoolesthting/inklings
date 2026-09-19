@@ -12,6 +12,12 @@ interface Tier {
   features: string[];
   ctaLabel: string;
   ctaHref: string;
+  /** Anchor id so other pages can deep-link (e.g. /pricing#book). */
+  anchorId?: string;
+  /** Small print under the button. */
+  microcopy?: string;
+  /** Secondary text link under the button. */
+  altLink?: { label: string; href: string };
 }
 
 const TIERS: Tier[] = [
@@ -30,6 +36,7 @@ const TIERS: Tier[] = [
     ],
     ctaLabel: "Start a free story",
     ctaHref: "/trial",
+    microcopy: "No credit card. The Free plan never asks for one.",
   },
   {
     id: "premium",
@@ -49,6 +56,8 @@ const TIERS: Tier[] = [
     ],
     ctaLabel: "Try Premium free for 14 days",
     ctaHref: "/api/billing/checkout?tier=premium",
+    microcopy: "Card required · $0 today · cancel in one click before day 14 or pay $9.99/mo",
+    altLink: { label: "Gift Premium instead", href: "/gift" },
   },
   {
     id: "printed_book",
@@ -65,17 +74,20 @@ const TIERS: Tier[] = [
     ],
     ctaLabel: "See how printing works",
     ctaHref: "/how-it-works#printed",
+    anchorId: "book",
   },
 ];
 
-export function PricingTiers() {
+export function PricingTiers({ headingLevel = "h2" }: { headingLevel?: "h2" | "h3" }) {
+  const Heading = headingLevel;
   return (
     <div className="grid gap-6 lg:grid-cols-3">
       {TIERS.map((tier) => (
         <div
           key={tier.id}
+          id={tier.anchorId}
           className={
-            "card-base relative flex flex-col " +
+            "card-base relative flex flex-col " + (tier.anchorId ? "scroll-mt-28 " : "") +
             (tier.featured ? "ring-2 ring-coral" : "")
           }
         >
@@ -84,7 +96,7 @@ export function PricingTiers() {
               {tier.badge}
             </div>
           )}
-          <h3 className="text-2xl font-bold text-ink">{tier.name}</h3>
+          <Heading className="font-sans text-2xl font-bold text-ink">{tier.name}</Heading>
           <div className="mt-4 flex items-baseline gap-1">
             <span className="text-lg text-ink-500">{tier.currency}</span>
             <span className="text-5xl font-bold text-ink">{tier.amount}</span>
@@ -100,10 +112,22 @@ export function PricingTiers() {
           </ul>
           <Link
             href={tier.ctaHref}
-            className={"mt-8 " + (tier.featured ? "btn-primary btn-full" : "btn-secondary btn-full")}
+            className={
+              "mt-8 " + (tier.featured || tier.id === "free" ? "btn-primary btn-full" : "btn-secondary btn-full")
+            }
           >
             {tier.ctaLabel}
           </Link>
+          {tier.microcopy && (
+            <p className="mt-3 text-center text-xs leading-snug text-ink-600">{tier.microcopy}</p>
+          )}
+          {tier.altLink && (
+            <p className="mt-3 text-center text-sm">
+              <Link href={tier.altLink.href} className="font-semibold text-coral underline underline-offset-4">
+                {tier.altLink.label} &rarr;
+              </Link>
+            </p>
+          )}
         </div>
       ))}
     </div>
