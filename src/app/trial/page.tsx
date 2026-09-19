@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { brand } from "@/lib/brand";
 import { TrialForm } from "@/components/TrialForm";
+import { TrialStepper } from "@/components/TrialStepper";
 
 export const dynamic = "force-dynamic";
 
@@ -45,6 +46,8 @@ export default async function TrialPage(props: {
           <p className="mt-4 text-lg text-ink-700">
             Create your parent account with email and password. No credit card required.
           </p>
+
+          <TrialStepper current={1} />
 
           {errorMsg && (
             <div
