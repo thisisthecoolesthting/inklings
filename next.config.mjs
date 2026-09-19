@@ -20,6 +20,12 @@ const nextConfig = {
       { pathname: "/user-content/**" },
     ],
   },
+  async redirects() {
+    return [
+      // /features/draw-or-photo promoted a photo/drawing upload feature that does not exist.
+      { source: "/features/draw-or-photo", destination: "/features/character-maker", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

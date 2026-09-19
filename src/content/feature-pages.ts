@@ -11,19 +11,19 @@ export const FEATURES: FeatureBlock[] = [
     slug: "voice-first-studio",
     title: "Voice-first kid Studio",
     summary:
-      "Your child speaks to Sparky and taps giant buttons. No reading, no typing — designed for ages 4-8.",
+      "Your child taps giant picture buttons or answers Sparky out loud. No typing needed — designed for ages 4-8.",
   },
   {
     slug: "character-bible",
     title: "Persistent character family",
     summary:
-      "Characters your child invents stay alive across every story — same look, same personality, same voice.",
+      "Characters your child invents are saved and can star in every story — same name, animal, colors, and personality traits.",
   },
   {
-    slug: "draw-or-photo",
-    title: "Draw or snap to character",
+    slug: "character-maker",
+    title: "Build a character in a few taps",
     summary:
-      "Take a photo of a stuffed animal or a crayon drawing. Inklings turns it into a starring story character.",
+      "Your child picks a name, an animal, a favorite color, and one or two personality traits. A new story friend is ready in under a minute.",
   },
   {
     slug: "parent-approval",
@@ -41,6 +41,6 @@ export const FEATURES: FeatureBlock[] = [
     slug: "safety-first",
     title: "Safety is the first feature",
     summary:
-      "On-device face detection, sandbox mode for new characters, content moderation on every AI output.",
+      "No photo or drawing uploads, no open chat box, a word filter on every page Sparky writes, and a parent approval gate.",
   },
 ];

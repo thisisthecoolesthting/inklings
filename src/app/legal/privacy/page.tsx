@@ -45,27 +45,37 @@ export default function PrivacyPage() {
             Stripe customer ID for billing (if you subscribe or order a print).
           </li>
           <li>
-            <strong>Child profile info:</strong> your child&apos;s first name, age range, and an
-            optional avatar you upload. We never ask for a last name, birthdate, or contact
-            details for the child.
+            <strong>Child profile info:</strong> your child&apos;s first name and age. We never ask
+            for a last name, birthdate, photo, or contact details for the child.
           </li>
           <li>
-            <strong>Story &amp; character inputs:</strong> the characters, worlds, and story
-            choices your child creates in the Studio &mdash; stored privately to your account so
-            characters can return across stories.
+            <strong>Story &amp; character inputs:</strong> the characters (including the name your
+            child types for each one), worlds, story choices, and the story text and illustrations
+            generated from them &mdash; stored in your account so characters can return across
+            stories.
+          </li>
+          <li>
+            <strong>Consent record:</strong> when you create an account we store your confirmation
+            that you are the child&apos;s parent or legal guardian, along with the time, your IP
+            address, and your browser&apos;s user-agent string.
           </li>
           <li>
             <strong>Voice input during Studio sessions:</strong> the Studio uses your browser&apos;s
             built-in speech recognition (the Web Speech API) to turn your child&apos;s spoken
-            choices into text. That audio is processed by your browser/device, not by Inklings
-            &mdash; our servers only ever receive the resulting text transcript. We do not record,
-            upload, or store raw voice audio.
+            choices into text. Inklings never receives or stores audio &mdash; our servers only
+            ever receive the resulting text transcript. Some browsers send audio to their own
+            speech service to do the transcribing, so check your browser&apos;s privacy settings if
+            that matters to you.
           </li>
           <li>
-            <strong>Photo uploads:</strong> if you upload a photo to inspire a character, on-device
-            face detection blurs any face in your browser <em>before</em> the image ever reaches
-            our servers. We keep the stylized illustration output and the (already-blurred)
-            original privately to your account, so it can be re-rendered later.
+            <strong>Photos and drawings:</strong> Inklings does not currently accept photo or
+            drawing uploads, so we do not collect photos or images of your child. Characters are
+            built only from the name, animal, color, and personality traits your child taps in. We
+            will update this policy before we ever add uploads.
+          </li>
+          <li>
+            <strong>Usage records:</strong> counts of stories started and illustrations generated,
+            tied to your account, used to apply plan limits.
           </li>
           <li>
             <strong>Usage analytics:</strong> basic, IP-anonymized product analytics (see Cookies
@@ -80,8 +90,8 @@ export default function PrivacyPage() {
         </p>
         <ul className="mt-3 list-disc pl-6 text-ink-700">
           <li><strong>Stripe</strong> &mdash; processes payments and subscriptions. Stripe receives billing details directly; Inklings never sees or stores your card number.</li>
-          <li><strong>Anthropic</strong> (Claude API) &mdash; powers Sparky, the AI that guides your child&apos;s story. Story text and choices are sent to Anthropic to generate Sparky&apos;s responses.</li>
-          <li><strong>Together AI</strong> &mdash; generates the illustrations for your child&apos;s story pages from the story text/character description.</li>
+          <li><strong>Anthropic</strong> (Claude API) &mdash; powers Sparky, the AI that writes your child&apos;s story pages. Story choices, character details, and the story text so far are sent to Anthropic to generate each page.</li>
+          <li><strong>OpenRouter and Together AI</strong> &mdash; generate the illustrations for your child&apos;s story pages from the story text and character descriptions. OpenRouter routes the request to an image model provider (currently Google&apos;s Gemini image model); Together AI is used as a fallback.</li>
           <li><strong>Resend / our mail server</strong> &mdash; delivers transactional email (magic links, receipts, account notices) to your inbox.</li>
           <li><strong>Lulu</strong> (our print fulfillment partner) &mdash; when you order a printed softcover, the finished book file and the parent&apos;s shipping address are shared with Lulu so they can print and ship your book.</li>
         </ul>
@@ -89,10 +99,10 @@ export default function PrivacyPage() {
         <h2 className="mt-8 text-2xl font-bold text-ink">How long we keep data</h2>
         <p className="mt-3 text-ink-700">
           We keep your account, child profile, and story data for as long as your account is
-          active. If you delete your account, we delete your data &mdash; account, child profile,
-          stories, characters, and uploaded images &mdash; within 30 days. Some records (like order
-          and payment history) may be retained longer where we&apos;re legally required to keep
-          them for tax or accounting purposes.
+          active. If you delete your account, we delete your account, child profiles, stories, and
+          characters within 30 days. Some records (like order and payment history, the consent
+          record above, and usage counts) may be retained longer where we need them for legal, tax,
+          accounting, or security purposes.
         </p>
 
         <h2 className="mt-8 text-2xl font-bold text-ink">Your rights as a parent</h2>
@@ -109,9 +119,10 @@ export default function PrivacyPage() {
           </li>
           <li>
             <strong>Revoke consent</strong> to us collecting your child&apos;s information at any
-            time from <code>/portal/settings</code>. Revoking consent will pause story creation and
-            lead to account deletion if not resolved, since collecting that information is
-            necessary to run the Studio.
+            time by emailing{" "}
+            <a className="text-coral underline" href="mailto:hello@inklings.shop">hello@inklings.shop</a>{" "}
+            or by deleting your account. Because that information is necessary to run the Studio,
+            revoking consent means we close the account.
           </li>
         </ul>
 
@@ -126,13 +137,13 @@ export default function PrivacyPage() {
           <li>No public profiles, no social discovery, no sharing surface.</li>
           <li>No selling or trading of your data, ever.</li>
           <li>No advertising. Inklings is a paid product.</li>
-          <li>No collection of biometric data &mdash; face detection runs in your browser and the face never reaches us.</li>
+          <li>No collection of biometric data &mdash; Inklings does not accept photo or drawing uploads, so no face images or facial data are collected. We will update this policy before adding uploads.</li>
         </ul>
 
         <h2 className="mt-8 text-2xl font-bold text-ink">COPPA &amp; children</h2>
         <p className="mt-3 text-ink-700">
           Inklings is built for children under 13. The parent creates and controls the account, and
-          nothing your child creates publishes, ships, or exports without your approval. We collect
+          a story cannot be ordered as a printed book without your approval, and Inklings has no public sharing. We collect
           only what is necessary to operate the service, described above. You can review, export,
           or delete your account and all associated data at any time from your portal settings.
         </p>

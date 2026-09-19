@@ -79,12 +79,12 @@ Parents of children ages 4 and up. Grandparents looking for keepsake gifts. Home
 
 See `docs/INKLINGS_SPINE_DEVIATIONS.md` and `AGENTS.md`. Highlights:
 
-- New characters live in `sandboxMode = true` until parent approves
-- Photos: face detection on-device, faces blurred before upload
-- Sparky is a tightly-bounded branching flow, not an open chatbot
-- Content moderation on every AI text + image output
-- COPPA-compliant: parent owns the account, child profile cascades off it
-- Nothing publishes, exports, or prints without parent approval
+- New characters are created with `sandboxMode = true` and flagged in the parent portal for approve / send back
+- No photo or drawing uploads (and therefore no face detection); characters are built from taps only
+- Sparky is a tightly-bounded branching flow, not an open chatbot; the only child-typed text is a character name
+- A blocked-word filter runs on child input and on every page Sparky writes (`lib/safety.ts`)
+- COPPA: parent owns the account and consents at sign-up; child profile cascades off it
+- A story cannot be ordered as a printed book without parent approval
 
 ## License
 

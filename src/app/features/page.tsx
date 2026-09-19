@@ -9,7 +9,7 @@ import { CtaBand } from "@/components/CtaBand";
 export const metadata: Metadata = pageMetadata({
   title: "Features — the whole storybook studio",
   description:
-    "Six things Inklings actually does: a voice-first kid Studio, persistent characters, drawing-to-character, parent approval, printed books, and safety.",
+    "Six things Inklings actually does: a tap-and-talk kid Studio, persistent characters, a tap-to-build character maker, parent approval, printed books, and safety.",
   path: "/features",
 });
 

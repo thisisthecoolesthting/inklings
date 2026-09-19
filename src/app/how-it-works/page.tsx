@@ -16,10 +16,10 @@ export const metadata: Metadata = pageMetadata({
 
 const STEPS = [
   { n: 1, title: "Parent makes the account", body: "You sign up with email — no credit card. Add your child's first name and age." },
-  { n: 2, title: "Your child meets Sparky", body: "Sparky greets them in the kid Studio. Voice-first, with giant tap-buttons. No reading needed." },
-  { n: 3, title: "They build a character family", body: "Photograph a stuffed animal, draw a hero, or describe one out loud. Inklings turns each into a starring character with a saved look so they appear the same in every story." },
+  { n: 2, title: "Your child meets Sparky", body: "Sparky greets them in the kid Studio with giant emoji tap-buttons and an optional mic for saying a pick out loud. Sparky's questions appear on screen, so a grown-up can read them aloud for the youngest kids." },
+  { n: 3, title: "They build a character family", body: "Tap a name, an animal, a favorite color, and one or two personality traits — or use the ready-made Milo and Pip. Each character is saved so it can star in every story." },
   { n: 4, title: "They write a five-act story", body: "Beginning, problem, adventure, resolution, celebration — Sparky walks through each act with simple branching choices. Never an empty text box." },
-  { n: 5, title: "You approve and print", body: "Every page comes to your portal for review. Approve, edit text, or regenerate art. Download a free PDF or order a real softcover keepsake." },
+  { n: 5, title: "You approve and print", body: "Every page comes to your portal for review. Approve the story or send it back to your child, then order a real softcover keepsake." },
 ];
 
 export default function HowPage() {
@@ -88,8 +88,8 @@ export default function HowPage() {
             <div className="p-6">
               <h2 className="text-xl font-bold text-ink">About the printed books</h2>
               <p className="mt-3 text-ink-700">
-                Softcover, 8.5&quot; &times; 8.5&quot;, 24&ndash;32 pages, full-color throughout.
-                Professionally printed and shipped directly to your door in 7&ndash;10 business days.
+                Softcover, 8.5&quot; &times; 8.5&quot;, full-color throughout, one illustrated page for each
+                step of your child&apos;s story. Printed on demand by our partner Lulu and shipped to your door — we estimate 7&ndash;10 business days.
                 One-time charge on any tier &mdash; $19.99 per book.
               </p>
               <div className="mt-5 flex flex-wrap items-center gap-3">

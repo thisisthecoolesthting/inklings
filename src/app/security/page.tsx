@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { brand } from "@/lib/brand";
-import { ShieldCheck, Lock, Eye, UserCheck, Image as ImageIcon, Key } from "lucide-react";
+import { ShieldCheck, Lock, ImageOff, UserCheck, ListChecks, Key } from "lucide-react";
 import { SafetyComparison } from "@/components/marketing/SafetyComparison";
 import { pageMetadata } from "@/lib/seo";
 import { PrimaryCta } from "@/components/PrimaryCta";
@@ -9,17 +9,17 @@ import { PrimaryCta } from "@/components/PrimaryCta";
 export const metadata: Metadata = pageMetadata({
   title: "Safety & privacy for kids' stories",
   description:
-    "How Inklings protects kids: a parent-owned account, bounded Sparky choices instead of open chat, on-device face blurring, and minimal COPPA-minded data.",
+    "How Inklings protects kids: a parent-owned account, bounded Sparky choices instead of open chat, no photo or drawing uploads, and minimal COPPA-minded data.",
   path: "/security",
 });
 
 const PILLARS = [
   { icon: UserCheck, title: "Parent owns the account", body: "There is no separate child login. The parent creates and controls the account; the child profile is linked to it. We collect only your child's first name and age." },
-  { icon: ShieldCheck, title: "Parent approves before anything publishes", body: "Sandbox mode means new characters and stories are private to your child's session until you explicitly approve them. Nothing ships, prints, or exports without your sign-off." },
-  { icon: Eye, title: "On-device face detection", body: "If a photo upload contains a human face, our face-detection runs in your browser before anything reaches our servers — and the face is blurred. We then extract colors and shapes for the illustration." },
+  { icon: ShieldCheck, title: "Parent approves before anything publishes", body: "New characters and finished stories are flagged in your portal for review. A story can't be ordered as a printed book until you approve it, and Inklings has no public sharing or publishing features." },
+  { icon: ImageOff, title: "No photo or drawing uploads", body: "Inklings does not accept photos or drawings, so no images of your child, your home, or anyone's face are collected. Characters are built only from taps: a name, an animal, a color, and personality traits." },
   { icon: Lock, title: "No public profiles, no social feed", body: "Inklings has no public discovery surface. There is nothing for someone to find, follow, or message. Private by design." },
-  { icon: ImageIcon, title: "Content moderation on every AI output", body: "Both Sparky's text and the illustration model run with safety filters enabled. Sparky is a tightly bounded branching system, not an open chatbot." },
-  { icon: Key, title: "COPPA-compliant", body: "Designed for children under 13 with parent consent and minimal data collection. Children cannot communicate with anyone outside their family." },
+  { icon: ListChecks, title: "A word filter on every page Sparky writes", body: "Every page Sparky writes is checked against a blocked-word list before your child sees it, and a safe fallback page is used if it fails. Sparky is a tightly bounded branching system, not an open chatbot, and you review the finished pages before anything is printed." },
+  { icon: Key, title: "Built around COPPA", body: "Designed for children under 13: parent consent is recorded at sign-up, data collection is minimal, and there is no way for children to communicate with anyone outside their family." },
 ];
 
 export default function SecurityPage() {
@@ -34,7 +34,7 @@ export default function SecurityPage() {
             </h1>
             <p className="mt-6 text-lg text-ink-700">
               Inklings is built for children. That means parents control everything,
-              data collection is minimized, and AI outputs run through safety filters.
+              data collection is minimized, and the text Sparky writes goes through a word filter.
             </p>
           </div>
         </div>

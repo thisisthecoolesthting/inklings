@@ -41,16 +41,17 @@ Forbidden phrases on marketing pages: "edutainment", "engagement", "screen time"
 ## Two product surfaces
 
 1. **Kid Studio** at `/studio` — voice-first, giant tap-buttons. Sparky is a *bounded* branching flow, not an open chatbot. Voice STT has a tap-button fallback because STT on 4-year-olds is unreliable.
-2. **Parent Portal** at `/portal` — approval queue (sandbox-mode characters, awaiting-parent stories), orders, billing, settings. Nothing publishes/exports/prints without parent approval here first.
+2. **Parent Portal** at `/portal` — approval queue (sandbox-mode characters, awaiting-parent stories), orders, billing, settings. A story cannot be ordered as a printed book without parent approval here first. (There is no publish/share feature and no PDF export.)
 
 ## Safety rules baked in
 
-- New characters live in `sandbox_mode = true` until parent approves.
-- Photos run on-device face detection before upload; faces are blurred before any byte reaches the server.
-- All AI text passes through `lib/safety.ts` sanitization (input) and moderation (output).
+- New characters are created with `sandbox_mode = true` and flagged in the parent portal for approve / send back. (They are already placed in the series cast at creation; only approved ones can be re-assigned to cast slots from the portal.)
+- **There are NO photo or drawing uploads and NO face detection.** Do not write marketing copy, FAQ, privacy text, or JSON-LD that claims photo upload, face blurring, or on-device face detection. If uploads are ever built, update the privacy policy first.
+- Child input passes through `lib/safety.ts` `sanitizeChildInput` (blocked-word swap, 240-char cap); Sparky's text passes through `moderateAiText` (blocked-word list) and falls back to a deterministic stub. That is the only automated moderation; image models get a picture-book prompt with no extra safety flags set by us.
 - Sparky redirects unsafe inputs playfully (never error messages to children).
-- Content moderation enabled on TogetherAI Flux calls.
-- COPPA-compliant: parent owns account, only first name + age collected for child.
+- The only free text a child types is a character's name (max 30 chars).
+- COPPA: parent owns the account and confirms consent at sign-up (recorded in `ParentalConsent`); only first name + age collected for the child. Don't claim legal "COPPA-compliant" status without legal review.
+- Every public claim must trace to code; see `docs/CLAIMS_AUDIT_2026-09.md`.
 
 ## Git push convention
 

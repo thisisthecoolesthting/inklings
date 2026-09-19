@@ -42,13 +42,14 @@ export const FEATURE_DEEP_DIVES: DeepDive[] = [
     slug: "voice-first-studio",
     metaTitle: "Voice-first kid Studio for ages 4-8",
     metaDescription:
-      "How the Inklings kid Studio works for ages 4-8: tap giant buttons or just talk to Sparky, no reading or typing needed, and never an open chat box.",
-    title: "Voice-first, no reading required.",
+      "How the Inklings kid Studio works for ages 4-8: tap giant emoji buttons or say your pick out loud to Sparky. No typing, and never an open chat box.",
+    title: "Tap it or say it. No typing.",
     intro: (
       <>
-        Most apps for kids 4-8 assume the kid can read. Most kids 4-8 can&apos;t — at least not at
-        the speed needed to enjoy a creative tool. Inklings flips it: your child <em>talks</em> to
-        Sparky, and Sparky narrates the story back. Reading is optional everywhere.
+        Most apps for kids 4-8 assume the kid can type. Most kids 4-8 can&apos;t — at least not at
+        the speed needed to enjoy a creative tool. Inklings flips it: your child <em>taps</em> a
+        big picture button or <em>says</em> their pick out loud, and Sparky turns it into the next
+        page of the story. There is nothing to type.
       </>
     ),
     sections: [
@@ -57,10 +58,16 @@ export const FEATURE_DEEP_DIVES: DeepDive[] = [
         body: (
           <p>
             Sparky asks one question at a time — &ldquo;Where are we today?&rdquo; — and shows
-            three or four giant tap-buttons with emoji. Your child can <strong>tap</strong> a button
+            three or four giant tap-buttons with emoji. The question appears as on-screen text, so
+            younger children may like a grown-up to read it aloud. Your child can <strong>tap</strong> a button
             or <strong>say</strong> the answer out loud. We use the browser&apos;s built-in speech
             recognition, and our servers only ever receive the resulting text — never a recording of
-            your child&apos;s voice.
+            your child&apos;s voice. (Depending on the browser, its speech service may process the
+            audio itself; see our{" "}
+            <Link href="/legal/privacy" className={link}>
+              privacy policy
+            </Link>
+            .)
           </p>
         ),
       },
@@ -79,9 +86,10 @@ export const FEATURE_DEEP_DIVES: DeepDive[] = [
         heading: "Sparky is bounded, not a chatbot",
         body: (
           <p>
-            Every choice your child sees is a chip we wrote and tested. Sparky doesn&apos;t take
-            freeform input. There&apos;s no way for your child to wander into an open conversation
-            with an AI — every path leads somewhere safe.{" "}
+            Every choice your child sees is a chip we wrote. Sparky doesn&apos;t take
+            freeform questions. The only thing your child types anywhere in the Studio is a
+            character&apos;s name (up to 30 characters), so there&apos;s no way to wander into an
+            open conversation with an AI.{" "}
             <Link href="/security" className={link}>
               See the safety architecture
             </Link>
@@ -101,13 +109,13 @@ export const FEATURE_DEEP_DIVES: DeepDive[] = [
     slug: "character-bible",
     metaTitle: "Persistent character family across every story",
     metaDescription:
-      "Characters your child invents stay the same across every story: same look, same personality, same voice. See how the Inklings Character Bible works.",
+      "Characters your child invents are saved and return in every story: same name, animal, colors, and personality. See how the Inklings Character Bible works.",
     title: "A persistent family of characters, not a one-off book.",
     intro: (
       <>
         The book is the artifact. The <em>family</em> of characters your child invents — Biscuit the
         puppy, Saffron the magical fox, every recurring friend — is the actual product. They show up
-        across every story. They remember each other.
+        across every story, book after book.
       </>
     ),
     showcase: "character-shelf",
@@ -116,19 +124,20 @@ export const FEATURE_DEEP_DIVES: DeepDive[] = [
         heading: "The Character Bible",
         body: (
           <p>
-            Each character your child creates gets a permanent record: name, species, personality
-            traits, favorite activities, recurring phrases, and a saved look. When the same
-            character appears in story #4, they look like the same character from story #1.
+            Each character your child creates is saved with a name, an animal, a color, and one or
+            two personality traits. Sparky reuses that description in every page and illustration
+            prompt, so the same character comes back in story #4 the way they were in story #1.
+            (AI-drawn art can still vary a little from page to page.)
           </p>
         ),
       },
       {
-        heading: "Series memory (Premium)",
+        heading: "Series memory",
         body: (
           <p>
-            On the Premium tier, characters carry memory across the whole series. Sparky knows that
-            Biscuit found the lost bell in the meadowlands, and weaves that thread into the next
-            adventure. Your child&apos;s storybook universe accumulates depth, week by week.{" "}
+            Each book in a series starts from a short recap of the last one — its title and final
+            page — so Sparky can pick the thread back up with the same characters. Every plan gets
+            this within a story world; Premium adds more worlds, each with its own cast.{" "}
             <Link href="/pricing" className={link}>
               See what Premium adds
             </Link>
@@ -141,8 +150,8 @@ export const FEATURE_DEEP_DIVES: DeepDive[] = [
         body: (
           <p>
             A children&apos;s book made by AI is a commodity. A children&apos;s book starring{" "}
-            <em>your kid&apos;s</em> imagined puppy, drawn the same way every time, with personality
-            your kid already knows by heart — that&apos;s a heirloom. The Character Bible is the
+            <em>your kid&apos;s</em> imagined puppy, back in book after book with the personality
+            your kid already knows by heart — that&apos;s a keepsake. The Character Bible is the
             difference.
           </p>
         ),
@@ -155,50 +164,74 @@ export const FEATURE_DEEP_DIVES: DeepDive[] = [
     },
   },
   {
-    slug: "draw-or-photo",
-    metaTitle: "Draw or snap a photo to make a character",
+    slug: "character-maker",
+    metaTitle: "Build a story character in a few taps",
     metaDescription:
-      "Turn a crayon drawing or a stuffed animal into a story character. Faces are blurred on your device before upload, and you approve every new character.",
-    title: "Start with the drawing on the fridge.",
+      "Your child builds a story character by tapping a name, an animal, a favorite color, and personality traits. No typing, no uploads, and you approve each one.",
+    title: "Build a character in a few taps.",
     intro: (
       <>
-        Most kids 4-8 already have a favorite character — a crayon dragon, a stuffed bunny with one
-        ear. Inklings starts there, so the star of the story is something your child already loves.
+        Most kids 4-8 already have a favorite kind of character — a fox in a scarf, a dragon who
+        loves snacks. In the Studio they build one in under a minute by tapping big picture
+        buttons, and that character can star in every story after.
       </>
     ),
     sections: [
       {
-        heading: "From a drawing or a stuffed animal to a starring character",
+        heading: "Four things to pick",
         body: (
           <>
-            <p>
-              Photograph a stuffed animal or a crayon drawing, or describe a hero out loud.
-              Inklings turns it into a character with a saved look, so they appear the same in every
-              story — that&apos;s the{" "}
-              <Link href="/features/character-bible" className={link}>
-                Character Bible
-              </Link>
-              .
+            <ul className="list-disc space-y-1 pl-6">
+              <li>
+                <strong>A name</strong> — the only thing your child types, up to 30 characters
+              </li>
+              <li>
+                <strong>An animal</strong> — fox, puppy, cat, bunny, dragon, bear, owl, or unicorn
+              </li>
+              <li>
+                <strong>A favorite color</strong> — one of eight big color swatches
+              </li>
+              <li>
+                <strong>One or two personality traits</strong> — silly, brave, kind, curious,
+                speedy, or gentle
+              </li>
+            </ul>
+            <p className="mt-3">
+              Prefer to skip it? &ldquo;Quick start&rdquo; gives your child two ready-made friends,
+              Milo the fox and Pip the puppy.
             </p>
           </>
         ),
       },
       {
-        heading: "Faces are blurred on your device, first",
+        heading: "Saved for every story",
+        body: (
+          <p>
+            The name, animal, color, and traits are saved to your child&apos;s profile, and Sparky
+            uses them in every page and illustration prompt — that&apos;s the{" "}
+            <Link href="/features/character-bible" className={link}>
+              Character Bible
+            </Link>
+            . A story needs two characters in the cast, and each story world holds up to three.
+          </p>
+        ),
+      },
+      {
+        heading: "No photos, no drawings, no uploads",
         body: (
           <>
             <p>
-              If a photo contains a human face, face detection runs in your browser and blurs it
-              before the image is uploaded — so a face never reaches our servers. We use the photo
-              to pull out colors, shapes, and emotional tone for the character&apos;s illustration,
-              and it stays private to your account.
-            </p>
-            <p className="mt-3">
-              The details are in our{" "}
+              Inklings does not currently accept photos or drawings, so there is no image of your
+              child, your home, or anyone&apos;s face to collect. Characters are built only from the
+              picks above. If we ever add uploads, we will update our{" "}
               <Link href="/legal/privacy" className={link}>
                 privacy policy
               </Link>{" "}
-              and on the{" "}
+              first.
+            </p>
+            <p className="mt-3">
+              The name your child types goes through the same word filter as everything else in the
+              Studio. More on that on the{" "}
               <Link href="/security" className={link}>
                 safety page
               </Link>
@@ -208,25 +241,14 @@ export const FEATURE_DEEP_DIVES: DeepDive[] = [
         ),
       },
       {
-        heading: "A messy drawing is a fine drawing",
+        heading: "You see every new character",
         body: (
           <p>
-            We aren&apos;t tracing your child&apos;s lines. We read the colors, the shapes, and the
-            feeling of the picture and use those to illustrate the character — so a wobbly crayon
-            sketch has just as much to work with as a careful one. And nothing joins your
-            child&apos;s character family until you&apos;ve looked at it and said yes.
-          </p>
-        ),
-      },
-      {
-        heading: "No photo handy? Build one in a few taps",
-        body: (
-          <p>
-            In the Studio your child can also make a character from scratch: pick a name, an animal,
-            a favorite color, and one or two personality traits. It lands in a private sandbox until
-            you approve it from your portal —{" "}
+            New characters are flagged in your parent portal as soon as your child makes them. You
+            can approve one or send it back, and only approved characters can be moved into a
+            story world&apos;s cast from your portal.{" "}
             <Link href="/features/parent-approval" className={link}>
-              here&apos;s how approval works
+              Here&apos;s how approval works
             </Link>
             .
           </p>
@@ -234,8 +256,8 @@ export const FEATURE_DEEP_DIVES: DeepDive[] = [
       },
     ],
     cta: {
-      title: "Bring the drawing to life.",
-      body: "Free to start. You approve every character before it joins the family.",
+      title: "Make a story friend.",
+      body: "Free to start. You review every new character in your portal.",
       primary: { label: "Create your first story free", href: "/trial" },
       secondary: { label: "Try Sparky — no account", href: "/try" },
     },
@@ -244,24 +266,23 @@ export const FEATURE_DEEP_DIVES: DeepDive[] = [
     slug: "parent-approval",
     metaTitle: "Parent approval gate for every story",
     metaDescription:
-      "Nothing your child makes publishes, exports, or prints without your approval. New characters wait in a private sandbox and you review every page.",
-    title: "Nothing leaves the sandbox without you.",
+      "Nothing your child makes can be printed without your approval. New characters are flagged for your review, and you look at every page before approving a story.",
+    title: "Nothing gets printed without you.",
     intro: (
       <>
-        When your child invents a new character, it lands in a private sandbox — visible only to
-        them in that session. When they finish a story, it lands in your approval queue. You read
-        every page. You approve, edit, or send back. Then — and only then — does anything export,
-        share, or print.
+        When your child invents a new character, it&apos;s flagged in your parent portal. When they
+        finish a story, it lands in your approval queue and you can read every page. You approve or
+        send it back. Only an approved story can be ordered as a printed book.
       </>
     ),
     sections: [
       {
-        heading: "Sandbox mode for new characters",
+        heading: "New characters are flagged for review",
         body: (
           <p>
-            When your child creates a character, that character is private to their session. They
-            can play with it. It does NOT enter the shared character family until you approve it
-            from your portal.
+            When your child creates a character, it appears in your portal marked as waiting for
+            you. You can approve it or send it back (which removes it). Only approved characters can
+            be moved into a story world&apos;s cast from your portal.
           </p>
         ),
       },
@@ -269,10 +290,10 @@ export const FEATURE_DEEP_DIVES: DeepDive[] = [
         heading: "Page-by-page review",
         body: (
           <p>
-            When a story is finished, you see every page side-by-side: text on the left,
-            illustration on the right. You can approve the whole thing, edit a sentence, regenerate
-            an image, or send the story back to your child for revision. Books in &ldquo;awaiting
-            parent&rdquo; status never reach the printer.
+            When a story is finished, you see every page — illustration with the story text
+            beneath it. You can approve the whole story, approve it and go straight to print
+            checkout, or send it back to your child to redo. Books that are still &ldquo;awaiting
+            parent&rdquo; can&apos;t be ordered from the printer.
           </p>
         ),
       },
@@ -280,10 +301,10 @@ export const FEATURE_DEEP_DIVES: DeepDive[] = [
         heading: "Why it's the safety contract",
         body: (
           <p>
-            We don&apos;t rely on AI moderation alone. Sparky is bounded, the image model is
-            filtered, content moderation runs on every output — but ultimately, you are the gate. If
-            anything slips past every other check, you catch it on review. That layered safety is
-            the only kind worth claiming.
+            We don&apos;t rely on automated checks alone. Sparky is bounded, the text it writes is
+            checked against a blocked-word list, and illustrations are made to a picture-book
+            prompt — but ultimately, you are the gate. If anything slips past those checks, you can
+            catch it on review before a book is printed.
           </p>
         ),
       },
@@ -298,7 +319,7 @@ export const FEATURE_DEEP_DIVES: DeepDive[] = [
     slug: "printed-keepsake",
     metaTitle: "Printed softcover keepsake books",
     metaDescription:
-      "Order your child's approved story as a real 8.5 x 8.5 in matte softcover, up to 32 full-color pages. $19.99 one-time, shipped in 7-10 business days.",
+      "Order your child's approved story as a real 8.5 x 8.5 in full-color softcover. $19.99 one-time, on any plan, printed and shipped by our partner Lulu.",
     title: "A real book, on a real shelf.",
     intro: (
       <>
@@ -312,9 +333,9 @@ export const FEATURE_DEEP_DIVES: DeepDive[] = [
         body: (
           <>
             <ul className="list-disc space-y-1 pl-6">
-              <li>Softcover, 8.5&quot; &times; 8.5&quot;, with a matte cover</li>
-              <li>Full-color pages, up to 32 illustrated pages</li>
-              <li>Printed on demand and shipped to your door in 7&ndash;10 business days</li>
+              <li>Softcover, 8.5&quot; &times; 8.5&quot;, full color throughout</li>
+              <li>A short picture book: one illustrated page for each step of the story</li>
+              <li>Printed on demand and shipped to your door — we estimate 7&ndash;10 business days</li>
               <li>
                 <strong>$19.99 per book</strong> — a one-time charge, available on any plan,
                 including Free
@@ -366,9 +387,8 @@ export const FEATURE_DEEP_DIVES: DeepDive[] = [
         heading: "Screen first, print when you're ready",
         body: (
           <p>
-            Every plan can read finished stories on screen. Free includes a low-resolution PDF with
-            an Inklings watermark; Premium adds an HD print-ready PDF with no watermark. Choose
-            print for the stories worth keeping — see{" "}
+            Every plan can read approved stories on screen in your family library. Choose print
+            for the stories worth keeping — see{" "}
             <Link href="/pricing#book" className={link}>
               pricing
             </Link>{" "}
@@ -388,7 +408,7 @@ export const FEATURE_DEEP_DIVES: DeepDive[] = [
     slug: "safety-first",
     metaTitle: "Safety is the first feature",
     metaDescription:
-      "Inklings is built for kids: bounded Sparky choices instead of open chat, parent approval on everything, sandboxed characters, and minimal data.",
+      "Inklings is built for kids: tap-choice Sparky steps instead of open chat, no photo uploads, a word filter on the text Sparky writes, and parent approval.",
     title: "Safety is the first feature, not the last.",
     intro: (
       <>
@@ -402,13 +422,16 @@ export const FEATURE_DEEP_DIVES: DeepDive[] = [
         body: (
           <>
             <p>
-              Every step of a story is a small set of two to four tap-buttons we wrote ourselves.
-              There is no freeform text input, so there is no way for a child to wander into an open
-              chat with an AI. If something unsafe does come up, Sparky redirects playfully — a
-              child never sees an error message.
+              Every step of a story is a small set of tap-buttons we wrote ourselves. A child
+              can&apos;t type questions to the AI — the only thing they type is a character&apos;s
+              name, up to 30 characters — so there is no way to wander into an open chat. If a
+              blocked word turns up, it&apos;s swapped for something gentle instead of showing an
+              error message.
             </p>
             <p className="mt-3">
-              Sparky&apos;s text and the illustration model both run with safety filters on.{" "}
+              Every page Sparky writes is checked against a blocked-word list before your child sees
+              it; if it fails, a safe fallback page is used instead. We don&apos;t accept photo or
+              drawing uploads.{" "}
               <Link href="/security" className={link}>
                 See how it compares to a chatbot
               </Link>
@@ -421,9 +444,9 @@ export const FEATURE_DEEP_DIVES: DeepDive[] = [
         heading: "You are the gate",
         body: (
           <p>
-            New characters wait in a private sandbox until you approve them, and every finished
-            story lands in your approval queue before anything is exported, shared, or printed.
-            Filters are one layer; your review is the one that counts.{" "}
+            New characters are flagged for your review, and every finished story lands in your
+            approval queue before it can be printed. Filters are one layer; your review is the one
+            that counts.{" "}
             <Link href="/features/parent-approval" className={link}>
               How the approval gate works
             </Link>
@@ -437,7 +460,7 @@ export const FEATURE_DEEP_DIVES: DeepDive[] = [
           <p>
             There is no child login. You create the account and confirm you&apos;re your
             child&apos;s parent or legal guardian at sign-up, and the child profile is linked to
-            yours. We keep the child&apos;s details to a first name and age range, and there are no
+            yours. We keep the child&apos;s details to a first name and age, and there are no
             public profiles, no feed, and no way for anyone outside your family to contact your
             child.
           </p>
@@ -449,8 +472,8 @@ export const FEATURE_DEEP_DIVES: DeepDive[] = [
           <>
             <p>
               We never sell or trade your data, and there are no ads. Voice audio is handled by your
-              browser — our servers only get the text. You can export or delete everything from your
-              portal settings, and deleted data is removed within 30 days.
+              browser&apos;s speech recognition — our servers only get the text. You can export or
+              delete your account data from your portal settings.
             </p>
             <p className="mt-3">
               The full list of what we collect and which service providers help us run Inklings is

@@ -31,7 +31,7 @@ These are not gaps; they are intentional brand and architecture choices for a co
 | Sparky live Claude API | DONE — live Anthropic call wired in `lib/sparky.ts` (model claude-sonnet-4-6) with deterministic stub fallback when ANTHROPIC_API_KEY is missing | — |
 | TogetherAI Flux image gen | DONE — implemented in `lib/image-gen.ts` (TogetherAI FLUX.1-schnell) | — |
 | Voice STT (Web Speech API) | DONE — `components/studio/use-voice-recognition.ts` with tap-button fallback | — |
-| Face detection on upload | Library not yet wired | 005-face-detection |
+| Photo/drawing upload + face detection | NOT BUILT. The site must not claim uploads or face blurring; update the privacy policy before building. | 005-face-detection (unscheduled) |
 | Stripe Price IDs / checkout | DONE (code) — checkout/portal/webhook implemented; live Price IDs configured in env. Pending only: dashboard acceptance test (subscribe→cancel→resubscribe) and webhook URL verification | — |
 | KDP sample export / CMYK | DONE — `npm run kdp:sample` works; KDP templates now emit CMYK vector colors | — |
 | Playwright walkthrough video | Not yet recorded | 008-walkthrough-video |

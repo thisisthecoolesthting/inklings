@@ -9,7 +9,7 @@ import Link from "next/link";
 export const metadata: Metadata = pageMetadata({
   title: "FAQ — questions parents ask first",
   description:
-    "Answers to what parents ask first about Inklings: safety, parent approval, pricing, printed books, voice input, photos, and COPPA, for kids ages 4-8.",
+    "Answers to what parents ask first about Inklings: safety, parent approval, pricing, printed books, voice input, uploads, and COPPA, for kids ages 4-8.",
   path: "/faq",
 });
 
