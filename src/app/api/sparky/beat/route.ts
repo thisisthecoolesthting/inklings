@@ -6,6 +6,9 @@ import { sanitizeChildInput } from "@/lib/safety";
 import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { generatePreview, seedFromImageSeed } from "@/lib/image-gen";
+import { clientIp, rateLimit } from "@/lib/rate-limit";
+
+export const dynamic = "force-dynamic";
 
 const CharacterSchema = z.object({
   name: z.string(),
@@ -45,6 +48,14 @@ const FREE_TIER_STORIES_PER_MONTH = 3;
 const FREE_TIER_IMAGES_PER_MONTH = 60;
 const PREMIUM_IMAGES_PER_MONTH = 1500;
 
+// Burst limits (each beat = one LLM call + at most one image call, i.e. real API spend).
+// A full story is ~7 beats, so 60 beats / 10 min per parent account allows several
+// stories back to back plus retries. The per-IP cap is looser because siblings,
+// classrooms and NAT'd households legitimately share one IP.
+const BEATS_PER_USER = 60;
+const BEATS_PER_IP = 150;
+const BEAT_WINDOW_MS = 10 * 60_000;
+
 function resolveBeat(beatId: string, variantKey?: string): SparkyBeat | null {
   const def = BEAT_DEFINITIONS.find((b) => b.id === beatId);
   if (!def) return null;
@@ -59,7 +70,36 @@ function resolveBeat(beatId: string, variantKey?: string): SparkyBeat | null {
 }
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
+  // This route spends LLM + image-generation credit: parent session required.
+  const session = await getSession();
+  if (!session) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+
+  const byUser = rateLimit(req, {
+    key: "sparky-beat-user",
+    id: session.userId,
+    limit: BEATS_PER_USER,
+    windowMs: BEAT_WINDOW_MS,
+  });
+  const byIp = rateLimit(req, {
+    key: "sparky-beat-ip",
+    id: clientIp(req),
+    limit: BEATS_PER_IP,
+    windowMs: BEAT_WINDOW_MS,
+  });
+  if (!byUser.ok || !byIp.ok) {
+    const retryAfter = Math.max(byUser.retryAfter, byIp.retryAfter, 1);
+    return NextResponse.json(
+      { error: "rate_limited" },
+      { status: 429, headers: { "Retry-After": String(retryAfter) } },
+    );
+  }
+
+  let body: unknown;
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "invalid" }, { status: 400 });
+  }
   const parsed = Schema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: "invalid" }, { status: 400 });
   const { beatId, choiceId, variantKey, ctx } = parsed.data;
@@ -74,8 +114,7 @@ export async function POST(req: NextRequest) {
   const choiceLabel = beat.choices.find((c) => c.id === choiceId)?.label ?? choiceId;
 
   if (beatId === "where_are_we") {
-    const session = await getSession();
-    if (session && session.tier === "free") {
+    if (session.tier === "free") {
       const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
       const count = await prisma.usageEvent.count({
         where: { userId: session.userId, kind: "story_started", createdAt: { gte: since } },
@@ -113,18 +152,15 @@ export async function POST(req: NextRequest) {
   let imageGenSource: "live" | "skipped" | "quota_blocked" | "error" = "skipped";
 
   if (sparky.imagePrompt) {
-    const session = await getSession();
     let canGenerate = true;
-    if (session) {
-      const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-      const limit = session.tier === "premium" ? PREMIUM_IMAGES_PER_MONTH : FREE_TIER_IMAGES_PER_MONTH;
-      const used = await prisma.usageEvent.count({
-        where: { userId: session.userId, kind: "image_generated", createdAt: { gte: since } },
-      });
-      if (used >= limit) {
-        canGenerate = false;
-        imageGenSource = "quota_blocked";
-      }
+    const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const limit = session.tier === "premium" ? PREMIUM_IMAGES_PER_MONTH : FREE_TIER_IMAGES_PER_MONTH;
+    const used = await prisma.usageEvent.count({
+      where: { userId: session.userId, kind: "image_generated", createdAt: { gte: since } },
+    });
+    if (used >= limit) {
+      canGenerate = false;
+      imageGenSource = "quota_blocked";
     }
 
     if (canGenerate && (process.env.OPENROUTER_API_KEY || process.env.TOGETHER_API_KEY)) {
@@ -138,17 +174,15 @@ export async function POST(req: NextRequest) {
       if (result.ok) {
         imageUrl = result.url;
         imageGenSource = "live";
-        if (session) {
-          await prisma.usageEvent
-            .create({
-              data: {
-                userId: session.userId,
-                kind: "image_generated",
-                meta: { beatId, bytes: result.bytes, seed: result.seed, choice: choiceLabel },
-              },
-            })
-            .catch(() => {});
-        }
+        await prisma.usageEvent
+          .create({
+            data: {
+              userId: session.userId,
+              kind: "image_generated",
+              meta: { beatId, bytes: result.bytes, seed: result.seed, choice: choiceLabel },
+            },
+          })
+          .catch(() => {});
       } else {
         imageGenSource = "error";
       }
