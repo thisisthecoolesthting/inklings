@@ -59,8 +59,11 @@ const config: Config = {
           "Roboto",
           "sans-serif",
         ],
-        // Reserved for kid-facing display only — to be loaded as woff2 later
-        display: ["'Quicksand Variable'", "sans-serif"],
+        // Brand display face for h1/h2 + hero headlines — loaded via next/font/google
+        // in src/lib/fonts.ts (Fraunces, CSS var --font-fraunces). Applied site-wide
+        // to headings via globals.css `@layer base`; use `font-display` directly for
+        // non-heading elements (e.g. a styled eyebrow or callout) that want it too.
+        display: ["var(--font-fraunces)", "Georgia", "serif"],
       },
       maxWidth: {
         "section": "72rem", // hero sections

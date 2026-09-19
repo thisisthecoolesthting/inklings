@@ -27,6 +27,18 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
 }
 
+@layer base {
+  /* Brand display typeface (Fraunces, via next/font/google) for headings +
+     hero headlines, site-wide. Body copy keeps the system stack above for
+     readability. See src/lib/fonts.ts + tailwind.config.ts `fontFamily.display`. */
+  h1,
+  h2,
+  .font-display {
+    font-family: var(--font-fraunces), Georgia, serif;
+    font-optical-sizing: auto;
+  }
+}
+
 @layer components {
   .btn {
     @apply inline-flex items-center justify-center rounded-button px-6 py-3 text-sm font-semibold transition-all duration-300 min-h-[48px];

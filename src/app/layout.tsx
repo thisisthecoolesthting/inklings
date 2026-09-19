@@ -4,6 +4,7 @@ import "./globals.css";
 import { brand } from "@/lib/brand";
 import { SiteChrome } from "@/components/SiteChrome";
 import { OrganizationJsonLd } from "@/lib/jsonld";
+import { fraunces } from "@/lib/fonts";
 
 export const metadata: Metadata = {
   title: `${brand.name} — Build a story universe your child runs`,
@@ -41,7 +42,7 @@ const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={fraunces.variable}>
       <body className="flex min-h-screen flex-col font-sans">
         {GA_ID && (
           <>
