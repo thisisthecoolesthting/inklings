@@ -109,6 +109,8 @@ export interface StalwartMessage {
   subject: string;
   text: string;
   html?: string;
+  /** Optional Reply-To (used by the contact form so replies reach the sender). */
+  replyTo?: string;
 }
 
 export async function sendViaStalwart(msg: StalwartMessage): Promise<void> {
@@ -141,6 +143,7 @@ export async function sendViaStalwart(msg: StalwartMessage): Promise<void> {
     to: msg.to.map((email) => ({ email })),
     subject: msg.subject,
   };
+  if (msg.replyTo) emailCreate.replyTo = [{ email: msg.replyTo }];
   if (msg.html) {
     bodyValues.hpart = { value: msg.html };
     emailCreate.htmlBody = [{ partId: "hpart", type: "text/html" }];

@@ -7,6 +7,8 @@ interface ResendMessage {
   subject: string;
   html: string;
   text: string;
+  /** Optional Reply-To address. */
+  replyTo?: string;
 }
 
 /** Parse `Name <addr@host>` or `addr@host` into { name?, email }. */
@@ -26,7 +28,7 @@ async function sendViaResend(msg: ResendMessage): Promise<void> {
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-    body: JSON.stringify(msg),
+    body: JSON.stringify({ ...msg, replyTo: undefined, reply_to: msg.replyTo }),
   });
   if (!res.ok) throw new Error(`Resend ${res.status}: ${await res.text()}`);
 }
@@ -49,6 +51,7 @@ async function sendViaSmtp(msg: ResendMessage): Promise<void> {
     subject: msg.subject,
     text: msg.text,
     html: msg.html,
+    replyTo: msg.replyTo,
   });
 }
 
@@ -64,6 +67,7 @@ async function sendMessage(msg: ResendMessage): Promise<void> {
       subject: msg.subject,
       text: msg.text,
       html: msg.html,
+      replyTo: msg.replyTo,
     });
   }
   // Fallback: SMTP submission (requires a mailbox password).
@@ -180,6 +184,47 @@ export async function sendPrintOrderConfirmation(opts: { to: string; bookTitle: 
         <p><strong>${opts.bookTitle}</strong> is on its way — expect delivery in 7–10 business days.</p>
         <p><a href="${ordersUrl}" style="display:inline-block;background:#F4815C;color:#fff;padding:14px 28px;border-radius:12px;text-decoration:none;">View orders</a></p>
       </div>
+    </body></html>`,
+  });
+}
+
+export const CONTACT_TOPICS = [
+  { value: "support", label: "Support with my account" },
+  { value: "classroom", label: "Classroom or school pilot" },
+  { value: "press", label: "Press inquiry" },
+  { value: "safety", label: "Safety concern" },
+  { value: "sample-story", label: "Send me a sample story" },
+] as const;
+
+export type ContactTopic = (typeof CONTACT_TOPICS)[number]["value"];
+
+function escapeHtml(v: string): string {
+  return v.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+/** Contact-form message to hello@ (Reply-To is the sender, so a plain reply reaches them). */
+export async function sendContactFormEmail(opts: {
+  name: string;
+  email: string;
+  topic: ContactTopic;
+  message: string;
+}) {
+  const inbox = brand.emailFrom;
+  const from = process.env.RESEND_FROM_EMAIL ?? brand.emailFrom;
+  const topicLabel = CONTACT_TOPICS.find((t) => t.value === opts.topic)?.label ?? opts.topic;
+  await sendMessage({
+    from: `${brand.name} Contact Form <${from}>`,
+    to: [inbox],
+    replyTo: opts.email,
+    subject: `[Contact: ${opts.topic}] ${opts.name}`,
+    text: `Topic: ${topicLabel}
+Name: ${opts.name}
+Email: ${opts.email}
+
+${opts.message}`,
+    html: `<!doctype html><html><body style="font-family:-apple-system,sans-serif;color:#4A2545;">
+      <p><strong>Topic:</strong> ${escapeHtml(topicLabel)}<br/><strong>Name:</strong> ${escapeHtml(opts.name)}<br/><strong>Email:</strong> ${escapeHtml(opts.email)}</p>
+      <p style="white-space:pre-wrap;">${escapeHtml(opts.message)}</p>
     </body></html>`,
   });
 }
