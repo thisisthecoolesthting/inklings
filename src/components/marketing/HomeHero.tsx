@@ -18,13 +18,14 @@ function ShowcaseCard({
   priority?: boolean;
 }) {
   return (
-    <div className="relative aspect-square w-full overflow-hidden rounded-xl border-[3px] border-white bg-cream-50 shadow-[0_10px_28px_rgba(74,37,69,0.14)]">
+    <div className="relative aspect-square w-full overflow-hidden rounded-button border-[3px] border-white bg-cream-50 shadow-[0_10px_28px_rgba(74,37,69,0.14)]">
       <Image
         src={src}
         alt={alt}
         fill
         priority={priority}
         loading={priority ? undefined : "lazy"}
+        fetchPriority={priority ? "high" : undefined}
         sizes="(max-width: 640px) 42vw, (max-width: 1024px) 22vw, 280px"
         className="object-contain"
       />
@@ -55,7 +56,7 @@ export async function HomeHero() {
     {
       src: second,
       alt: "Open storybook page — illustration with readable text below",
-      priority: false,
+      priority: true,
     },
   ];
 
@@ -102,7 +103,7 @@ export async function HomeHero() {
                 {gridItems.map((item, i) => (
                   <div
                     key={`${item.src}-${i}`}
-                    className={`transform transition-transform duration-300 hover:rotate-0 ${TILE_TILT[i] ?? "rotate-0"}`}
+                    className={`transform transition-transform duration-300 motion-safe:hover:rotate-0 ${TILE_TILT[i] ?? "rotate-0"}`}
                   >
                     <ShowcaseCard
                       src={item.src}

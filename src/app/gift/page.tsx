@@ -90,12 +90,12 @@ export default function GiftPage() {
                   <input type="hidden" name="tier" value="gift" />
                   <input type="hidden" name="giftPlan" value={g.id} />
                   <label className="block text-left">
-                    <span className="text-xs font-medium text-ink-600">Recipient email (optional)</span>
+                    <span className="text-sm font-medium text-ink-700">Recipient email (optional)</span>
                     <input
                       type="email"
                       name="recipientEmail"
                       placeholder="grandma@example.com"
-                      className="mt-1 w-full rounded-button border border-ink-100 px-3 py-2 text-sm"
+                      className="mt-1 h-12 min-h-[48px] w-full rounded-button border-2 border-ink-100 bg-white px-4 text-base"
                     />
                   </label>
                   <p className="text-xs text-ink-500">

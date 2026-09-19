@@ -75,7 +75,7 @@ export default async function LibraryPage({
                 <div className="aspect-[4/3] overflow-hidden rounded-card bg-gradient-to-br from-cream-200 to-mint-100">
                   {thumb ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={thumb} alt="" className="h-full w-full object-cover opacity-90" />
+                    <img src={thumb} alt="" width={400} height={400} loading="lazy" decoding="async" className="h-full w-full object-cover opacity-90" />
                   ) : (
                     <div className="flex h-full flex-col items-center justify-center p-4 text-center">
                       <p className="text-lg font-bold text-ink">{s.title}</p>

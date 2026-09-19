@@ -67,7 +67,7 @@ export default async function LibrarySeriesPage({
                   <div className="aspect-[4/5] overflow-hidden rounded-card bg-cream-200">
                     {thumb ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={thumb} alt="" className="h-full w-full object-cover" />
+                      <img src={thumb} alt="" width={400} height={400} loading="lazy" decoding="async" className="h-full w-full object-cover" />
                     ) : (
                       <div className="flex h-full items-center justify-center text-sm text-ink-500">No cover</div>
                     )}

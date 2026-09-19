@@ -71,7 +71,7 @@ export default function HomePage() {
                   <li key={l.path}>
                     <Link
                       href={l.path}
-                      className="rounded-full bg-mint-100 px-3 py-1 text-sm font-medium text-ink-700 hover:bg-mint-200"
+                      className="inline-flex min-h-[44px] items-center rounded-full bg-mint-100 px-4 py-2 text-sm font-medium text-ink-700 hover:bg-mint-400"
                     >
                       {l.breadcrumbLabel}
                     </Link>
@@ -118,7 +118,7 @@ export default function HomePage() {
           </div>
           <FAQ items={FAQ_TEASERS} />
           <p className="mt-6 text-center">
-            <Link href="/faq" className="font-semibold text-coral hover:underline">
+            <Link href="/faq" className="inline-flex min-h-[44px] items-center font-semibold text-coral-dark hover:underline">
               More answers →
             </Link>
           </p>
@@ -132,7 +132,7 @@ export default function HomePage() {
             <h2 className="section-title">Safety is the first feature</h2>
             <p className="section-subtitle">
               Sparky never hands a child an open text box.{" "}
-              <Link href="/security" className="text-coral underline">
+              <Link href="/security" className="text-coral-dark underline">
                 See how Sparky is different →
               </Link>
             </p>
