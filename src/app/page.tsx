@@ -16,7 +16,7 @@ const FAQ_TEASERS = FAQ_HOME.slice(0, 4);
 export const metadata: Metadata = pageMetadata({
   title: `${brand.name} — Build a story universe your child runs`,
   description:
-    "Inklings lets kids ages 4 and up build a story universe where their characters return across every story. Voice-first, parent-approved, real printed books.",
+    "Inklings lets kids ages 4-8 build a story universe where their characters return across every story. Voice-first, parent-approved, real printed books.",
   path: "/",
 });
 
@@ -42,7 +42,7 @@ export default function HomePage() {
             <div className="card-base">
               <h2 className="text-2xl font-bold text-ink">Who it&apos;s for</h2>
               <p className="mt-4 text-ink-700">
-                Parents and grandparents of children ages 4 and up — especially families who want a
+                Parents and grandparents of children ages 4-8 — especially families who want a
                 keepsake, not another passive app.
               </p>
               <ul className="mt-4 flex flex-wrap gap-2">
@@ -70,7 +70,7 @@ export default function HomePage() {
             <span className="eyebrow">Simple pricing</span>
             <h2 className="section-title">Start free. Print when you&apos;re ready.</h2>
             <p className="section-subtitle">
-              Try your first book free. Premium unlocks unlimited stories and HD export.
+              Try your first story free. Premium unlocks unlimited stories and HD export.
               Printed softcovers are a one-time add-on on any plan.
             </p>
           </div>

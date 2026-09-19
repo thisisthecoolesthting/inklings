@@ -52,7 +52,7 @@ export async function StudioPreviewSection() {
               ))}
             </ol>
             <Link href="/trial" className="btn-primary btn-large mt-8 inline-flex">
-              Create your first book free
+              Create your first story free
             </Link>
           </div>
 
