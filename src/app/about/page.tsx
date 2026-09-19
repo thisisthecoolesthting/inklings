@@ -25,9 +25,9 @@ export default function AboutPage() {
         <div className="container-ink mx-auto max-w-3xl space-y-6 text-lg text-ink-700">
           <p>
             Inklings started with a simple idea: most software for kids is designed to hold their
-            attention. That&apos;s the wrong job. The job we wanted was to give kids a place to <em>make</em>
-            something — something they keep, something parents are proud they spent twenty minutes on,
-            something that holds up on a bookshelf.
+            attention. That&apos;s the wrong job. The job we wanted was to give kids a place to{" "}
+            <em>make</em> something — something they keep, something parents are proud they spent
+            twenty minutes on, something that holds up on a bookshelf.
           </p>
           <p>
             Books do that. Books made by your own kid, starring their own characters,
@@ -39,9 +39,26 @@ export default function AboutPage() {
             you seeing it first. Printed in the real world because pixels disappear and books don&apos;t.
           </p>
           <p>
-            We&apos;re a small team and we read every email. Tell us what your kid made:
-            <Link className="ml-1 text-coral underline" href="/contact">say hello</Link>.
+            We&apos;re a small team and we read every email. Tell us what your kid made:{" "}
+            <Link className="text-coral underline" href="/contact">say hello</Link>.
           </p>
+
+          {/*
+            TODO(Ricky) — Fable UX review flagged "zero social proof" on this page.
+            Do NOT fabricate a founder name, headcount, or testimonials — add a real,
+            short human-element section here once you have the actual details, e.g.:
+
+            <div className="mt-10 flex items-start gap-4 rounded-card border border-ink-100 bg-white p-6 shadow-card">
+              <img src="/images/site/{{FOUNDER_PHOTO}}" alt="{{FOUNDER_NAME}}" className="h-16 w-16 rounded-full object-cover" />
+              <div>
+                <p className="font-semibold text-ink">{{FOUNDER_NAME}}</p>
+                <p className="text-sm text-ink-600">{{FOUNDER_BLURB}}</p>
+              </div>
+            </div>
+
+            Fill in {{FOUNDER_NAME}} / {{FOUNDER_BLURB}} / {{FOUNDER_PHOTO}} with real info,
+            then uncomment.
+          */}
         </div>
       </section>
     </>
