@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { brand } from "@/lib/brand";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: `About — ${brand.name}`,
-  description: "Why Inklings exists and how we think about kids' creative tools.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "About — stories children keep",
+  description:
+    "Why Inklings exists: most kids' software holds attention, so we built a storybook studio where kids 4-8 make something they keep, with parents in charge.",
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (

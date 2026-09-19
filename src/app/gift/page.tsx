@@ -30,7 +30,7 @@ const GIFTS = [
 export const metadata: Metadata = pageMetadata({
   title: "Gift Premium story studio for kids",
   description:
-    "Gift Inklings Premium to creative kids ages 4-8. Characters, unlimited stories, and optional printed softcover keepsakes. Redeem by email.",
+    "Gift Inklings Premium to creative kids ages 4-8: unlimited stories, characters that return every time, and optional printed keepsakes. Redeemed by email.",
   path: "/gift",
 });
 

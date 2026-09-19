@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import { brand } from "@/lib/brand";
 import { OPERATOR_LEGAL_NAME, OPERATOR_MAILING_ADDRESS } from "@/lib/legal-config";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: `Privacy policy — ${brand.name}`,
-  description: "How Inklings handles your family's data.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Privacy policy",
+  description:
+    "How Inklings handles your family's data: what we collect, who we share it with, how long we keep it, and how to export or delete everything.",
+  path: "/legal/privacy",
+});
 
 export default function PrivacyPage() {
   return (

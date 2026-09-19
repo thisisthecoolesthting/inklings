@@ -3,11 +3,14 @@ import Link from "next/link";
 import { brand } from "@/lib/brand";
 import { ShieldCheck, Lock, Eye, UserCheck, Image as ImageIcon, Key } from "lucide-react";
 import { SafetyComparison } from "@/components/marketing/SafetyComparison";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: `Safety & privacy — ${brand.name}`,
-  description: "How Inklings protects kids and their data.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Safety & privacy for kids' stories",
+  description:
+    "How Inklings protects kids: a parent-owned account, bounded Sparky choices instead of open chat, on-device face blurring, and minimal COPPA-minded data.",
+  path: "/security",
+});
 
 const PILLARS = [
   { icon: UserCheck, title: "Parent owns the account", body: "There is no separate child login. The parent creates and controls the account; the child profile is linked to it. We collect only your child's first name and age." },

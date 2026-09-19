@@ -3,13 +3,16 @@ import Link from "next/link";
 import { brand } from "@/lib/brand";
 import { TrialForm } from "@/components/TrialForm";
 import { TrialStepper } from "@/components/TrialStepper";
+import { pageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: `Start a free story — ${brand.name}`,
-  description: "Create your free Inklings parent account in 60 seconds. No credit card.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Start a free story",
+  description:
+    "Create your free Inklings parent account in about a minute. No credit card, and your child's first story is free. You approve every page before it is kept.",
+  path: "/trial",
+});
 
 const ERROR_MESSAGES: Record<string, string> = {
   invalid: "Please check your email and password, then try again.",

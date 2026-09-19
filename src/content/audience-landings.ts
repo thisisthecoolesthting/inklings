@@ -26,7 +26,7 @@ export const AUDIENCE_LANDINGS: AudienceLandingConfig[] = [
       "Grandparents love Inklings because it is simple to gift, easy to track from your portal, and every season your grandchild can turn a story into a printed softcover keepsake.",
     metaTitle: "Story book gift for grandchildren ages 4-8",
     metaDescription:
-      "Gift Inklings Premium to grandchildren ages 4-8. They build characters and stories all year; you approve from your portal. Printed softcover books ship to their door.",
+      "Gift Inklings Premium to grandchildren ages 4-8. They build characters and stories all year, you approve from your portal, and printed books ship to them.",
     bullets: [
       {
         title: "One gift, many stories",
@@ -73,7 +73,7 @@ export const AUDIENCE_LANDINGS: AudienceLandingConfig[] = [
       "Inklings turns oral storytelling into illustrated pages kids can read back — voice-first, no login maze, parent approval built in for take-home books.",
     metaTitle: "Classroom storytelling tool for ages 4-8",
     metaDescription:
-      "Voice-first digital storytelling for elementary classrooms. Kids tap choices with Sparky, get illustrated pages, and parents approve printed keepsake books.",
+      "Voice-first digital storytelling for classrooms. Kids tap choices with Sparky, get illustrated pages, and parents approve printed keepsake books at home.",
     bullets: [
       {
         title: "Voice-first literacy",
@@ -125,7 +125,7 @@ export const AUDIENCE_LANDINGS: AudienceLandingConfig[] = [
       "Sparky asks one question at a time. Your child taps or talks. Illustrated pages appear as the story grows — confidence before handwriting pressure.",
     metaTitle: "Writing app for reluctant readers & ADHD kids 4-8",
     metaDescription:
-      "Story-making without blank-page stress. Voice-first choices, instant illustrations, parent-approved books. Built for ages 4-8 who struggle with traditional writing.",
+      "Story-making without blank-page stress. Voice-first choices, instant illustrations, and parent-approved books for kids 4-8 who dislike writing.",
     bullets: [
       {
         title: "Tap or talk — never type",

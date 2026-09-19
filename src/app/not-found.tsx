@@ -1,4 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Page not found — Inklings",
+  description:
+    "Sparky could not find that page. Head back to Inklings, try the free Sparky demo, or browse the FAQ.",
+  robots: { index: false, follow: true },
+};
 
 export default function NotFound() {
   return (

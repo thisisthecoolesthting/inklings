@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { brand } from "@/lib/brand";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: `Watch a quick tour — ${brand.name}`,
+export const metadata: Metadata = pageMetadata({
+  title: "Watch a 10-second tour",
   description:
-    "Ten seconds — what Inklings actually does. Voice-first kid Studio, parent approval gate, real printed books.",
-};
+    "Watch a 10-second tour of Inklings: the voice-first kid Studio, the parent approval gate, and real printed softcover storybooks. Try it free.",
+  path: "/watch",
+});
 
 export default function WatchPage() {
   return (

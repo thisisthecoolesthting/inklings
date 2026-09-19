@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { brand } from "@/lib/brand";
+import { pageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: `Sign in — ${brand.name}`,
-  description: "Sign in to your Inklings parent account.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Sign in to your parent account",
+  description:
+    "Sign in to your Inklings parent account to review your child's stories, approve new characters, manage billing, and order printed softcover books.",
+  path: "/login",
+});
 
 const ERROR_MESSAGES: Record<string, string> = {
   invalid: "That email or password didn't match. Please try again.",

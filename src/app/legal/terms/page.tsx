@@ -2,11 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { brand } from "@/lib/brand";
 import { GOVERNING_LAW_JURISDICTION, OPERATOR_LEGAL_NAME } from "@/lib/legal-config";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: `Terms of service — ${brand.name}`,
-  description: "Terms of using Inklings.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Terms of service",
+  description:
+    "The terms for using Inklings: who can use it, content ownership, AI-assisted illustrations, print orders and refunds, and one-click cancellation.",
+  path: "/legal/terms",
+});
 
 export default function TermsPage() {
   return (

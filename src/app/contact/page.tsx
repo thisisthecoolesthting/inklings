@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import { brand } from "@/lib/brand";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: `Contact — ${brand.name}`,
-  description: "Get in touch with the Inklings team.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Contact us",
+  description:
+    "Questions, support, classroom pilots, press, or a safety concern? Message the Inklings team and we will reply. We read every note ourselves.",
+  path: "/contact",
+});
 
 export default function ContactPage() {
   return (

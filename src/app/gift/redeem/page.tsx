@@ -4,6 +4,14 @@ import { brand } from "@/lib/brand";
 import { getSession } from "@/lib/session";
 import { redeemGiftAction } from "./actions";
 import { GiftCodeInput } from "@/components/gift/GiftCodeInput";
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata = pageMetadata({
+  title: "Redeem your gift code",
+  description:
+    "Redeem your Inklings gift code to unlock Premium: unlimited stories, series memory, and print-ready books for a child in your family, ages 4-8.",
+  path: "/gift/redeem",
+});
 
 const ERROR_COPY: Record<string, string> = {
   invalid_code: "That code doesn't look right. Check your gift email and try again.",

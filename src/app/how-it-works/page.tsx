@@ -2,11 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { brand } from "@/lib/brand";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: `How it works — ${brand.name}`,
-  description: "From your child's idea to a real printed storybook in five steps.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "How it works — from idea to printed book",
+  description:
+    "See how Inklings works in five steps: your child taps choices with Sparky, you approve every page, then order a real printed softcover keepsake.",
+  path: "/how-it-works",
+});
 
 const STEPS = [
   { n: 1, title: "Parent makes the account", body: "You sign up with email — no credit card. Add your child's first name and age." },

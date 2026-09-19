@@ -6,7 +6,8 @@ import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
   title: "FAQ — questions parents ask first",
-  description: "Answers about safety, pricing, printing, voice input, and parent approval for Inklings ages 4-8.",
+  description:
+    "Answers to what parents ask first about Inklings: safety, parent approval, pricing, printed books, voice input, photos, and COPPA, for kids ages 4-8.",
   path: "/faq",
 });
 
@@ -32,7 +33,7 @@ export default function FaqPage() {
       </section>
       <section className="section">
         <div className="container-ink mx-auto max-w-3xl">
-          <FAQ items={FAQ_HOME} />
+          <FAQ items={FAQ_HOME} headingLevel="h2" />
         </div>
       </section>
     </>

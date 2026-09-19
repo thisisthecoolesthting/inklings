@@ -3,11 +3,14 @@ import Link from "next/link";
 import { brand } from "@/lib/brand";
 import { FEATURES } from "@/content/feature-pages";
 import { BreadcrumbJsonLd } from "@/lib/jsonld";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: `Features — ${brand.name}`,
-  description: "What Inklings actually does: voice-first kid Studio, persistent character family, parent approval gate, real printed books.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Features — the whole storybook studio",
+  description:
+    "Six things Inklings actually does: a voice-first kid Studio, persistent characters, drawing-to-character, parent approval, printed books, and safety.",
+  path: "/features",
+});
 
 export default function FeaturesHub() {
   return (
