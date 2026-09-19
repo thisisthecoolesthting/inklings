@@ -28,6 +28,18 @@ export async function POST(req: NextRequest) {
   }
 
   const form = await req.formData();
+  const rawEmail = String(form.get("email") ?? "");
+  const consentChecked = form.get("coppa_consent") === "yes";
+
+  /** Redirect back to /trial preserving the entered email + consent checkbox state. */
+  function redirectWithState(error: string) {
+    const url = new URL("/trial", getSiteUrl());
+    url.searchParams.set("error", error);
+    if (rawEmail) url.searchParams.set("email", rawEmail);
+    url.searchParams.set("consent", consentChecked ? "1" : "0");
+    return NextResponse.redirect(url, { status: 303 });
+  }
+
   const parsed = Schema.safeParse({
     email: form.get("email"),
     password: form.get("password"),
@@ -40,21 +52,21 @@ export async function POST(req: NextRequest) {
     const err = parsed.error.flatten().fieldErrors.coppa_consent?.length
       ? "consent_required"
       : "invalid";
-    return NextResponse.redirect(new URL(`/trial?error=${err}`, getSiteUrl()), { status: 303 });
+    return redirectWithState(err);
   }
 
   const email = parsed.data.email.trim().toLowerCase();
   const pwErr = validatePassword(parsed.data.password);
   if (pwErr) {
-    return NextResponse.redirect(new URL("/trial?error=weak_password", getSiteUrl()), { status: 303 });
+    return redirectWithState("weak_password");
   }
   if (parsed.data.password !== parsed.data.password_confirm) {
-    return NextResponse.redirect(new URL("/trial?error=mismatch", getSiteUrl()), { status: 303 });
+    return redirectWithState("mismatch");
   }
 
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing?.passwordHash) {
-    return NextResponse.redirect(new URL("/trial?error=exists", getSiteUrl()), { status: 303 });
+    return redirectWithState("exists");
   }
 
   const passwordHash = await hashPassword(parsed.data.password);

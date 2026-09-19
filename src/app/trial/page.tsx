@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { brand } from "@/lib/brand";
+import { TrialForm } from "@/components/TrialForm";
 
 export const dynamic = "force-dynamic";
 
@@ -22,6 +23,8 @@ const ERROR_MESSAGES: Record<string, string> = {
 interface TrialSearchParams {
   error?: string;
   tier?: string;
+  email?: string;
+  consent?: string;
 }
 
 export default async function TrialPage(props: {
@@ -63,90 +66,11 @@ export default async function TrialPage(props: {
             </div>
           )}
 
-          <form action="/api/auth/signup" method="POST" className="mt-8 space-y-4">
-            {params.tier && <input type="hidden" name="tier" value={params.tier} />}
-            <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-ink">
-                Your email
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                autoComplete="email"
-                className="mt-1 w-full rounded-button border-2 border-ink-100 bg-white px-4 py-3 text-base focus:border-coral focus:outline-none"
-                placeholder="parent@example.com"
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="block text-sm font-semibold text-ink">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                autoComplete="new-password"
-                minLength={8}
-                className="mt-1 w-full rounded-button border-2 border-ink-100 bg-white px-4 py-3 text-base focus:border-coral focus:outline-none"
-              />
-              <p className="mt-1 text-xs text-ink-500">At least 8 characters.</p>
-            </div>
-            <div>
-              <label htmlFor="password_confirm" className="block text-sm font-semibold text-ink">
-                Confirm password
-              </label>
-              <input
-                id="password_confirm"
-                name="password_confirm"
-                type="password"
-                required
-                autoComplete="new-password"
-                minLength={8}
-                className="mt-1 w-full rounded-button border-2 border-ink-100 bg-white px-4 py-3 text-base focus:border-coral focus:outline-none"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <div className="flex items-start gap-2">
-                <input
-                  id="coppa_consent"
-                  type="checkbox"
-                  name="coppa_consent"
-                  value="yes"
-                  required
-                  className="mt-0.5 shrink-0 accent-coral"
-                />
-                <label htmlFor="coppa_consent" className="text-xs text-ink-600 leading-relaxed">
-                  I am this child&apos;s parent or legal guardian, and I consent to Inklings
-                  collecting the information my child provides to create their stories.
-                </label>
-              </div>
-              <p className="text-xs text-ink-500">
-                Inklings is designed for children ages 4 and up and is operated for parents. We never
-                market to children directly.
-              </p>
-            </div>
-            <button type="submit" className="btn-primary btn-large btn-full">
-              Create account
-            </button>
-            <p className="text-xs text-ink-500">
-              Already have an account?{" "}
-              <Link href="/login" className="underline">
-                Sign in
-              </Link>
-              . By continuing you agree to our{" "}
-              <Link href="/legal/terms" className="underline">
-                Terms
-              </Link>{" "}
-              and{" "}
-              <Link href="/legal/privacy" className="underline">
-                Privacy Policy
-              </Link>
-              .
-            </p>
-          </form>
+          <TrialForm
+            defaultEmail={params.email}
+            defaultConsent={params.consent === "1"}
+            defaultTier={params.tier}
+          />
         </div>
       </div>
     </section>
