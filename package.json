@@ -5,6 +5,8 @@
   "description": "Inklings — AI-guided storybook studio for kids ages 4 and up. Spawned from the SolutionStore SaaS spine.",
   "scripts": {
     "dev": "next dev -p 3400",
+    "check:placeholders": "node scripts/check-placeholders.mjs",
+    "prebuild": "node scripts/check-placeholders.mjs",
     "build": "npx prisma generate && next build",
     "start": "next start -p 3400",
     "lint": "next lint",
