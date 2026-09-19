@@ -31,7 +31,8 @@ function Spine({ spine, compact }: { spine: Spine; compact: boolean }) {
     <div
       className="group relative flex flex-none flex-col items-center justify-end rounded-t-[2px] rounded-b-[3px] shadow-[inset_-3px_0_0_rgba(0,0,0,0.12),0_3px_6px_rgba(74,37,69,0.18)] transition-transform duration-300 motion-safe:hover:-translate-y-1.5"
       style={{ width, height, background: spine.color }}
-      title={`${spine.label} · ${spine.month}`}
+      role="img"
+      aria-label={`${spine.label}, ${spine.month}`}
     >
       <span
         className="mb-2 text-[9px] font-bold uppercase tracking-wide text-white/90"
@@ -39,9 +40,6 @@ function Spine({ spine, compact }: { spine: Spine; compact: boolean }) {
         aria-hidden
       >
         {spine.label}
-      </span>
-      <span className="sr-only">
-        {spine.label}, {spine.month} — same character family
       </span>
       <span className="absolute -bottom-5 whitespace-nowrap text-[10px] font-semibold text-ink-500">
         {spine.month}
@@ -54,7 +52,11 @@ export function CharacterShelf({ compact = false }: { compact?: boolean }) {
   return (
     <div className={compact ? "mx-auto max-w-xl" : "mx-auto max-w-2xl"}>
       <div className="rounded-card border border-ink-100 bg-white/70 px-6 pb-8 pt-6 shadow-card">
-        <div className="flex items-end justify-center gap-2 overflow-x-auto pb-1">
+        <div
+          role="group"
+          aria-label="A bookshelf of six books, all starring the same character family"
+          className="flex items-end justify-center gap-2 overflow-x-auto pb-1"
+        >
           {SPINES.map((s) => (
             <Spine key={s.label} spine={s} compact={compact} />
           ))}
