@@ -80,7 +80,7 @@ export function PricingTiers() {
           }
         >
           {tier.badge && (
-            <div className="absolute right-6 top-6 rounded-full bg-coral px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white">
+            <div className="absolute right-6 top-6 rounded-full bg-coral-dark px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white">
               {tier.badge}
             </div>
           )}
@@ -93,7 +93,7 @@ export function PricingTiers() {
           <ul className="mt-6 flex-1 space-y-3 text-sm text-ink-700">
             {tier.features.map((f) => (
               <li key={f} className="flex items-start gap-2">
-                <Check className="mt-0.5 h-4 w-4 flex-none text-mint-600" aria-hidden />
+                <Check className="mt-0.5 h-4 w-4 flex-none text-mint-700" aria-hidden />
                 <span dangerouslySetInnerHTML={{ __html: f }} />
               </li>
             ))}

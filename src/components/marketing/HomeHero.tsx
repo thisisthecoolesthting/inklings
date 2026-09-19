@@ -67,7 +67,7 @@ export async function HomeHero() {
             <span className="eyebrow">For kids {brand.ageAudience}</span>
             <h1 className="mt-3 text-4xl font-bold leading-[1.08] tracking-tight text-ink md:text-5xl lg:text-[3.25rem]">
               Your kid is the{" "}
-              <span className="text-coral">author</span>
+              <span className="text-coral-dark">author</span>
               {" — "}not just the hero.
             </h1>
             <p className="mt-5 text-lg leading-relaxed text-ink-700 md:text-xl">

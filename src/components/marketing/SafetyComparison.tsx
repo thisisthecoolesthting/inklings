@@ -9,10 +9,10 @@ export function SafetyComparison({ compact = false }: { compact?: boolean }) {
       {/* Left: generic AI chatbot */}
       <div className="card-base flex flex-col border-red-200/70">
         <div className="flex items-center gap-2">
-          <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-red-100 text-red-500" aria-hidden>
+          <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-red-100 text-red-700" aria-hidden>
             ✕
           </span>
-          <p className="text-sm font-bold uppercase tracking-wide text-red-500">Not this</p>
+          <p className="text-sm font-bold uppercase tracking-wide text-red-700">Not this</p>
         </div>
         <h3 className={`mt-3 font-bold text-ink ${compact ? "text-lg" : "text-xl"}`}>
           A generic AI chatbot
@@ -25,12 +25,12 @@ export function SafetyComparison({ compact = false }: { compact?: boolean }) {
         {/* Chat-bubble mock with blinking cursor */}
         <div className="mt-5 flex-1 rounded-card border border-red-100 bg-red-50/50 p-4">
           <div className="mb-3 flex justify-end">
-            <div className="max-w-[80%] rounded-2xl rounded-tr-sm bg-white px-3 py-2 text-xs text-ink-600 shadow-sm">
+            <div className="max-w-[80%] rounded-2xl rounded-tr-[4px] bg-white px-3 py-2 text-xs text-ink-600 shadow-sm">
               hi can u be my friend and tell me a secret
             </div>
           </div>
           <div className="flex justify-start">
-            <div className="max-w-[80%] rounded-2xl rounded-tl-sm bg-ink-200/60 px-3 py-2 text-xs text-ink-700 shadow-sm">
+            <div className="max-w-[80%] rounded-2xl rounded-tl-[4px] bg-ink-200/60 px-3 py-2 text-xs text-ink-700 shadow-sm">
               <span aria-hidden>Sure! Let&apos;s chat about anything you&apos;d like</span>
               <span className="ml-0.5 inline-block h-3 w-[2px] motion-safe:animate-pulse bg-ink-500 align-middle" aria-hidden />
               <span className="sr-only">An open-ended chatbot reply, still generating</span>
@@ -42,10 +42,10 @@ export function SafetyComparison({ compact = false }: { compact?: boolean }) {
       {/* Right: Sparky */}
       <div className="card-base flex flex-col border-mint-400 ring-2 ring-mint-400">
         <div className="flex items-center gap-2">
-          <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-mint-500 text-white" aria-hidden>
+          <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-mint-500 font-bold text-ink" aria-hidden>
             ✓
           </span>
-          <p className="text-sm font-bold uppercase tracking-wide text-mint-600">This is Sparky</p>
+          <p className="rounded-full bg-mint-500 px-3 py-1 text-sm font-bold uppercase tracking-wide text-ink">This is Sparky</p>
         </div>
         <h3 className={`mt-3 font-bold text-ink ${compact ? "text-lg" : "text-xl"}`}>
           A bounded, branching guide

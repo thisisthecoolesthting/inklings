@@ -35,7 +35,7 @@ function FAQRow({ item }: { item: FaqItem }) {
         <h3 className="text-base font-semibold text-ink">{item.q}</h3>
         <Plus
           aria-hidden
-          className={`h-5 w-5 flex-none text-mint-500 transition-transform duration-300 ${
+          className={`h-5 w-5 flex-none text-mint-700 transition-transform duration-300 ${
             open ? "rotate-45" : ""
           }`}
         />

@@ -16,7 +16,7 @@ export function TrustBadges({ className = "" }: { className?: string }) {
     >
       {BADGES.map((b) => (
         <li key={b.label} className="inline-flex items-center gap-1.5 text-sm font-semibold text-ink-700">
-          <b.icon className="h-4 w-4 text-coral" aria-hidden />
+          <b.icon className="h-4 w-4 text-coral-dark" aria-hidden />
           <span>{b.label}</span>
         </li>
       ))}

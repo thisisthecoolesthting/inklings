@@ -107,13 +107,13 @@ export async function PrintShowcase() {
             </p>
             <ul className="mt-6 space-y-2 text-sm text-ink-700">
               <li className="flex gap-2">
-                <span className="font-bold text-coral">✓</span> Professionally printed softcover
+                <span className="font-bold text-coral-dark">✓</span> Professionally printed softcover
               </li>
               <li className="flex gap-2">
-                <span className="font-bold text-coral">✓</span> Ships in 7–10 days
+                <span className="font-bold text-coral-dark">✓</span> Ships in 7–10 days
               </li>
               <li className="flex gap-2">
-                <span className="font-bold text-coral">✓</span> Readable story text on every page
+                <span className="font-bold text-coral-dark">✓</span> Readable story text on every page
               </li>
             </ul>
             <Link href="/gift" className="btn-primary mt-6 inline-flex">

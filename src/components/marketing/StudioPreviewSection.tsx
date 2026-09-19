@@ -44,7 +44,7 @@ export async function StudioPreviewSection() {
             <ol className="mt-8 space-y-4">
               {STEPS.map((step, i) => (
                 <li key={step} className="flex gap-3 text-ink-700">
-                  <span className="flex h-7 w-7 flex-none items-center justify-center rounded-full bg-coral text-sm font-bold text-white">
+                  <span className="flex h-7 w-7 flex-none items-center justify-center rounded-full bg-coral-dark text-sm font-bold text-white">
                     {i + 1}
                   </span>
                   <span className="pt-0.5">{step}</span>

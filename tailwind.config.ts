@@ -34,6 +34,9 @@ const config: Config = {
           500: "#F4815C",
           600: "#E05F35",
           700: "#B84620",
+          // AA-safe coral for TEXT/badge fills on cream/white: 4.78:1 on #FFF6E5,
+          // white-on-dark 5.13:1. Keep bright DEFAULT coral for decoration only.
+          dark: "#BA4A24",
         },
         mint: {
           DEFAULT: "#A8DDB5", // secondary accent (Sparky chips, badges)
@@ -42,6 +45,8 @@ const config: Config = {
           400: "#B7E3C2",
           500: "#A8DDB5",
           600: "#7FCB91",
+          // Text/icon-safe green: 5.07:1 on white, 4.72:1 on cream. Use instead of mint-500/600 for text.
+          700: "#2F7D46",
         },
         gold: {
           DEFAULT: "#D4A574", // tertiary accent, "approved" + premium tier
@@ -69,12 +74,17 @@ const config: Config = {
         "section": "72rem", // hero sections
         "prose-narrow": "36rem",
       },
+      // Radius scale: sm 12px (buttons, inputs, chips) / card 20px / pill 9999px.
       borderRadius: {
-        button: "12px", // softer than spine's 6px — kid-friendly
+        sm: "12px",
+        button: "12px", // alias of sm — kept for existing usages
         card: "20px",
+        pill: "9999px",
       },
+      // Shadow scale: card + card-hover (cardHover kept as an alias).
       boxShadow: {
         card: "0 4px 14px rgba(74, 37, 69, 0.08)",
+        "card-hover": "0 8px 24px rgba(74, 37, 69, 0.14)",
         cardHover: "0 8px 24px rgba(74, 37, 69, 0.14)",
       },
     },

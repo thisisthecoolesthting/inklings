@@ -38,20 +38,20 @@ export function Header() {
       <header className="sticky top-0 z-40 w-full border-b border-cream-200/60 bg-cream-100/95 backdrop-blur-xl">
         <nav className="container-ink flex items-center justify-between py-4" aria-label="Primary">
           <Link href="/" className="flex items-center gap-2 text-ink" onClick={() => setOpen(false)}>
-            <Sparkles className="h-7 w-7 text-coral" aria-hidden />
+            <Sparkles className="h-7 w-7 text-coral-dark" aria-hidden />
             <span className="text-xl font-bold tracking-tight">{brand.name}</span>
           </Link>
           <ul className="hidden items-center gap-8 lg:flex">
             {NAV.map((it) => (
               <li key={it.href}>
-                <Link href={it.href} className="text-sm font-medium text-ink-700 transition-colors hover:text-coral">
+                <Link href={it.href} className="text-sm font-medium text-ink-700 transition-colors hover:text-coral-dark">
                   {it.label}
                 </Link>
               </li>
             ))}
           </ul>
           <div className="hidden items-center gap-3 lg:flex">
-            <Link href="/login" className="text-sm font-medium text-ink-700 hover:text-coral">
+            <Link href="/login" className="text-sm font-medium text-ink-700 hover:text-coral-dark">
               Sign in
             </Link>
             <Link href="/trial" className="btn-primary">
@@ -79,7 +79,7 @@ export function Header() {
           <aside className="fixed left-0 top-0 z-[70] h-screen w-[320px] max-w-[85vw] bg-cream-100 p-6 shadow-2xl lg:hidden">
             <div className="mb-8 flex items-center justify-between">
               <Link href="/" className="flex items-center gap-2 text-ink" onClick={() => setOpen(false)}>
-                <Sparkles className="h-7 w-7 text-coral" aria-hidden />
+                <Sparkles className="h-7 w-7 text-coral-dark" aria-hidden />
                 <span className="text-xl font-bold tracking-tight">{brand.name}</span>
               </Link>
               <button onClick={() => setOpen(false)} aria-label="Close menu" className="p-2 text-ink">

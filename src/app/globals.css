@@ -13,7 +13,33 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  scroll-padding-top: 5rem; /* sticky header offset for in-page anchors */
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+/* Keyboard focus — visible on every interactive element.
+   Plum ring on cream/white surfaces; cream ring on the plum CTA band + footer. */
+:focus-visible {
+  outline: 3px solid #4A2545;
+  outline-offset: 3px;
+}
+.hero-final-cta :focus-visible,
+footer :focus-visible,
+.on-plum :focus-visible {
+  outline-color: #FFF6E5;
+}
+
+/* Reduced motion: no hover/active transforms anywhere, whichever utility asked for them. */
+@media (prefers-reduced-motion: reduce) {
+  *:hover, *:active, *:focus-visible { transform: none !important; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 html, body {
@@ -43,15 +69,19 @@ body {
   .btn {
     @apply inline-flex items-center justify-center rounded-button px-6 py-3 text-sm font-semibold transition-all duration-300 min-h-[48px];
   }
+  /* AA: white on the lightest gradient stop (#C94F2B) is 4.53:1; label is 16px semibold. */
   .btn-primary {
-    @apply btn text-white shadow-card hover:-translate-y-0.5 hover:shadow-cardHover;
-    background: linear-gradient(135deg, #F4815C, #E05F35);
+    @apply btn text-base font-semibold text-white shadow-card motion-safe:hover:-translate-y-0.5 hover:shadow-card-hover;
+    background: linear-gradient(135deg, #C94F2B, #B8431D);
+  }
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #BA4A24, #A63A17);
   }
   .btn-secondary {
-    @apply btn border-2 border-ink text-ink hover:bg-ink hover:text-cream hover:-translate-y-0.5 hover:shadow-card;
+    @apply btn border-2 border-ink text-ink hover:bg-ink hover:text-cream motion-safe:hover:-translate-y-0.5 hover:shadow-card;
   }
   .btn-ghost {
-    @apply btn border-2 border-mint-500 text-ink hover:bg-mint-500 hover:text-ink hover:-translate-y-0.5;
+    @apply btn border-2 border-mint-500 text-ink hover:bg-mint-500 hover:text-ink motion-safe:hover:-translate-y-0.5;
   }
   .btn-large { @apply px-8 py-4 text-base min-h-[56px]; }
   .btn-full  { @apply w-full; }
@@ -60,10 +90,11 @@ body {
     @apply mx-auto w-full max-w-[1280px] px-[5%];
   }
 
-  .section { @apply py-20; }
-  .section-mobile { @apply py-14; }
-  .section-header { @apply mb-14; }
-  .section-header-center { @apply mb-14 text-center; }
+  /* Vertical rhythm: 52px on phones, 80px from md up. */
+  .section { @apply py-[52px] md:py-20; }
+  .section-mobile { @apply py-[52px] md:py-20; }
+  .section-header { @apply mb-8 md:mb-14; }
+  .section-header-center { @apply mb-8 text-center md:mb-14; }
   .section-title {
     @apply mb-4 text-3xl font-bold leading-tight tracking-tight text-ink sm:text-4xl;
   }
@@ -97,12 +128,16 @@ body {
     transform: scaleX(0);
     transition: transform 0.3s ease;
   }
-  .card-base:hover::before { transform: scaleX(1); }
-  .card-base:hover { @apply -translate-y-1 bg-white/95 shadow-cardHover; }
+  .card-base:hover::before,
+  .card-base:focus-within::before { transform: scaleX(1); }
+  .card-base:hover { @apply bg-white/95 shadow-card-hover; }
+  @media (prefers-reduced-motion: no-preference) {
+    .card-base:hover { @apply -translate-y-1; }
+  }
 
   /* Eyebrow above h1 — uppercase accent (per spine §3 typography) */
   .eyebrow {
-    @apply mb-3 inline-block text-xs font-semibold uppercase tracking-[0.14em] text-coral;
+    @apply mb-3 inline-block text-xs font-semibold uppercase tracking-[0.14em] text-coral-dark;
   }
   .eyebrow-on-dark {
     @apply mb-3 inline-block text-xs font-semibold uppercase tracking-[0.14em] text-mint;
@@ -110,21 +145,21 @@ body {
 
   /* Sparky chip — used in kid Studio for branching choice buttons */
   .sparky-chip {
-    @apply inline-flex items-center gap-2 rounded-full bg-mint-100 px-5 py-3 text-base font-semibold text-ink-700 ring-2 ring-mint-400 transition-all hover:bg-mint-500 hover:scale-105 active:scale-95;
+    @apply inline-flex items-center gap-2 rounded-full bg-mint-100 px-5 py-3 text-base font-semibold text-ink-700 ring-2 ring-mint-400 transition-all hover:bg-mint-500 motion-safe:hover:scale-105 motion-safe:active:scale-95;
     min-height: 56px;
   }
   .sparky-chip-kid {
-    @apply flex w-full items-center gap-3 rounded-3xl bg-white px-5 py-4 text-left text-xl font-bold text-ink shadow-card ring-2 ring-mint-400 transition-all hover:bg-mint-100 hover:scale-[1.02] active:scale-95;
+    @apply flex w-full items-center gap-3 rounded-3xl bg-white px-5 py-4 text-left text-xl font-bold text-ink shadow-card ring-2 ring-mint-400 transition-all hover:bg-mint-100 motion-safe:hover:scale-[1.02] motion-safe:active:scale-95;
     min-height: 88px;
   }
 
   /* Big-button — the primary kid-facing tap target. Ages 4-8, finger-friendly. */
   .big-button {
-    @apply flex w-full items-center justify-center gap-3 rounded-card bg-coral px-8 py-6 text-2xl font-bold text-white shadow-card transition-all hover:bg-coral-600 hover:shadow-cardHover active:scale-95;
+    @apply flex w-full items-center justify-center gap-3 rounded-card bg-coral-dark px-8 py-6 text-2xl font-bold text-white shadow-card transition-all hover:bg-coral-700 hover:shadow-card-hover motion-safe:active:scale-95;
     min-height: 88px;
   }
   .big-button-mint {
-    @apply flex w-full items-center justify-center gap-3 rounded-card bg-mint px-8 py-6 text-2xl font-bold text-ink shadow-card transition-all hover:bg-mint-600 hover:shadow-cardHover active:scale-95;
+    @apply flex w-full items-center justify-center gap-3 rounded-card bg-mint px-8 py-6 text-2xl font-bold text-ink shadow-card transition-all hover:bg-mint-600 hover:shadow-card-hover motion-safe:active:scale-95;
     min-height: 88px;
   }
 
@@ -157,3 +192,22 @@ body {
 
 /* Mobile rules per spine §8 — never zoom-on-focus, 16px min input */
 input, textarea, select { font-size: 16px; }
+
+/* Contrast safety net (WCAG AA). Bright coral (#F4815C) is 2.4:1 on cream, so any
+   coral TEXT/badge that still lives in page content is drawn in coral-dark. Fills that are
+   purely decorative (no text on them) keep bright coral. Header/footer/dark bands are exempt. */
+main .text-coral { color: #BA4A24; }
+main .hero-final-cta .text-coral,
+main .on-plum .text-coral { color: #F4815C; }
+main .bg-coral.text-white { background-color: #BA4A24; }
+
+/* Mobile rhythm: page sections declare py-20/py-24 (80-96px). On phones that makes a
+   ~9,800px homepage, so tighten to ~52px below md. Desktop is untouched. */
+@media (max-width: 767px) {
+  main section.py-24,
+  main section.py-20,
+  main section.py-16 {
+    padding-top: 3.25rem;
+    padding-bottom: 3.25rem;
+  }
+}

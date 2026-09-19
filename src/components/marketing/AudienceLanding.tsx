@@ -54,7 +54,7 @@ export function AudienceLanding({ config }: { config: AudienceLandingConfig }) {
             <ol className="mt-6 space-y-4">
               {config.steps.map((step, i) => (
                 <li key={step.title} className="flex gap-4">
-                  <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-coral text-sm font-bold text-white">
+                  <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-coral-dark text-sm font-bold text-white">
                     {i + 1}
                   </span>
                   <div>

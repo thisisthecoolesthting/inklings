@@ -28,9 +28,9 @@ export function TrialStepper({ current = 1 }: { current?: 1 | 2 | 3 }) {
                 className={
                   "flex h-8 w-8 flex-none items-center justify-center rounded-full text-sm font-bold transition-colors " +
                   (state === "done"
-                    ? "bg-mint-500 text-white"
+                    ? "bg-mint-500 text-ink"
                     : state === "active"
-                      ? "bg-coral text-white ring-4 ring-coral/20"
+                      ? "bg-coral-dark text-white ring-4 ring-coral/20"
                       : "border-2 border-ink-100 bg-white text-ink-400")
                 }
               >

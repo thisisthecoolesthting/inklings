@@ -29,7 +29,7 @@ function Spine({ spine, compact }: { spine: Spine; compact: boolean }) {
   const height = compact ? spine.height * 0.72 : spine.height;
   return (
     <div
-      className="group relative flex flex-none flex-col items-center justify-end rounded-t-sm rounded-b-[3px] shadow-[inset_-3px_0_0_rgba(0,0,0,0.12),0_3px_6px_rgba(74,37,69,0.18)] transition-transform duration-300 hover:-translate-y-1.5"
+      className="group relative flex flex-none flex-col items-center justify-end rounded-t-[2px] rounded-b-[3px] shadow-[inset_-3px_0_0_rgba(0,0,0,0.12),0_3px_6px_rgba(74,37,69,0.18)] transition-transform duration-300 motion-safe:hover:-translate-y-1.5"
       style={{ width, height, background: spine.color }}
       title={`${spine.label} · ${spine.month}`}
     >
