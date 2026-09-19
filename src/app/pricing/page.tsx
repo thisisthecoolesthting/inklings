@@ -4,9 +4,10 @@ import { brand } from "@/lib/brand";
 import { PricingTiers } from "@/components/PricingTiers";
 import { CharacterShelf } from "@/components/marketing/CharacterShelf";
 import { FAQ } from "@/components/FAQ";
-import { FAQ_HOME } from "@/content/faq-data";
+import { FAQ_HOME, FAQ_CARD_ITEM } from "@/content/faq-data";
 import { BreadcrumbJsonLd, ProductOffersJsonLd } from "@/lib/jsonld";
 import { pageMetadata } from "@/lib/seo";
+import { CtaBand } from "@/components/CtaBand";
 
 export const metadata: Metadata = pageMetadata({
   title: "Pricing — simple plans for families",
@@ -74,19 +75,16 @@ export default function PricingPage() {
           <div className="section-header-center">
             <h2 className="section-title">Questions parents ask</h2>
           </div>
-          <FAQ items={FAQ_HOME} />
+          <FAQ items={[FAQ_CARD_ITEM, ...FAQ_HOME.filter((f) => f !== FAQ_CARD_ITEM)]} />
         </div>
       </section>
 
-      <section className="hero-final-cta py-20">
-        <div className="container-ink mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-bold text-cream-100">Ready when you are</h2>
-          <p className="mt-3 text-cream-200/85">No credit card to start. Cancel any time.</p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link href="/trial" className="btn-primary btn-large">{brand.primaryCta}</Link>
-          </div>
-        </div>
-      </section>
+      <CtaBand
+        title="Ready when you are"
+        body="No credit card to start. Cancel any time."
+        primary={{ label: brand.primaryCta, href: "/trial" }}
+        secondary={{ label: "Try Sparky in 30 seconds", href: "/try" }}
+      />
     </>
   );
 }

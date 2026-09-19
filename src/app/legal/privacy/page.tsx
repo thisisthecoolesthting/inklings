@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { brand } from "@/lib/brand";
 import { OPERATOR_LEGAL_NAME, OPERATOR_MAILING_ADDRESS } from "@/lib/legal-config";
 import { pageMetadata } from "@/lib/seo";
+import { PrimaryCta } from "@/components/PrimaryCta";
 
 export const metadata: Metadata = pageMetadata({
   title: "Privacy policy",
@@ -140,6 +141,15 @@ export default function PrivacyPage() {
         <p className="mt-3 text-ink-700">
           Privacy questions: <a className="text-coral underline" href="mailto:hello@inklings.shop">hello@inklings.shop</a>
         </p>
+
+        <div className="mt-12 flex flex-col items-center justify-center gap-4 border-t border-ink-100 pt-8 sm:flex-row">
+          <PrimaryCta href="/pricing" variant="secondary" microcopy={false}>
+            Back to pricing
+          </PrimaryCta>
+          <PrimaryCta href="/trial" microcopy={false}>
+            Create your first story free
+          </PrimaryCta>
+        </div>
       </article>
     </section>
   );

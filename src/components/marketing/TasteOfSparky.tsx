@@ -92,7 +92,14 @@ function useTypewriter(text: string, active: boolean) {
   return shown;
 }
 
-export function TasteOfSparky({ className = "" }: { className?: string }) {
+export function TasteOfSparky({
+  className = "",
+  showEmailOption = false,
+}: {
+  className?: string;
+  /** Adds an "email me this story" link under the post-choice CTA (used on /try). */
+  showEmailOption?: boolean;
+}) {
   const [selected, setSelected] = useState<Branch | null>(null);
   const shownText = useTypewriter(selected?.text ?? "", selected != null);
 
@@ -158,6 +165,13 @@ export function TasteOfSparky({ className = "" }: { className?: string }) {
               <Link href="/trial" className="btn-primary btn-large mt-5 inline-flex w-fit">
                 Make this your kid&apos;s real book →
               </Link>
+              {showEmailOption && (
+                <p className="mt-3 text-sm text-ink-600">
+                  <Link href="/contact?topic=sample-story" className="font-semibold text-coral underline underline-offset-4">
+                    Or email me this story as a PDF
+                  </Link>
+                </p>
+              )}
             </div>
           </div>
         )}

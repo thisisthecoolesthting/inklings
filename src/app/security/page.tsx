@@ -4,6 +4,7 @@ import { brand } from "@/lib/brand";
 import { ShieldCheck, Lock, Eye, UserCheck, Image as ImageIcon, Key } from "lucide-react";
 import { SafetyComparison } from "@/components/marketing/SafetyComparison";
 import { pageMetadata } from "@/lib/seo";
+import { PrimaryCta } from "@/components/PrimaryCta";
 
 export const metadata: Metadata = pageMetadata({
   title: "Safety & privacy for kids' stories",
@@ -66,6 +67,14 @@ export default function SecurityPage() {
             </p>
           </div>
           <SafetyComparison />
+          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:items-start">
+            <PrimaryCta href="/trial" microcopy="You approve every page before it exists outside your account.">
+              Create your parent account
+            </PrimaryCta>
+            <PrimaryCta href="/try" variant="secondary" microcopy={false}>
+              Try the bounded version yourself
+            </PrimaryCta>
+          </div>
         </div>
       </section>
 

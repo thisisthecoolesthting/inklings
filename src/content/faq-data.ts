@@ -1,5 +1,10 @@
 export interface FaqItem { q: string; a: string }
 
+export const FAQ_CARD_ITEM: FaqItem = {
+  q: "Do I need a card for the free plan?",
+  a: "No. The Free plan never asks for a card. Premium starts with a 14-day trial that does need a card, and you can cancel in one click before day 14.",
+};
+
 export const FAQ_HOME: FaqItem[] = [
   {
     q: "What ages is Inklings for?",
@@ -29,4 +34,5 @@ export const FAQ_HOME: FaqItem[] = [
     q: "Is Inklings COPPA-compliant?",
     a: "Yes. The parent creates the account; the child profile is linked to yours. We collect only your child's first name and age, and the parent's email. No direct child data collection, no public profiles.",
   },
+  FAQ_CARD_ITEM,
 ];

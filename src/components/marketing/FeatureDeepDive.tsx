@@ -83,17 +83,13 @@ export function FeatureDeepDive({ dive }: { dive: DeepDive }) {
         </div>
       </section>
 
-      <section className="hero-final-cta py-20">
-        <div className="container-ink">
-          <CtaBand
-            title={dive.cta.title}
-            body={dive.cta.body}
-            primary={dive.cta.primary}
-            secondary={dive.cta.secondary}
-            microcopy={dive.cta.microcopy}
-          />
-        </div>
-      </section>
+      <CtaBand
+        title={dive.cta.title}
+        body={dive.cta.body}
+        primary={dive.cta.primary}
+        secondary={dive.cta.secondary}
+        microcopy={dive.cta.microcopy}
+      />
     </>
   );
 }

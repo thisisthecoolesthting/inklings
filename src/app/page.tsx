@@ -12,6 +12,7 @@ import { TasteOfSparky } from "@/components/marketing/TasteOfSparky";
 import { SafetyComparison } from "@/components/marketing/SafetyComparison";
 import { FullPageTrigger } from "@/components/marketing/FullPageLightbox";
 import { pageMetadata } from "@/lib/seo";
+import { PrimaryCta } from "@/components/PrimaryCta";
 
 /** Top FAQ only — full list lives on /faq */
 const FAQ_TEASERS = FAQ_HOME.slice(0, 4);
@@ -53,6 +54,11 @@ export default function HomePage() {
               <p className="mt-3 text-sm font-semibold text-ink-600">
                 Softcover keepsake · $19.99 · ships in 7–10 days
               </p>
+              <div className="mt-5">
+                <PrimaryCta href="#see-it-in-action" variant="secondary" microcopy={false}>
+                  See a real 20-minute book ↓
+                </PrimaryCta>
+              </div>
             </div>
             <div className="card-base">
               <h2 className="text-2xl font-bold text-ink">Who it&apos;s for</h2>
@@ -96,6 +102,11 @@ export default function HomePage() {
             </p>
           </div>
           <PricingTiers headingLevel="h3" />
+          <div className="mt-8 flex justify-center">
+            <PrimaryCta href="/pricing" variant="secondary" microcopy={false}>
+              Compare all plans
+            </PrimaryCta>
+          </div>
         </div>
       </section>
 
@@ -128,6 +139,11 @@ export default function HomePage() {
           </div>
           <div className="mt-10">
             <SafetyComparison compact />
+          </div>
+          <div className="mt-8 flex justify-center">
+            <PrimaryCta href="/try" variant="secondary" microcopy={false}>
+              Try the safe version yourself
+            </PrimaryCta>
           </div>
         </div>
       </section>

@@ -4,6 +4,7 @@ import { brand } from "@/lib/brand";
 import { FEATURES } from "@/content/feature-pages";
 import { BreadcrumbJsonLd } from "@/lib/jsonld";
 import { pageMetadata } from "@/lib/seo";
+import { CtaBand } from "@/components/CtaBand";
 
 export const metadata: Metadata = pageMetadata({
   title: "Features — the whole storybook studio",
@@ -40,6 +41,12 @@ export default function FeaturesHub() {
           ))}
         </div>
       </section>
+      <CtaBand
+        title="Six features, one free story."
+        body="Try them all in your first story. Free, no credit card."
+        primary={{ label: "Create your first story free", href: "/trial" }}
+        secondary={{ label: "Try Sparky", href: "/try" }}
+      />
     </>
   );
 }

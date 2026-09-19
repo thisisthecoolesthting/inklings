@@ -4,6 +4,7 @@ import { brand } from "@/lib/brand";
 import { TasteOfSparky } from "@/components/marketing/TasteOfSparky";
 import { pageMetadata } from "@/lib/seo";
 import { BreadcrumbJsonLd } from "@/lib/jsonld";
+import { CtaBand } from "@/components/CtaBand";
 
 export const metadata: Metadata = pageMetadata({
   title: "Try Sparky free — no account needed",
@@ -30,7 +31,7 @@ export default function TryPage() {
           </div>
 
           <div className="mx-auto mt-10 max-w-2xl">
-            <TasteOfSparky />
+            <TasteOfSparky showEmailOption />
           </div>
 
           <p className="mx-auto mt-8 max-w-2xl text-center text-sm text-ink-500">
@@ -44,17 +45,12 @@ export default function TryPage() {
         </div>
       </section>
 
-      <section className="hero-final-cta py-20">
-        <div className="container-ink mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-bold text-cream-100">Ready for the real thing?</h2>
-          <p className="mt-3 text-cream-200/85">Free to try. No credit card.</p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link href="/trial" className="btn-primary btn-large">
-              {brand.primaryCta}
-            </Link>
-          </div>
-        </div>
-      </section>
+      <CtaBand
+        title="Ready for the real thing?"
+        body="Free to try. No credit card. Buying for a grandchild? Gift Premium instead."
+        primary={{ label: brand.primaryCta, href: "/trial" }}
+        secondary={{ label: "Gift Premium", href: "/gift" }}
+      />
     </>
   );
 }

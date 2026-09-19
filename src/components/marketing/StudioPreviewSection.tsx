@@ -30,7 +30,7 @@ export async function StudioPreviewSection() {
   if (tiles.length === 0) return null;
 
   return (
-    <section className="section scroll-mt-28 bg-cream-100">
+    <section id="see-it-in-action" className="section scroll-mt-28 bg-cream-100">
       <div className="container-ink">
         <div className="mx-auto max-w-3xl xl:max-w-none xl:grid xl:grid-cols-2 xl:items-start xl:gap-16">
           <div>

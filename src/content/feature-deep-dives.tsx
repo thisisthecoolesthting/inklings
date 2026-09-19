@@ -31,7 +31,7 @@ export interface DeepDive {
     body?: string;
     primary: { label: string; href: string };
     secondary?: { label: string; href: string };
-    microcopy?: string | false;
+    microcopy?: string;
   };
 }
 
@@ -388,7 +388,7 @@ export const FEATURE_DEEP_DIVES: DeepDive[] = [
     slug: "safety-first",
     metaTitle: "Safety is the first feature",
     metaDescription:
-      "Inklings is built for kids: bounded Sparky choices instead of open chat, parent approval on everything, sandboxed characters, and COPPA-minded data handling.",
+      "Inklings is built for kids: bounded Sparky choices instead of open chat, parent approval on everything, sandboxed characters, and minimal data.",
     title: "Safety is the first feature, not the last.",
     intro: (
       <>

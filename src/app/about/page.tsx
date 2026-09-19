@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { brand } from "@/lib/brand";
 import { pageMetadata } from "@/lib/seo";
+import { CtaBand } from "@/components/CtaBand";
 
 export const metadata: Metadata = pageMetadata({
   title: "About — stories children keep",
@@ -64,6 +65,11 @@ export default function AboutPage() {
           */}
         </div>
       </section>
+      <CtaBand
+        title="Make something they'll keep."
+        primary={{ label: "Create your first story free", href: "/trial" }}
+        secondary={{ label: "Read the safety architecture", href: "/security" }}
+      />
     </>
   );
 }

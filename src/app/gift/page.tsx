@@ -4,6 +4,7 @@ import { Gift } from "lucide-react";
 import { pageMetadata } from "@/lib/seo";
 import { BreadcrumbJsonLd } from "@/lib/jsonld";
 import { CharacterShelf } from "@/components/marketing/CharacterShelf";
+import { CtaBand } from "@/components/CtaBand";
 
 const GIFTS = [
   {
@@ -24,6 +25,21 @@ const GIFTS = [
     name: "1 year of Premium",
     price: "$89.99",
     blurb: "The full story universe — best value for grandparents and holidays.",
+  },
+];
+
+const GIFT_STEPS = [
+  {
+    title: "Choose a plan",
+    body: "Pick 1, 6, or 12 months and check out securely with Stripe. You'll sign in to a free parent account first.",
+  },
+  {
+    title: "We email the code",
+    body: "Your gift code arrives in your inbox as soon as payment goes through. Add the recipient's email and we'll send it to them too.",
+  },
+  {
+    title: "They redeem it",
+    body: "The recipient enters the code at inklings.shop/gift/redeem and Premium switches on.",
   },
 ];
 
@@ -60,7 +76,7 @@ export default function GiftPage() {
 
           <div className="mt-12 grid gap-6 lg:grid-cols-3">
             {GIFTS.map((g) => (
-              <div key={g.id} className="card-base flex flex-col">
+              <div key={g.id} id={g.id} className="card-base flex scroll-mt-28 flex-col">
                 {g.badge && (
                   <span className="mb-2 inline-block w-fit rounded-full bg-coral px-3 py-1 text-xs font-bold text-white">
                     {g.badge}
@@ -82,6 +98,9 @@ export default function GiftPage() {
                       className="mt-1 w-full rounded-button border border-ink-100 px-3 py-2 text-sm"
                     />
                   </label>
+                  <p className="text-xs text-ink-500">
+                    Not sure of their email? We&apos;ll send the code to you.
+                  </p>
                   <button type="submit" className="btn-primary btn-full">
                     Gift {g.name.toLowerCase()}
                   </button>
@@ -101,6 +120,24 @@ export default function GiftPage() {
             </Link>
           </p>
 
+          <div className="mx-auto mt-16 max-w-4xl">
+            <div className="mx-auto max-w-xl text-center">
+              <span className="eyebrow">Simple by design</span>
+              <h2 className="text-2xl font-bold text-ink">How gifting works</h2>
+            </div>
+            <ol className="mt-8 grid gap-5 md:grid-cols-3">
+              {GIFT_STEPS.map((step, i) => (
+                <li key={step.title} className="card-base">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-coral text-base font-bold text-white">
+                    {i + 1}
+                  </span>
+                  <h3 className="mt-4 text-lg font-bold text-ink">{step.title}</h3>
+                  <p className="mt-2 text-sm text-ink-700">{step.body}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+
           <div className="mt-16">
             <div className="mx-auto max-w-xl text-center">
               <span className="eyebrow">What they&apos;ll build over time</span>
@@ -112,6 +149,13 @@ export default function GiftPage() {
           </div>
         </div>
       </section>
+      <CtaBand
+        title="Give them a whole year of stories."
+        body="Redeemed by email at inklings.shop/gift/redeem."
+        primary={{ label: "Gift 1 year — $89.99", href: "#gift_12m" }}
+        secondary={{ label: "Prefer they try it free first?", href: "/trial" }}
+        microcopy="Secure checkout with Stripe · a code lands in your inbox."
+      />
     </>
   );
 }

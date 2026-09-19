@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FAQ } from "@/components/FAQ";
+import { CtaBand } from "@/components/CtaBand";
 import { BreadcrumbJsonLd, FaqPageJsonLd } from "@/lib/jsonld";
 import type { AudienceLandingConfig } from "@/content/audience-landings";
 
@@ -41,6 +42,16 @@ export function AudienceLanding({ config }: { config: AudienceLandingConfig }) {
               <div key={b.title} className="card-base">
                 <h2 className="text-xl font-bold text-ink">{b.title}</h2>
                 <p className="mt-3 text-ink-700">{b.body}</p>
+                {b.link && (
+                  <p className="mt-4">
+                    <Link
+                      href={b.link.href}
+                      className="text-sm font-semibold text-coral underline underline-offset-4"
+                    >
+                      {b.link.label} &rarr;
+                    </Link>
+                  </p>
+                )}
               </div>
             ))}
           </div>
@@ -77,6 +88,7 @@ export function AudienceLanding({ config }: { config: AudienceLandingConfig }) {
         </div>
       </section>
 
+      {!config.hideRelated && (
       <section className="section">
         <div className="container-ink mx-auto max-w-3xl">
           <h2 className="text-lg font-bold text-ink">Related</h2>
@@ -91,6 +103,16 @@ export function AudienceLanding({ config }: { config: AudienceLandingConfig }) {
           </ul>
         </div>
       </section>
+      )}
+      {config.endBand && (
+        <CtaBand
+          title={config.endBand.title}
+          body={config.endBand.body}
+          primary={config.endBand.primary}
+          secondary={config.endBand.secondary}
+          microcopy={config.endBand.microcopy}
+        />
+      )}
     </>
   );
 }

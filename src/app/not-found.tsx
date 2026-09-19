@@ -28,6 +28,9 @@ export default function NotFound() {
             <Link href="/faq" className="btn-secondary btn-large inline-flex">
               Visit the FAQ
             </Link>
+            <Link href="/try" className="btn-secondary btn-large inline-flex">
+              Try Sparky
+            </Link>
           </div>
         </div>
       </div>

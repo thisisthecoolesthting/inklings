@@ -7,12 +7,22 @@ export type AudienceLandingConfig = {
   subtitle: string;
   metaTitle: string;
   metaDescription: string;
-  bullets: { title: string; body: string }[];
+  bullets: { title: string; body: string; link?: { href: string; label: string } }[];
   steps?: { title: string; body: string }[];
   primaryCta: { href: string; label: string };
   secondaryCta?: { href: string; label: string };
   faq: { q: string; a: string }[];
   related: { href: string; label: string }[];
+  /** Hide the "Related" link row (used when the page ends on a dedicated band). */
+  hideRelated?: boolean;
+  /** Closing CtaBand rendered as the last thing on the page. */
+  endBand?: {
+    title: string;
+    body?: string;
+    primary: { label: string; href: string };
+    secondary: { label: string; href: string };
+    microcopy?: string;
+  };
 };
 
 export const AUDIENCE_LANDINGS: AudienceLandingConfig[] = [
@@ -39,6 +49,7 @@ export const AUDIENCE_LANDINGS: AudienceLandingConfig[] = [
       {
         title: "Real books on the shelf",
         body: "Order an 8.5″ softcover after you approve a story. Ships in about 7–10 days — perfect for birthdays and holidays.",
+        link: { href: "/how-it-works", label: "See how printing works" },
       },
     ],
     primaryCta: { href: "/gift", label: "See gift plans" },
@@ -62,13 +73,20 @@ export const AUDIENCE_LANDINGS: AudienceLandingConfig[] = [
       { href: "/pricing", label: "Compare plans" },
       { href: "/features/parent-approval", label: "Parent approval" },
     ],
+    hideRelated: true,
+    endBand: {
+      title: "Give a whole year of stories.",
+      primary: { label: "Gift 1 year of Premium", href: "/gift" },
+      secondary: { label: "See a sample book", href: "/#see-it-in-action" },
+      microcopy: "Redeemed by email · you can stay in the approval loop.",
+    },
   },
   {
     slug: "for-teachers",
     path: "/for-teachers",
     breadcrumbLabel: "For teachers",
     eyebrow: "Classroom storytelling",
-    title: "Reluctant writers become authors in one lesson",
+    title: "Every kid leaves the lesson holding a story they wrote",
     subtitle:
       "Inklings turns oral storytelling into illustrated pages kids can read back — voice-first, no login maze, parent approval built in for take-home books.",
     metaTitle: "Classroom storytelling tool for ages 4-8",
@@ -93,8 +111,8 @@ export const AUDIENCE_LANDINGS: AudienceLandingConfig[] = [
       { title: "Story sprint", body: "20 minutes: pairs or individuals tap through a short adventure in the Studio." },
       { title: "Share & print", body: "Parents approve at home; optional class set of softcovers for a fundraiser or celebration." },
     ],
-    primaryCta: { href: "/contact", label: "Request classroom info" },
-    secondaryCta: { href: "/trial", label: "Try Sparky free" },
+    primaryCta: { href: "/contact?topic=classroom", label: "Request classroom info" },
+    secondaryCta: { href: "/try", label: "Try Sparky with your class — no login" },
     faq: [
       {
         q: "Does every child need an account?",
@@ -114,6 +132,12 @@ export const AUDIENCE_LANDINGS: AudienceLandingConfig[] = [
       { href: "/for-reluctant-writers", label: "Reluctant writers" },
       { href: "/how-it-works", label: "How it works" },
     ],
+    endBand: {
+      title: "Pilot it with one class for free.",
+      primary: { label: "Request a classroom pilot", href: "/contact?topic=classroom" },
+      secondary: { label: "Try the demo now", href: "/try" },
+      microcopy: "Tell us about your class and we'll write back by email.",
+    },
   },
   {
     slug: "for-reluctant-writers",
@@ -161,6 +185,12 @@ export const AUDIENCE_LANDINGS: AudienceLandingConfig[] = [
       { href: "/for-teachers", label: "For teachers" },
       { href: "/security", label: "Safety & privacy" },
     ],
+    endBand: {
+      title: "A finished book in one sitting.",
+      primary: { label: "Start free — no typing required", href: "/trial" },
+      secondary: { label: "Try the tap-to-choose demo", href: "/try" },
+      microcopy: "Works with a mic or just tapping.",
+    },
   },
   {
     slug: "homeschool",
@@ -208,6 +238,11 @@ export const AUDIENCE_LANDINGS: AudienceLandingConfig[] = [
       { href: "/for-reluctant-writers", label: "Reluctant writers" },
       { href: "/how-it-works", label: "How it works" },
     ],
+    endBand: {
+      title: "Add it to this week's language-arts block.",
+      primary: { label: "Start free", href: "/trial" },
+      secondary: { label: "See what Premium adds", href: "/pricing" },
+    },
   },
 ];
 

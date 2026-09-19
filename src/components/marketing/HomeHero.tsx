@@ -81,11 +81,16 @@ export async function HomeHero() {
               <Link href="/trial" className="btn-primary btn-large">
                 {brand.primaryCta}
               </Link>
-              <Link href="/for-grandparents" className="btn-ghost btn-large">
-                Gift for grandparents
+              <Link href="/try" className="btn-secondary btn-large">
+                Try Sparky — no account
               </Link>
             </div>
             <p className="mt-5 text-sm font-medium text-ink-500">{brand.trustStrip}</p>
+            <p className="mt-2 text-sm">
+              <Link href="/for-grandparents" className="font-semibold text-coral underline underline-offset-4">
+                Gift for grandparents
+              </Link>
+            </p>
           </div>
 
           <div className="w-full lg:max-w-none">
