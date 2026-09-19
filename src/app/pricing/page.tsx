@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { brand } from "@/lib/brand";
 import { PricingTiers } from "@/components/PricingTiers";
+import { CharacterShelf } from "@/components/marketing/CharacterShelf";
 import { FAQ } from "@/components/FAQ";
 import { FAQ_HOME } from "@/content/faq-data";
 import { BreadcrumbJsonLd, ProductOffersJsonLd } from "@/lib/jsonld";
@@ -56,7 +57,19 @@ export default function PricingPage() {
         </div>
       </section>
 
-      <section className="section bg-cream-100">
+      <section className="section-mobile bg-cream-100">
+        <div className="container-ink">
+          <div className="mx-auto max-w-xl text-center">
+            <span className="eyebrow">What Premium&apos;s &quot;series memory&quot; looks like</span>
+            <h2 className="text-2xl font-bold text-ink">A shelf that keeps growing</h2>
+          </div>
+          <div className="mt-6">
+            <CharacterShelf compact />
+          </div>
+        </div>
+      </section>
+
+      <section className="section">
         <div className="container-ink mx-auto max-w-3xl">
           <div className="section-header-center">
             <h2 className="section-title">Questions parents ask</h2>

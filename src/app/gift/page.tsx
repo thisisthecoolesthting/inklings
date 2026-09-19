@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Gift } from "lucide-react";
 import { pageMetadata } from "@/lib/seo";
 import { BreadcrumbJsonLd } from "@/lib/jsonld";
+import { CharacterShelf } from "@/components/marketing/CharacterShelf";
 
 const GIFTS = [
   {
@@ -99,6 +100,16 @@ export default function GiftPage() {
               Compare all plans
             </Link>
           </p>
+
+          <div className="mt-16">
+            <div className="mx-auto max-w-xl text-center">
+              <span className="eyebrow">What they&apos;ll build over time</span>
+              <h2 className="text-2xl font-bold text-ink">A shelf that keeps growing</h2>
+            </div>
+            <div className="mt-6">
+              <CharacterShelf compact />
+            </div>
+          </div>
         </div>
       </section>
     </>

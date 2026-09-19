@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { brand } from "@/lib/brand";
 import { BreadcrumbJsonLd } from "@/lib/jsonld";
+import { CharacterShelf } from "@/components/marketing/CharacterShelf";
 
 export const metadata: Metadata = {
   title: `Persistent character family — ${brand.name}`,
@@ -21,6 +22,20 @@ export default function FeatureBible() {
               The book is the artifact. The <em>family</em> of characters your child invents — Biscuit the puppy, Saffron the magical fox, every recurring friend — is the actual product. They show up across every story. They remember each other.
             </p>
           </div>
+        </div>
+      </section>
+
+      <section className="section bg-cream-100">
+        <div className="container-ink">
+          <div className="section-header-center">
+            <span className="eyebrow">Watch it accumulate</span>
+            <h2 className="section-title">A shelf that keeps growing</h2>
+            <p className="section-subtitle">
+              Every approved story adds a new spine, same characters inside. This is what the
+              Character Bible looks like after a few months of play.
+            </p>
+          </div>
+          <CharacterShelf />
         </div>
       </section>
 
