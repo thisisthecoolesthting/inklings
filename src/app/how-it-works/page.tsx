@@ -50,7 +50,7 @@ export default function HowPage() {
               autoPlay
               muted
               playsInline
-              poster="/images/site/og-default.svg"
+              poster="/images/site/walkthrough-poster.jpg"
               className="w-full rounded-card border-t-0 border border-ink-100"
             >
               <source src="/videos/walkthrough.webm" type="video/webm" />
