@@ -29,6 +29,17 @@ const nextConfig = {
   async headers() {
     return [
       {
+        // Belt-and-braces baseline (Caddy sends the same four, minus Permissions-Policy).
+        // No CSP on purpose. microphone=(self): the Studio uses browser speech recognition.
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "Permissions-Policy", value: "camera=(), geolocation=(), microphone=(self), payment=(self)" },
+        ],
+      },
+      {
         source: "/_next/static/:path*",
         headers: [
           { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
