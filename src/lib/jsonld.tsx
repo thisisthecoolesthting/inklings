@@ -54,7 +54,7 @@ export function OrganizationJsonLd() {
     url: base,
     logo: `${base}/images/brand/inklings-mark.svg`,
     description:
-      "A story universe studio for kids ages 4 and up. Characters return in every story. Voice-first, parent-approved, real printed books.",
+      "A story universe studio for kids ages 4-8. Characters return in every story. Voice-first, parent-approved, real printed books.",
     sameAs: [],
     contactPoint: {
       "@type": "ContactPoint",
@@ -80,7 +80,7 @@ export function ProductOffersJsonLd({
     "@context": "https://schema.org",
     "@type": "Product",
     name: "Inklings Story Studio",
-    description: "Voice-first story studio for kids ages 4 and up with parent approval and printed keepsake books.",
+    description: "Voice-first story studio for kids ages 4-8 with parent approval and printed keepsake books.",
     brand: { "@type": "Brand", name: "Inklings" },
     audience: { "@type": "PeopleAudience", suggestedMinAge: 4 },
     url: `${base}/pricing`,

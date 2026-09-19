@@ -11,7 +11,7 @@ export const FEATURES: FeatureBlock[] = [
     slug: "voice-first-studio",
     title: "Voice-first kid Studio",
     summary:
-      "Your child speaks to Sparky and taps giant buttons. No reading, no typing — designed for ages 4 and up.",
+      "Your child speaks to Sparky and taps giant buttons. No reading, no typing — designed for ages 4-8.",
   },
   {
     slug: "character-bible",

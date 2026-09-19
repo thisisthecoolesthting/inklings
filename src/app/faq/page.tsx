@@ -6,7 +6,7 @@ import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
   title: "FAQ — questions parents ask first",
-  description: "Answers about safety, pricing, printing, voice input, and parent approval for Inklings ages 4 and up.",
+  description: "Answers about safety, pricing, printing, voice input, and parent approval for Inklings ages 4-8.",
   path: "/faq",
 });
 
