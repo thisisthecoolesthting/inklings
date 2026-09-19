@@ -8,6 +8,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: `Forgot password — ${brand.name}`,
   description: "Reset your Inklings parent account password.",
+  robots: { index: false, follow: false },
 };
 
 const ERROR_MESSAGES: Record<string, string> = {
