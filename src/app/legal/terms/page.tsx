@@ -17,7 +17,9 @@ export default function TermsPage() {
         <h2 className="mt-8 text-2xl font-bold text-ink">Who can use Inklings</h2>
         <p className="mt-3 text-ink-700">
           Inklings is for parents creating accounts for their own children, or with the child&apos;s
-          legal guardian&apos;s consent. You must be 18 or older to create an account.
+          legal guardian&apos;s consent. You must be 18 or older to create and hold a parent
+          account &mdash; children do not have their own login and never create an account
+          themselves.
         </p>
 
         <h2 className="mt-8 text-2xl font-bold text-ink">Content ownership</h2>
@@ -59,6 +61,23 @@ export default function TermsPage() {
           <Link href="/api/billing/portal" className="btn-secondary inline-flex text-sm">
             Open billing portal (signed-in parents)
           </Link>
+        </p>
+        <p className="mt-4 text-ink-700">
+          We don&apos;t offer partial refunds for unused time in a billing period &mdash;
+          cancelling stops future billing, and your Premium access continues through the end of
+          the period you already paid for. This is separate from the printed-book refund policy
+          above, which covers damaged or misprinted physical books.
+        </p>
+
+        <h2 className="mt-8 text-2xl font-bold text-ink">Governing law</h2>
+        <p className="mt-3 text-ink-700">
+          These terms are governed by the laws of {"{{GOVERNING_LAW_JURISDICTION}}"}, without
+          regard to conflict-of-law principles.
+        </p>
+
+        <h2 className="mt-8 text-2xl font-bold text-ink">The company</h2>
+        <p className="mt-3 text-ink-700">
+          Inklings is operated by {"{{OPERATOR_LEGAL_NAME}}"}.
         </p>
 
         <h2 className="mt-8 text-2xl font-bold text-ink">Contact</h2>
