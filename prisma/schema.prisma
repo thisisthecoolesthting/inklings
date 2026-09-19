@@ -273,3 +273,16 @@ model SeriesCast {
   @@index([seriesId])
   @@index([characterId])
 }
+
+// === Marketing leads (footer "Email me a sample story") ===
+// NOTE: schema is applied with `prisma db push` on the VPS (no migrations dir).
+// The /api/lead route fails soft until this table exists.
+model Lead {
+  id        String   @id @default(cuid())
+  email     String
+  source    String   @default("footer-sample")
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@index([createdAt])
+}

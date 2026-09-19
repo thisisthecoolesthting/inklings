@@ -225,6 +225,32 @@ ${opts.message}`,
     html: `<!doctype html><html><body style="font-family:-apple-system,sans-serif;color:#4A2545;">
       <p><strong>Topic:</strong> ${escapeHtml(topicLabel)}<br/><strong>Name:</strong> ${escapeHtml(opts.name)}<br/><strong>Email:</strong> ${escapeHtml(opts.email)}</p>
       <p style="white-space:pre-wrap;">${escapeHtml(opts.message)}</p>
+
+/** Sample-story email for the footer lead form. Links to the live demo; no attachment. */
+export async function sendSampleStoryEmail(opts: { to: string }) {
+  const from = process.env.RESEND_FROM_EMAIL ?? brand.emailFrom;
+  const site = process.env.NEXT_PUBLIC_APP_URL ?? "https://inklings.shop";
+  const demoUrl = `${site}/#see-it-in-action`;
+  const tryUrl = `${site}/try`;
+  await sendMessage({
+    from: `${brand.name} <${from}>`,
+    to: [opts.to],
+    subject: `Your sample story: Milo and the Moonbeam Map`,
+    text: `Here is the sample story from ${brand.name}: Milo and the Moonbeam Map, made by a child with Sparky and approved by a parent.
+
+Read it: ${demoUrl}
+
+Want to see how Sparky works? Try it with no account: ${tryUrl}
+
+You will not get a newsletter unless you ask for one. Questions? Reply to this email.`,
+    html: `<!doctype html><html><body style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#FFF6E5;padding:32px;color:#4A2545;">
+      <div style="max-width:520px;margin:0 auto;background:#fff;padding:32px;border-radius:20px;">
+        <h1 style="margin:0 0 16px;font-size:24px;color:#4A2545;">Milo and the Moonbeam Map</h1>
+        <p style="font-size:16px;line-height:1.5;">Here is a sample story from ${brand.name}, made by a child with Sparky and approved by a parent before it was finished.</p>
+        <p style="margin:24px 0;"><a href="${demoUrl}" style="display:inline-block;background:#C94F2B;color:#fff;text-decoration:none;padding:14px 28px;border-radius:12px;font-weight:600;">Read the sample story</a></p>
+        <p style="font-size:14px;line-height:1.5;">Curious how Sparky works? <a href="${tryUrl}" style="color:#BA4A24;">Try it with no account</a>.</p>
+        <p style="font-size:12px;color:#7D506E;">You will not get a newsletter unless you ask for one. Questions? Just reply.</p>
+      </div>
     </body></html>`,
   });
 }
