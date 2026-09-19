@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { brand } from "@/lib/brand";
+import { CtaBand } from "@/components/CtaBand";
+import { PrimaryCta } from "@/components/PrimaryCta";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
@@ -26,38 +27,41 @@ export default function WatchPage() {
           </div>
         </div>
       </section>
-      <section className="section pt-0">
-        <div className="container-ink mx-auto max-w-4xl">
+      <section className="section pt-6">
+        <div className="container-ink mx-auto grid max-w-5xl items-center gap-8 lg:grid-cols-[minmax(0,1fr)_300px]">
+          {/*
+            The walkthrough is a 1280x720 (16:9) recording. The poster must share that
+            aspect ratio; a portrait poster made the player render ~795x1060.
+          */}
           <video
             controls
             muted
             playsInline
             preload="metadata"
-            poster="/images/marketing/print-hardcover.jpg"
-            className="w-full rounded-card border border-ink-100 shadow-card"
+            poster="/images/site/walkthrough-poster.jpg"
+            className="mx-auto aspect-video w-full max-w-3xl rounded-card border border-ink-100 bg-ink shadow-card"
           >
+            <source src="/videos/walkthrough.mp4" type="video/mp4" />
             <source src="/videos/walkthrough.webm" type="video/webm" />
             Your browser doesn&apos;t support inline video.{" "}
-            <a href="/videos/walkthrough.webm">Download the walkthrough</a>.
+            <a href="/videos/walkthrough.mp4">Download the walkthrough</a>.
           </video>
-        </div>
-      </section>
-      <section className="hero-final-cta py-20">
-        <div className="container-ink mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-bold text-cream-100">Now try it with your child.</h2>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link href="/trial" className="btn-primary btn-large">
-              {brand.primaryCta}
-            </Link>
-            <Link
-              href="/for-grandparents"
-              className="btn-ghost btn-large border-cream-200/60 text-cream-100 hover:bg-cream-100/10"
-            >
-              Gift for grandparents
-            </Link>
+          <div className="flex flex-col items-center gap-4 text-center lg:items-start lg:text-left">
+            <h2 className="text-2xl font-bold text-ink">Now try it yourself.</h2>
+            <p className="text-ink-700">
+              Tap through a real story beat with Sparky in about 30 seconds. No account needed.
+            </p>
+            <PrimaryCta href="/try" variant="secondary" microcopy={false}>
+              Try it yourself
+            </PrimaryCta>
           </div>
         </div>
       </section>
+      <CtaBand
+        title="Now try it with your child."
+        primary={{ label: brand.primaryCta, href: "/trial" }}
+        secondary={{ label: "Gift for grandparents", href: "/for-grandparents" }}
+      />
     </>
   );
 }
