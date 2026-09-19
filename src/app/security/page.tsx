@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { brand } from "@/lib/brand";
 import { ShieldCheck, Lock, Eye, UserCheck, Image as ImageIcon, Key } from "lucide-react";
+import { SafetyComparison } from "@/components/marketing/SafetyComparison";
 
 export const metadata: Metadata = {
   title: `Safety & privacy — ${brand.name}`,
@@ -44,6 +45,24 @@ export default function SecurityPage() {
               <p className="mt-2 text-ink-700">{p.body}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container-ink mx-auto max-w-5xl">
+          <div className="section-header-center">
+            <span className="eyebrow">The difference, side by side</span>
+            <h2 className="section-title">Not a chatbot. A bounded story guide.</h2>
+            <p className="section-subtitle">
+              Sparky never hands a child an open text box. Every turn is a small set of
+              parent-safe choices — the same pattern you can try yourself on{" "}
+              <Link href="/try" className="text-coral underline">
+                the taste-of-Sparky demo
+              </Link>
+              .
+            </p>
+          </div>
+          <SafetyComparison />
         </div>
       </section>
 
