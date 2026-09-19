@@ -63,7 +63,7 @@ export async function StudioPreviewSection() {
               <span className="h-2.5 w-2.5 rounded-full bg-mint-400" aria-hidden />
               <span className="ml-2 text-xs font-medium text-ink-500">Sparky Studio · sample story</span>
             </div>
-            <div className="grid grid-cols-2 gap-4 p-5 sm:gap-5 sm:p-6">
+            <div className="grid grid-cols-1 gap-4 p-5 sm:grid-cols-2 sm:gap-5 sm:p-6">
               {tiles.map((src, i) => (
                 <PageTile key={`${src}-${i}`} src={src} index={i} />
               ))}
