@@ -225,6 +225,9 @@ ${opts.message}`,
     html: `<!doctype html><html><body style="font-family:-apple-system,sans-serif;color:#4A2545;">
       <p><strong>Topic:</strong> ${escapeHtml(topicLabel)}<br/><strong>Name:</strong> ${escapeHtml(opts.name)}<br/><strong>Email:</strong> ${escapeHtml(opts.email)}</p>
       <p style="white-space:pre-wrap;">${escapeHtml(opts.message)}</p>
+    </body></html>`,
+  });
+}
 
 /** Sample-story email for the footer lead form. Links to the live demo; no attachment. */
 export async function sendSampleStoryEmail(opts: { to: string }) {

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { brand } from "@/lib/brand";
+import { AuthHelp } from "@/components/AuthHelp";
 
 export const dynamic = "force-dynamic";
 
@@ -76,12 +77,11 @@ export default async function ForgotPage(props: {
             <button type="submit" className="btn-primary btn-large btn-full">
               Send reset link
             </button>
-            <p className="text-xs text-ink-500">
-              <Link href="/login" className="underline">
-                Back to sign in
-              </Link>
-            </p>
+            <Link href="/login" className="btn-secondary btn-full">
+              Back to sign in
+            </Link>
           </form>
+          <AuthHelp />
         </div>
       </div>
     </section>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { brand } from "@/lib/brand";
 import { pageMetadata } from "@/lib/seo";
+import { AuthHelp } from "@/components/AuthHelp";
 
 export const dynamic = "force-dynamic";
 
@@ -74,7 +75,7 @@ export default async function LoginPage(props: {
                 <label htmlFor="password" className="block text-sm font-semibold text-ink">
                   Password
                 </label>
-                <Link href="/forgot-password" className="text-xs text-ink-500 underline">
+                <Link href="/forgot-password" className="inline-block py-2 text-sm text-ink-600 underline">
                   Forgot password?
                 </Link>
               </div>
@@ -99,6 +100,18 @@ export default async function LoginPage(props: {
               .
             </p>
           </form>
+
+          <div className="mt-8 space-y-4 border-t border-ink-100 pt-8">
+            <Link href="/trial" className="btn-secondary btn-large btn-full">
+              {brand.primaryCta}
+            </Link>
+            <p className="text-center text-sm text-ink-700">
+              <Link href="/gift/redeem" className="inline-block py-2 font-semibold text-coral-dark underline underline-offset-2">
+                Redeeming a gift?
+              </Link>
+            </p>
+          </div>
+          <AuthHelp />
         </div>
       </div>
     </section>

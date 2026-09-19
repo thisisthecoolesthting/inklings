@@ -22,6 +22,7 @@ export function TrialForm({
   defaultTier?: string;
 }) {
   const [clientError, setClientError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
   const passwordRef = useRef<HTMLInputElement>(null);
   const confirmRef = useRef<HTMLInputElement>(null);
 
@@ -44,6 +45,12 @@ export function TrialForm({
 
   return (
     <>
+      <ul className="mt-6 flex flex-wrap gap-x-4 gap-y-1 rounded-card bg-mint-100 px-4 py-3 text-sm font-semibold text-ink" aria-label="What to expect">
+        <li>Free plan is free forever</li>
+        <li>No card</li>
+        <li>About 60 seconds</li>
+      </ul>
+
       {clientError && (
         <div
           role="alert"
@@ -84,13 +91,23 @@ export function TrialForm({
             ref={passwordRef}
             id="password"
             name="password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             required
             autoComplete="new-password"
             minLength={8}
             className="mt-1 w-full rounded-button border-2 border-ink-100 bg-white px-4 py-3 text-base focus:border-coral focus:outline-none"
           />
-          <p className="mt-1 text-xs text-ink-500">At least 8 characters.</p>
+          <div className="mt-1 flex flex-wrap items-center justify-between gap-2">
+            <p className="text-xs text-ink-600">At least 8 characters.</p>
+            <button
+              type="button"
+              onClick={() => setShowPassword((v) => !v)}
+              aria-pressed={showPassword}
+              className="min-h-[44px] rounded-button px-2 text-sm font-semibold text-coral-dark underline underline-offset-2"
+            >
+              {showPassword ? "Hide password" : "Show password"}
+            </button>
+          </div>
         </div>
         <div>
           <label htmlFor="password_confirm" className="block text-sm font-semibold text-ink">
@@ -100,7 +117,7 @@ export function TrialForm({
             ref={confirmRef}
             id="password_confirm"
             name="password_confirm"
-            type="password"
+            type={showPassword ? "text" : "password"}
             required
             autoComplete="new-password"
             minLength={8}
@@ -108,7 +125,10 @@ export function TrialForm({
           />
         </div>
         <div className="space-y-1.5">
-          <div className="flex items-start gap-2">
+          <label
+            htmlFor="coppa_consent"
+            className="flex min-h-[44px] cursor-pointer items-start gap-3 rounded-button py-1 text-sm leading-relaxed text-ink-700"
+          >
             <input
               id="coppa_consent"
               type="checkbox"
@@ -116,14 +136,14 @@ export function TrialForm({
               value="yes"
               required
               defaultChecked={defaultConsent}
-              className="mt-0.5 shrink-0 accent-coral"
+              className="mt-0.5 h-6 w-6 shrink-0 cursor-pointer accent-coral-dark"
             />
-            <label htmlFor="coppa_consent" className="text-xs text-ink-600 leading-relaxed">
+            <span>
               I am this child&apos;s parent or legal guardian, and I consent to Inklings
               collecting the information my child provides to create their stories.
-            </label>
-          </div>
-          <p className="text-xs text-ink-500">
+            </span>
+          </label>
+          <p className="text-xs text-ink-600">
             Inklings is designed for children ages 4-8 and is operated for parents. We never
             market to children directly.
           </p>
@@ -131,7 +151,12 @@ export function TrialForm({
         <button type="submit" className="btn-primary btn-large btn-full">
           Create account
         </button>
-        <p className="text-xs text-ink-500">
+        <p className="text-center text-sm text-ink-700">
+          <Link href="/try" className="inline-block py-2 font-semibold text-coral-dark underline underline-offset-2">
+            Just want to see Sparky first? Try it, no account
+          </Link>
+        </p>
+        <p className="text-xs text-ink-600">
           Already have an account?{" "}
           <Link href="/login" className="underline">
             Sign in

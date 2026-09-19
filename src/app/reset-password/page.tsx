@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { brand } from "@/lib/brand";
+import { AuthHelp } from "@/components/AuthHelp";
 
 export const dynamic = "force-dynamic";
 
@@ -44,9 +45,14 @@ export default async function ResetPasswordPage(props: {
                 This reset link is missing or invalid. Request a fresh link from the forgot
                 password page.
               </p>
-              <Link href="/forgot-password" className="btn-primary btn-large inline-block">
-                Request reset link
-              </Link>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Link href="/forgot-password" className="btn-primary btn-large">
+                  Request reset link
+                </Link>
+                <Link href="/login" className="btn-secondary btn-large">
+                  Sign in
+                </Link>
+              </div>
             </div>
           ) : (
             <>
@@ -56,7 +62,15 @@ export default async function ResetPasswordPage(props: {
                   className="mt-6 rounded-card border-2 px-4 py-3 text-sm"
                   style={{ background: "#FEF2F2", borderColor: "#FECACA", color: "#991B1B" }}
                 >
-                  {errorMsg}
+                  {errorMsg}{" "}
+                  <Link href="/forgot-password" className="font-semibold underline">
+                    Request a new link
+                  </Link>{" "}
+                  or{" "}
+                  <Link href="/login" className="font-semibold underline">
+                    sign in
+                  </Link>
+                  .
                 </div>
               )}
 
@@ -99,6 +113,7 @@ export default async function ResetPasswordPage(props: {
               </form>
             </>
           )}
+          <AuthHelp />
         </div>
       </div>
     </section>
