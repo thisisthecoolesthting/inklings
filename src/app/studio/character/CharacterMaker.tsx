@@ -47,14 +47,14 @@ export function CharacterMaker({ childId, childName }: { childId: string; childN
 
       <fieldset>
         <legend className="text-xl font-bold text-ink">What are they?</legend>
-        <div className="mt-3 grid grid-cols-4 gap-2">
+        <div className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-4">
           {KID_CHARACTER_PICKS.species.map((s) => (
             <button
               key={s.id}
               type="button"
               onClick={() => setSpecies(s.id)}
               className={
-                "flex min-h-[88px] flex-col items-center justify-center rounded-2xl border-2 bg-white text-base font-bold " +
+                "flex min-h-[88px] flex-col items-center justify-center break-words rounded-2xl border-2 bg-white px-1 text-base font-bold " +
                 (species === s.id ? "border-coral bg-coral/10 ring-2 ring-coral" : "border-ink-100")
               }
             >
@@ -77,7 +77,7 @@ export function CharacterMaker({ childId, childName }: { childId: string; childN
               onClick={() => setColor(c.id)}
               aria-label={c.label}
               className={
-                "h-14 w-14 rounded-full border-4 " +
+                "h-16 w-16 rounded-full border-4 " +
                 (color === c.id ? "border-ink scale-110" : "border-white shadow")
               }
               style={{ backgroundColor: c.hex }}

@@ -48,8 +48,8 @@ export default async function ApprovalsPage({
   ]);
   return (
     <>
-      <header className="mb-10">
-        <h1 className="text-3xl font-bold text-ink">Approvals</h1>
+      <header className="mb-6 lg:mb-10">
+        <h1 className="text-2xl font-bold text-ink sm:text-3xl">Approvals</h1>
         <p className="mt-1 text-ink-700">Nothing publishes without your sign-off. Order a printed keepsake right after you approve.</p>
       </header>
 
@@ -65,15 +65,15 @@ export default async function ApprovalsPage({
       )}
 
       {readyToPrint.length > 0 && (
-        <section className="mb-10 rounded-card border-2 border-coral/30 bg-coral/5 p-6">
+        <section className="mb-8 rounded-card border-2 border-coral/30 bg-coral/5 p-4 sm:p-6 lg:mb-10">
           <h2 className="text-lg font-bold text-ink">Ready to print</h2>
           <p className="mt-1 text-sm text-ink-700">These approved stories can become softcover keepsakes ($19.99, ships in 7–10 days).</p>
           <ul className="mt-4 space-y-3">
             {readyToPrint.map((b) => (
-              <li key={b.id} className="flex flex-wrap items-center justify-between gap-3 rounded-button bg-white px-4 py-3">
-                <div>
+              <li key={b.id} className="flex flex-col gap-3 rounded-button bg-white px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="min-w-0 break-words">
                   <span className="font-semibold text-ink">{b.title}</span>
-                  <span className="ml-2 text-sm text-ink-500">by {b.child.name}</span>
+                  <span className="block text-sm text-ink-500 sm:ml-2 sm:inline">by {b.child.name}</span>
                 </div>
                 <PrintCheckoutForm bookId={b.id} className="btn-primary text-sm" />
               </li>
@@ -81,7 +81,7 @@ export default async function ApprovalsPage({
           </ul>
           {totalReadyToPrint > readyToPrint.length && (
             <div className="mt-4 text-center">
-              <Link href="/portal/orders" className="text-sm text-ink-500 underline">
+              <Link href="/portal/orders" className="inline-flex min-h-[44px] items-center text-sm text-ink-500 underline">
                 View all in Orders &rarr;
               </Link>
             </div>
@@ -89,21 +89,21 @@ export default async function ApprovalsPage({
         </section>
       )}
 
-      <section className="mb-10">
+      <section className="mb-8 lg:mb-10">
         <h2 className="text-xl font-bold text-ink">Characters waiting</h2>
         {pendingCharacters.length === 0 ? (
           <div className="card-base mt-3 text-ink-500">No characters awaiting approval.</div>
         ) : (
           <ul className="mt-3 grid gap-4 sm:grid-cols-2">
             {pendingCharacters.map((ch) => (
-              <li key={ch.id} className="card-base">
+              <li key={ch.id} className="card-base !p-4 sm:!p-6">
                 <span className="rounded-full bg-mint-100 px-3 py-1 text-xs font-semibold text-mint-600">
                   Waiting for your approval
                 </span>
-                <h3 className="mt-3 text-lg font-bold text-ink">{ch.name}</h3>
+                <h3 className="mt-3 break-words text-lg font-bold text-ink">{ch.name}</h3>
                 <p className="text-sm text-ink-500">From {ch.child.name}</p>
                 <p className="mt-3 text-sm text-ink-700">{ch.species ?? "character"}, {ch.role ?? "in story"}.</p>
-                <div className="mt-4 flex gap-2">
+                <div className="mt-4 grid grid-cols-2 gap-2 sm:flex">
                   <form action={approveCharacter}>
                     <input type="hidden" name="id" value={ch.id} />
                     <SubmitButton kind="approve">Approve</SubmitButton>
@@ -131,44 +131,44 @@ export default async function ApprovalsPage({
         ) : (
           <ul className="mt-3 space-y-6">
             {pendingBooks.map((b) => (
-              <li key={b.id} className="card-base">
-                <div className="flex flex-wrap items-start justify-between gap-4">
-                  <div>
-                    <h3 className="text-xl font-bold text-ink">{b.title}</h3>
-                    <p className="text-sm text-ink-500">From {b.child.name} &middot; {b._count.pages} pages</p>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    <form action={approveBook}>
-                      <input type="hidden" name="id" value={b.id} />
-                      <SubmitButton kind="approve">Approve only</SubmitButton>
-                    </form>
-                    <form action={approveBookAndPrint}>
-                      <input type="hidden" name="id" value={b.id} />
-                      <SubmitButton kind="approve">Approve &amp; go to print checkout</SubmitButton>
-                    </form>
-                    <form action={rejectBook}>
-                      <input type="hidden" name="id" value={b.id} />
-                      <SubmitButton kind="reject">Send back</SubmitButton>
-                    </form>
-                  </div>
+              <li key={b.id} className="card-base flex flex-col !overflow-visible !p-4 sm:!p-6 lg:!p-8">
+                <div className="min-w-0 break-words lg:order-first">
+                  <h3 className="text-xl font-bold text-ink">{b.title}</h3>
+                  <p className="text-sm text-ink-500">From {b.child.name} &middot; {b._count.pages} pages</p>
                 </div>
-                <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {b.pages.map((p) => (
-                    <div key={p.id} className="rounded-card border border-ink-100 bg-cream-50 p-3">
+                    <div key={p.id} className="min-w-0 rounded-card border border-ink-100 bg-cream-50 p-3">
                       <span className="text-xs font-semibold uppercase tracking-wider text-coral">Page {p.pageNumber}</span>
                       {p.imageUrlLowres && (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
                           src={p.imageUrlLowres}
-                          alt=""
-                          className="mt-2 w-full rounded border border-ink-100"
+                          alt={`Illustration for page ${p.pageNumber} of ${b.title}`}
+                          className="mt-2 h-auto w-full max-w-full rounded border border-ink-100"
                           width={512}
                           height={384}
+                          loading="lazy"
                         />
                       )}
-                      <p className="mt-2 text-sm text-ink line-clamp-3">{p.textContent}</p>
+                      <p className="mt-2 break-words text-base leading-relaxed text-ink sm:text-sm sm:line-clamp-3">{p.textContent}</p>
                     </div>
                   ))}
+                </div>
+                {/* Sticky on mobile (above the bottom tab bar); sits at the top on desktop. */}
+                <div className="sticky bottom-[calc(3.5rem+env(safe-area-inset-bottom))] z-20 -mx-4 mt-4 grid grid-cols-2 gap-2 border-t border-ink-100 bg-white/95 px-4 py-3 shadow-[0_-4px_12px_rgba(0,0,0,0.06)] backdrop-blur sm:-mx-6 sm:px-6 lg:static lg:order-first lg:mx-0 lg:mb-6 lg:mt-0 lg:flex lg:flex-wrap lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none lg:backdrop-blur-none">
+                  <form action={approveBookAndPrint} className="col-span-2 lg:col-span-1">
+                    <input type="hidden" name="id" value={b.id} />
+                    <SubmitButton kind="approve">Approve &amp; go to print checkout</SubmitButton>
+                  </form>
+                  <form action={approveBook}>
+                    <input type="hidden" name="id" value={b.id} />
+                    <SubmitButton kind="approve">Approve only</SubmitButton>
+                  </form>
+                  <form action={rejectBook}>
+                    <input type="hidden" name="id" value={b.id} />
+                    <SubmitButton kind="reject">Send back</SubmitButton>
+                  </form>
                 </div>
               </li>
             ))}

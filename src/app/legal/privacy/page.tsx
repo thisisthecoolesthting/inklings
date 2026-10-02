@@ -14,8 +14,8 @@ export const metadata: Metadata = pageMetadata({
 export default function PrivacyPage() {
   return (
     <section className="section bg-cream-100">
-      <article className="container-ink mx-auto max-w-3xl prose prose-ink">
-        <h1 className="text-4xl font-bold text-ink">Privacy policy</h1>
+      <article className="container-ink mx-auto max-w-3xl break-words prose prose-ink">
+        <h1 className="text-3xl font-bold text-ink sm:text-4xl">Privacy policy</h1>
         <p className="text-sm text-ink-500">Last updated: September 2026</p>
 
         <h2 className="mt-8 text-2xl font-bold text-ink">Who operates Inklings</h2>

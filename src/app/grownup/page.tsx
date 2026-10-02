@@ -10,8 +10,8 @@ export default async function GrownupUnlockPage({
   const redirectPath = sp.intent === "print" ? "/portal/approvals" : "/portal";
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-cream-100 px-4">
-      <div className="card-base max-w-md text-center">
+    <div className="flex min-h-[100dvh] items-center justify-center bg-cream-100 px-4 py-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-[calc(1.5rem+env(safe-area-inset-top))]">
+      <div className="card-base w-full max-w-md select-none text-center">
         <h1 className="text-2xl font-bold text-ink">Grown-up area</h1>
         {sp.intent === "print" ? (
           <p className="mt-3 text-ink-700">
@@ -27,7 +27,7 @@ export default async function GrownupUnlockPage({
         <div className="mt-8">
           <GrownupHoldButton redirectPath={redirectPath} />
         </div>
-        <Link href="/studio" className="mt-6 inline-block text-sm text-ink-500 underline">
+        <Link href="/studio" className="tap-link mt-4 text-sm text-ink-600 underline">
           ← Back to Sparky
         </Link>
       </div>

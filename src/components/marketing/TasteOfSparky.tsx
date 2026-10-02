@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { Volume2, Square } from "lucide-react";
+import { useSpeech } from "@/components/studio/use-speech";
 
 /**
  * "Taste of Sparky" — a zero-cost, no-account interactive preview of the
@@ -101,6 +103,7 @@ export function TasteOfSparky({
   showEmailOption?: boolean;
 }) {
   const [selected, setSelected] = useState<Branch | null>(null);
+  const { speak, stop, speakingMine: speaking, supported } = useSpeech();
   const shownText = useTypewriter(selected?.text ?? "", selected != null);
 
   return (
@@ -129,9 +132,13 @@ export function TasteOfSparky({
           <button
             key={b.id}
             type="button"
-            onClick={() => setSelected(b)}
+            onClick={() => {
+              setSelected(b);
+              // Tap is a user gesture, so iOS allows speech here.
+              speak(b.text, { force: true });
+            }}
             aria-pressed={selected?.id === b.id}
-            className={`sparky-chip ${selected?.id === b.id ? "bg-mint-500 scale-105" : ""}`}
+            className={`sparky-chip min-h-[64px] ${selected?.id === b.id ? "bg-mint-500 scale-105" : ""}`}
           >
             <span aria-hidden>{b.emoji}</span>
             {b.label}
@@ -162,6 +169,17 @@ export function TasteOfSparky({
                   ▋
                 </span>
               </p>
+              {supported && (
+                <button
+                  type="button"
+                  onClick={() => (speaking ? stop() : speak(selected.text, { force: true }))}
+                  aria-label={speaking ? "Stop Sparky" : "Hear Sparky read this"}
+                  className="mt-4 inline-flex min-h-[64px] w-fit items-center gap-3 rounded-2xl bg-gold/30 px-6 text-lg font-bold text-ink hover:bg-gold/50 focus-visible:outline focus-visible:outline-4 focus-visible:outline-coral motion-safe:active:scale-95"
+                >
+                  {speaking ? <Square className="h-6 w-6" aria-hidden /> : <Volume2 className="h-7 w-7" aria-hidden />}
+                  <span>{speaking ? "Stop" : "Hear Sparky"}</span>
+                </button>
+              )}
               <Link href="/trial" className="btn-primary btn-large mt-5 inline-flex w-fit">
                 Make this your kid&apos;s real book →
               </Link>

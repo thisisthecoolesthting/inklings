@@ -17,9 +17,9 @@ export function DeleteChildButton({ id, name }: { id: string; name: string }) {
       type="button"
       onClick={handleDelete}
       aria-label={`Remove ${name}`}
-      className="text-ink-500 hover:text-coral"
+      className="-mr-2 -mt-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-button text-ink-500 hover:text-coral focus-visible:outline focus-visible:outline-2 focus-visible:outline-coral"
     >
-      <Trash2 className="h-4 w-4" />
+      <Trash2 className="h-5 w-5" aria-hidden />
     </button>
   );
 }

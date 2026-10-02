@@ -18,7 +18,7 @@ export default function WatchPage() {
         <div className="container-ink section pb-8 pt-12">
           <div className="mx-auto max-w-3xl text-center">
             <span className="eyebrow">Quick tour</span>
-            <h1 className="text-4xl font-bold tracking-tight text-ink md:text-5xl">
+            <h1 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl md:text-5xl">
               Ten seconds — see Inklings.
             </h1>
             <p className="mt-4 text-lg text-ink-700">

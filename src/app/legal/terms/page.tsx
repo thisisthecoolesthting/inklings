@@ -15,8 +15,8 @@ export const metadata: Metadata = pageMetadata({
 export default function TermsPage() {
   return (
     <section className="section bg-cream-100">
-      <article className="container-ink mx-auto max-w-3xl">
-        <h1 className="text-4xl font-bold text-ink">Terms of service</h1>
+      <article className="container-ink mx-auto max-w-3xl break-words">
+        <h1 className="text-3xl font-bold text-ink sm:text-4xl">Terms of service</h1>
         <p className="text-sm text-ink-500">Last updated: September 2026</p>
 
         <h2 className="mt-8 text-2xl font-bold text-ink">Who can use Inklings</h2>

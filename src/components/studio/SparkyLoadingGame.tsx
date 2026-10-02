@@ -34,12 +34,12 @@ export function SparkyLoadingGame({
       <p className="mt-4 text-3xl font-bold text-coral" aria-hidden>
         Find: {EMOJIS[target]}
       </p>
-      <div className="mt-4 flex flex-wrap justify-center gap-2">
+      <div className="mt-4 flex flex-wrap justify-center gap-3">
         {EMOJIS.map((e, i) => (
           <button
             key={`${e}-${i}`}
             type="button"
-            className="flex h-14 w-14 items-center justify-center rounded-full bg-cream-50 text-2xl shadow-sm transition hover:scale-110 active:scale-95"
+            className="flex h-16 w-16 items-center justify-center rounded-full bg-cream-50 text-3xl shadow-sm transition hover:scale-110 active:scale-95"
             onClick={() => {
               if (i === target) {
                 setScore((s) => s + 1);

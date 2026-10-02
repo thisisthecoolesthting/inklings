@@ -84,6 +84,8 @@ export function ContactForm({ initialTopic }: { initialTopic: TopicValue }) {
           required
           maxLength={120}
           autoComplete="name"
+          autoCapitalize="words"
+          enterKeyHint="next"
           className={inputClass}
         />
       </div>
@@ -98,6 +100,11 @@ export function ContactForm({ initialTopic }: { initialTopic: TopicValue }) {
           required
           maxLength={254}
           autoComplete="email"
+          inputMode="email"
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck={false}
+          enterKeyHint="next"
           className={inputClass}
           placeholder="parent@example.com"
         />
@@ -141,7 +148,7 @@ export function ContactForm({ initialTopic }: { initialTopic: TopicValue }) {
           className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900"
         >
           {errorMsg}{" "}
-          <a className="font-semibold underline" href="mailto:hello@inklings.shop">
+          <a className="inline-flex min-h-[44px] items-center font-semibold underline" href="mailto:hello@inklings.shop">
             hello@inklings.shop
           </a>
           .
@@ -151,7 +158,7 @@ export function ContactForm({ initialTopic }: { initialTopic: TopicValue }) {
       <button
         type="submit"
         disabled={status === "sending"}
-        className="btn-primary btn-large w-full sm:w-auto"
+        className="btn-primary btn-large w-full disabled:opacity-70 sm:w-auto"
       >
         {status === "sending" ? "Sending…" : "Send message"}
       </button>

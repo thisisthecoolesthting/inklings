@@ -78,6 +78,11 @@ export function TrialForm({
             type="email"
             required
             autoComplete="email"
+            inputMode="email"
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
+            enterKeyHint="next"
             defaultValue={defaultEmail}
             className="mt-1 w-full rounded-button border-2 border-ink-100 bg-white px-4 py-3 text-base focus:border-coral focus:outline-none"
             placeholder="parent@example.com"
@@ -94,6 +99,10 @@ export function TrialForm({
             type={showPassword ? "text" : "password"}
             required
             autoComplete="new-password"
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
+            enterKeyHint="next"
             minLength={8}
             className="mt-1 w-full rounded-button border-2 border-ink-100 bg-white px-4 py-3 text-base focus:border-coral focus:outline-none"
           />
@@ -120,6 +129,10 @@ export function TrialForm({
             type={showPassword ? "text" : "password"}
             required
             autoComplete="new-password"
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
+            enterKeyHint="go"
             minLength={8}
             className="mt-1 w-full rounded-button border-2 border-ink-100 bg-white px-4 py-3 text-base focus:border-coral focus:outline-none"
           />
@@ -152,21 +165,21 @@ export function TrialForm({
           Create account
         </button>
         <p className="text-center text-sm text-ink-700">
-          <Link href="/try" className="inline-block py-2 font-semibold text-coral-dark underline underline-offset-2">
+          <Link href="/try" className="tap-link font-semibold text-coral-dark underline underline-offset-2">
             Just want to see Sparky first? Try it, no account
           </Link>
         </p>
-        <p className="text-xs text-ink-600">
+        <p className="text-sm text-ink-600">
           Already have an account?{" "}
-          <Link href="/login" className="underline">
+          <Link href="/login" className="inline-flex min-h-[44px] items-center underline">
             Sign in
           </Link>
           . By continuing you agree to our{" "}
-          <Link href="/legal/terms" className="underline">
+          <Link href="/legal/terms" className="inline-flex min-h-[44px] items-center underline">
             Terms
           </Link>{" "}
           and{" "}
-          <Link href="/legal/privacy" className="underline">
+          <Link href="/legal/privacy" className="inline-flex min-h-[44px] items-center underline">
             Privacy Policy
           </Link>
           .

@@ -56,9 +56,9 @@ export default async function PortalHome({
 
   return (
     <>
-      <header className="mb-10">
-        <h1 className="text-3xl font-bold text-ink">Welcome back</h1>
-        <p className="mt-2 text-ink-700">{session.email}</p>
+      <header className="mb-6 lg:mb-10">
+        <h1 className="text-2xl font-bold text-ink sm:text-3xl">Welcome back</h1>
+        <p className="mt-2 break-all text-ink-700">{session.email}</p>
       </header>
 
       {(sp.upgraded === "1" || sp.gift_redeemed === "1" || sp.gift_success === "1") && (
@@ -71,20 +71,6 @@ export default async function PortalHome({
         </div>
       )}
 
-      {pendingBooks > 0 && (
-        <div className="card-base mb-8 border-2 border-coral bg-coral/10 shadow-md lg:hidden">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <h2 className="text-lg font-bold text-ink">{pendingBooks} waiting for your approval</h2>
-              <p className="text-sm text-ink-700">Review stories before your child shares or prints them.</p>
-            </div>
-            <Link href="/portal/approvals" className="btn-primary">
-              Review now
-            </Link>
-          </div>
-        </div>
-      )}
-
       {needsCharacterSetup && children > 0 && (
         <div className="card-base mb-8 border-2 border-mint-300 bg-mint-50">
           <h2 className="text-lg font-bold text-ink">Set up your child&apos;s first story friends</h2>
@@ -92,7 +78,7 @@ export default async function PortalHome({
             Before Sparky can write a book, assign at least {minCoreCastToPublish()} characters to their series. Open Kid
             Studio and tap <strong>Quick start — Milo &amp; Pip</strong>, or create custom characters together.
           </p>
-          <div className="mt-4 flex flex-wrap gap-3">
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row">
             <Link href="/studio" className="btn-primary">
               Open Kid Studio
             </Link>
@@ -107,7 +93,7 @@ export default async function PortalHome({
         <div className="card-base mb-8 ring-2 ring-coral/40">
           <h2 className="text-lg font-bold text-ink">Try Premium free for 14 days</h2>
           <p className="mt-2 text-sm text-ink-700">Unlimited stories and unlimited story worlds for each child.</p>
-          <Link href="/api/billing/checkout?tier=premium" className="btn-primary mt-4 inline-flex">
+          <Link href="/api/billing/checkout?tier=premium" className="btn-primary mt-4 flex w-full sm:inline-flex sm:w-auto">
             Start free trial
           </Link>
         </div>
@@ -121,22 +107,22 @@ export default async function PortalHome({
             {readyToPrint.map((b) => (
               <li
                 key={b.id}
-                className="flex flex-wrap items-center justify-between gap-3 border-t border-ink-100 pt-3 first:border-0 first:pt-0"
+                className="flex flex-col gap-3 border-t border-ink-100 pt-3 first:border-0 first:pt-0"
               >
-                <span className="font-medium text-ink">{b.title}</span>
+                <span className="break-words font-medium text-ink">{b.title}</span>
                 <PrintCheckoutForm bookId={b.id} className="btn-secondary text-sm" />
               </li>
             ))}
           </ul>
           {totalReadyToPrint > readyToPrint.length && (
-            <Link href="/portal/orders" className="mt-4 inline-flex text-sm text-ink-500 underline">
+            <Link href="/portal/orders" className="mt-4 inline-flex min-h-[44px] items-center text-sm text-ink-500 underline">
               View all ready to print &rarr;
             </Link>
           )}
         </div>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         {[
           { label: "Children", value: children, icon: Sparkles, href: "/portal/children", highlight: false },
           {
@@ -152,30 +138,30 @@ export default async function PortalHome({
           <Link
             key={s.label}
             href={s.href}
-            className={`card-base transition-shadow hover:shadow-md ${
+            className={`card-base !p-4 sm:!p-8 transition-shadow hover:shadow-md ${
               s.highlight ? "border-2 border-coral bg-coral/5 ring-2 ring-coral/30" : ""
             }`}
           >
             <s.icon className={`h-6 w-6 ${s.highlight ? "text-coral" : "text-coral"}`} aria-hidden />
-            <div className="mt-3 text-3xl font-bold text-ink">{s.value}</div>
+            <div className="mt-3 text-2xl font-bold text-ink sm:text-3xl">{s.value}</div>
             <div className="text-sm text-ink-500">{s.label}</div>
             {s.highlight && <p className="mt-2 text-xs font-semibold text-coral">Tap to review →</p>}
           </Link>
         ))}
       </div>
 
-      <div className="mt-10 grid gap-6 lg:grid-cols-2">
+      <div className="mt-8 grid gap-4 sm:gap-6 lg:mt-10 lg:grid-cols-2">
         <div className="card-base">
           <h2 className="text-xl font-bold text-ink">Kid Studio</h2>
           <p className="mt-2 text-ink-700">Send your child back to Sparky to create their next adventure.</p>
-          <Link href="/studio" className="btn-primary mt-6 inline-flex">
+          <Link href="/studio" className="btn-primary mt-6 flex w-full sm:inline-flex sm:w-auto">
             Open Kid Studio
           </Link>
         </div>
         <div className="card-base">
           <h2 className="text-xl font-bold text-ink">Gift Premium</h2>
           <p className="mt-2 text-ink-700">Grandparents and family can gift months of story-making.</p>
-          <Link href="/gift" className="btn-secondary mt-6 inline-flex">
+          <Link href="/gift" className="btn-secondary mt-6 flex w-full sm:inline-flex sm:w-auto">
             Gift plans
           </Link>
         </div>

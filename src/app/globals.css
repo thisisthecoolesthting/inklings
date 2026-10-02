@@ -13,12 +13,30 @@
 }
 
 html {
-  scroll-padding-top: 5rem; /* sticky header offset for in-page anchors */
+  /* sticky header offset for in-page anchors (header is ~64px on phones, ~77px on desktop) */
+  scroll-padding-top: 4.75rem;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  scroll-behavior: auto;
+}
+@media (min-width: 1024px) {
+  html { scroll-padding-top: 5.5rem; }
 }
 
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
 }
+
+/* Stop rubber-band chaining on the page background; keep native pull-to-refresh. */
+body { overscroll-behavior-x: none; }
+
+/* Touch: no double-tap-zoom delay on controls; keeps pinch-zoom on the page. */
+a, button, summary, [role="button"], input, select, textarea, label { touch-action: manipulation; }
+
+/* Safe-area padding for notched phones (viewport-fit=cover). */
+.pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+.pt-safe { padding-top: env(safe-area-inset-top, 0px); }
 
 /* Keyboard focus — visible on every interactive element.
    Plum ring on cream/white surfaces; cream ring on the plum CTA band + footer. */
@@ -84,6 +102,13 @@ body {
     @apply btn border-2 border-mint-500 text-ink hover:bg-mint-500 hover:text-ink motion-safe:hover:-translate-y-0.5;
   }
   .btn-large { @apply px-8 py-4 text-base min-h-[56px]; }
+
+  /* Inline text link with a >=44px tap area. Use on standalone "Learn more ->" style links. */
+  .tap-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
   .btn-full  { @apply w-full; }
 
   .container-ink {
@@ -211,3 +236,13 @@ main .bg-coral.text-white { background-color: #BA4A24; }
     padding-bottom: 3.25rem;
   }
 }
+
+/* Footer + nav link tap area: give bare links in nav/footer landmarks a 44px hit area. */
+footer ul a { min-height: 44px; display: flex; align-items: center; }
+@media (min-width: 768px) {
+  footer ul a { min-height: 32px; }
+}
+
+/* Full-height helpers: dynamic viewport so mobile URL bars don't clip content. */
+.min-h-screen { min-height: 100vh; min-height: 100dvh; }
+.h-screen { height: 100vh; height: 100dvh; }

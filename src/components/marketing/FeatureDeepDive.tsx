@@ -29,8 +29,8 @@ export function FeatureDeepDive({ dive }: { dive: DeepDive }) {
         <div className="container-ink section">
           <div className="mx-auto max-w-3xl">
             <span className="eyebrow">Feature deep-dive</span>
-            <h1 className="text-4xl font-bold text-ink md:text-5xl">{dive.title}</h1>
-            <p className="mt-6 text-lg text-ink-700">{dive.intro}</p>
+            <h1 className="text-3xl font-bold text-ink sm:text-4xl md:text-5xl">{dive.title}</h1>
+            <p className="mt-4 text-base text-ink-700 md:mt-6 md:text-lg">{dive.intro}</p>
           </div>
         </div>
       </section>
@@ -52,11 +52,11 @@ export function FeatureDeepDive({ dive }: { dive: DeepDive }) {
       )}
 
       <section className="section">
-        <div className="container-ink mx-auto max-w-3xl space-y-6 text-ink-700">
+        <div className="container-ink mx-auto max-w-3xl space-y-4 text-ink-700 md:space-y-6">
           {dive.sections.map((s, i) => (
-            <div key={s.heading} className="space-y-6">
+            <div key={s.heading} className="space-y-4 md:space-y-6">
               <div className="card-base">
-                <h2 className="text-2xl font-bold text-ink">{s.heading}</h2>
+                <h2 className="text-xl font-bold text-ink md:text-2xl">{s.heading}</h2>
                 <div className="mt-3">{s.body}</div>
               </div>
               {i === 0 && (
@@ -73,10 +73,10 @@ export function FeatureDeepDive({ dive }: { dive: DeepDive }) {
             aria-label="More features"
             className="flex flex-wrap items-center justify-between gap-3 border-t border-ink-100 pt-6 text-sm font-semibold"
           >
-            <Link href="/features" className="text-ink-600 underline underline-offset-4 hover:text-ink">
+            <Link href="/features" className="inline-flex min-h-[44px] items-center text-ink-600 underline underline-offset-4 hover:text-ink">
               All features
             </Link>
-            <Link href={`/features/${next.slug}`} className="text-coral hover:underline">
+            <Link href={`/features/${next.slug}`} className="inline-flex min-h-[44px] items-center text-coral hover:underline">
               Next feature: {next.title} &rarr;
             </Link>
           </nav>

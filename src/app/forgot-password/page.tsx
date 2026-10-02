@@ -71,6 +71,11 @@ export default async function ForgotPage(props: {
                 type="email"
                 required
                 autoComplete="email"
+                inputMode="email"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
+                enterKeyHint="send"
                 className="mt-1 w-full rounded-button border-2 border-ink-100 bg-white px-4 py-3 text-base focus:border-coral focus:outline-none"
                 placeholder="parent@example.com"
               />

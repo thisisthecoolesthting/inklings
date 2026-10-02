@@ -12,7 +12,7 @@ export function CtaBanner({
   secondaryLabel: string;
 }) {
   return (
-    <div className="flex flex-wrap justify-center gap-4">
+    <div className="flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
       <Link href={primaryHref} className="btn-primary btn-large">
         {primaryLabel}
       </Link>

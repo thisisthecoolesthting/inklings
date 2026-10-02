@@ -5,6 +5,7 @@ import { ShieldCheck, Lock, ImageOff, UserCheck, ListChecks, Key } from "lucide-
 import { SafetyComparison } from "@/components/marketing/SafetyComparison";
 import { pageMetadata } from "@/lib/seo";
 import { PrimaryCta } from "@/components/PrimaryCta";
+import { SwipeStrip } from "@/components/marketing/SwipeStrip";
 
 export const metadata: Metadata = pageMetadata({
   title: "Safety & privacy for kids' stories",
@@ -29,7 +30,7 @@ export default function SecurityPage() {
         <div className="container-ink section">
           <div className="mx-auto max-w-3xl text-center">
             <span className="eyebrow">Safety &amp; privacy</span>
-            <h1 className="text-4xl font-bold tracking-tight text-ink md:text-5xl">
+            <h1 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl md:text-5xl">
               Safety is the first feature.
             </h1>
             <p className="mt-6 text-lg text-ink-700">
@@ -41,14 +42,16 @@ export default function SecurityPage() {
       </section>
 
       <section className="section">
-        <div className="container-ink mx-auto max-w-5xl grid gap-6 md:grid-cols-2">
-          {PILLARS.map((p) => (
-            <div key={p.title} className="card-base">
-              <p.icon className="h-8 w-8 text-coral" aria-hidden />
-              <h2 className="mt-4 text-xl font-bold text-ink">{p.title}</h2>
-              <p className="mt-2 text-ink-700">{p.body}</p>
-            </div>
-          ))}
+        <div className="container-ink mx-auto max-w-5xl">
+          <SwipeStrip label="Safety pillars" gridClassName="md:grid-cols-2 md:gap-6">
+            {PILLARS.map((p) => (
+              <div key={p.title} className="card-base h-full">
+                <p.icon className="h-8 w-8 text-coral" aria-hidden />
+                <h2 className="mt-3 text-xl font-bold text-ink md:mt-4">{p.title}</h2>
+                <p className="mt-2 text-ink-700">{p.body}</p>
+              </div>
+            ))}
+          </SwipeStrip>
         </div>
       </section>
 
@@ -81,10 +84,10 @@ export default function SecurityPage() {
       <section className="section bg-cream-100">
         <div className="container-ink mx-auto max-w-3xl">
           <h2 className="text-2xl font-bold text-ink">Read more</h2>
-          <ul className="mt-4 space-y-2 text-ink-700">
-            <li><Link className="text-coral underline" href="/legal/privacy">Privacy policy</Link></li>
-            <li><Link className="text-coral underline" href="/legal/terms">Terms of service</Link></li>
-            <li><Link className="text-coral underline" href="/contact">Contact us about a safety concern</Link></li>
+          <ul className="mt-2 space-y-0 text-ink-700 md:mt-4">
+            <li><Link className="inline-flex min-h-[44px] items-center text-coral underline" href="/legal/privacy">Privacy policy</Link></li>
+            <li><Link className="inline-flex min-h-[44px] items-center text-coral underline" href="/legal/terms">Terms of service</Link></li>
+            <li><Link className="inline-flex min-h-[44px] items-center text-coral underline" href="/contact">Contact us about a safety concern</Link></li>
           </ul>
         </div>
       </section>

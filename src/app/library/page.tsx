@@ -57,7 +57,7 @@ export default async function LibraryPage({
               <Link
                 key={c.id}
                 href={`/library?child=${c.id}`}
-                className={"rounded-full px-4 py-1 text-sm font-medium " + (c.id === childId ? "bg-coral text-white" : "bg-mint-100 text-ink")}
+                className={"inline-flex min-h-[48px] items-center rounded-full px-5 text-base font-semibold " + (c.id === childId ? "bg-coral text-white" : "bg-mint-100 text-ink")}
               >
                 {c.name}
               </Link>

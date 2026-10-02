@@ -36,7 +36,7 @@ export default function HomePage() {
             <span className="eyebrow">Try it right now</span>
             <h2 className="section-title">A taste of Sparky — no account needed</h2>
           </div>
-          <div className="mx-auto mt-8 max-w-2xl">
+          <div className="mx-auto mt-6 max-w-2xl md:mt-8">
             <TasteOfSparky />
           </div>
         </div>
@@ -44,7 +44,7 @@ export default function HomePage() {
 
       <section className="section bg-cream-100">
         <div className="container-ink">
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-4 md:grid-cols-2 md:gap-6">
             <div className="card-base">
               <h2 className="text-2xl font-bold text-ink">Making, not watching</h2>
               <p className="mt-4 text-ink-700">
@@ -54,7 +54,7 @@ export default function HomePage() {
               <p className="mt-3 text-sm font-semibold text-ink-600">
                 Softcover keepsake · $19.99 · ships in 7–10 days
               </p>
-              <div className="mt-5">
+              <div className="mt-5 hidden md:block">
                 <PrimaryCta href="#see-it-in-action" variant="secondary" microcopy={false}>
                   See a sample book ↓
                 </PrimaryCta>
@@ -85,13 +85,13 @@ export default function HomePage() {
 
       <StudioPreviewSection />
 
-      <div className="bg-cream-100 pb-16 pt-2">
+      <div className="bg-cream-100 pb-10 pt-0 md:pb-16 md:pt-2">
         <div className="container-ink flex justify-center">
           <FullPageTrigger />
         </div>
       </div>
 
-      <section className="section bg-cream-100">
+      <section id="pricing" className="section scroll-mt-20 bg-cream-100 md:scroll-mt-28">
         <div className="container-ink">
           <div className="section-header-center">
             <span className="eyebrow">Simple pricing</span>
@@ -102,7 +102,7 @@ export default function HomePage() {
             </p>
           </div>
           <PricingTiers headingLevel="h3" />
-          <div className="mt-8 flex justify-center">
+          <div className="mt-4 flex justify-center md:mt-8">
             <PrimaryCta href="/pricing" variant="secondary" microcopy={false}>
               Compare all plans
             </PrimaryCta>
@@ -137,10 +137,10 @@ export default function HomePage() {
               </Link>
             </p>
           </div>
-          <div className="mt-10">
+          <div className="mt-6 md:mt-10">
             <SafetyComparison compact />
           </div>
-          <div className="mt-8 flex justify-center">
+          <div className="mt-4 hidden justify-center md:mt-8 md:flex">
             <PrimaryCta href="/try" variant="secondary" microcopy={false}>
               Try the safe version yourself
             </PrimaryCta>
@@ -148,31 +148,33 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="hero-final-cta py-24">
+      <section data-final-cta className="hero-final-cta py-14 md:py-24">
         <div className="container-ink mx-auto max-w-3xl text-center">
           <span className="eyebrow-on-dark">A book they can hold</span>
-          <h2 className="text-3xl font-bold tracking-tight text-cream-100 md:text-4xl">
+          <h2 className="text-2xl font-bold tracking-tight text-cream-100 sm:text-3xl md:text-4xl">
             Their first book is about twenty minutes away.
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-cream-200/85">
             Free to try. No credit card. You approve before anything publishes.
           </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
+          <div className="mt-6 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:justify-center md:mt-8">
             <Link href="/trial" className="btn-primary btn-large">
               {brand.primaryCta}
             </Link>
-            <Link
-              href="/for-grandparents"
-              className="btn-ghost btn-large border-cream-200/60 text-cream-100 hover:bg-cream-100/10"
-            >
-              Gift for grandparents
-            </Link>
-            <Link
-              href="/gift"
-              className="btn-ghost btn-large border-cream-200/60 text-cream-100 hover:bg-cream-100/10"
-            >
-              Gift Premium
-            </Link>
+            <div className="grid grid-cols-2 gap-3 sm:contents">
+              <Link
+                href="/for-grandparents"
+                className="btn-ghost border-cream-200/60 px-3 text-center text-cream-100 hover:bg-cream-100/10 sm:btn-large"
+              >
+                Gift for grandparents
+              </Link>
+              <Link
+                href="/gift"
+                className="btn-ghost border-cream-200/60 px-3 text-center text-cream-100 hover:bg-cream-100/10 sm:btn-large"
+              >
+                Gift Premium
+              </Link>
+            </div>
           </div>
         </div>
       </section>

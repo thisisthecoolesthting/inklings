@@ -74,7 +74,7 @@ export default function GiftPage() {
             </p>
           </div>
 
-          <div className="mt-12 grid gap-6 lg:grid-cols-3">
+          <div className="mt-8 grid gap-4 md:mt-12 md:gap-6 lg:grid-cols-3">
             {GIFTS.map((g) => (
               <div key={g.id} id={g.id} className="card-base flex scroll-mt-28 flex-col">
                 {g.badge && (
@@ -109,23 +109,23 @@ export default function GiftPage() {
             ))}
           </div>
 
-          <p className="mt-10 text-center text-sm text-ink-500">
+          <p className="mt-8 text-center text-sm text-ink-500 md:mt-10">
             Recipient redeems at{" "}
-            <Link href="/gift/redeem" className="text-coral underline">
+            <Link href="/gift/redeem" className="inline-flex min-h-[44px] items-center text-coral underline">
               inklings.shop/gift/redeem
             </Link>
             .{" "}
-            <Link href="/pricing" className="underline">
+            <Link href="/pricing" className="inline-flex min-h-[44px] items-center underline">
               Compare all plans
             </Link>
           </p>
 
-          <div className="mx-auto mt-16 max-w-4xl">
+          <div className="mx-auto mt-10 max-w-4xl md:mt-16">
             <div className="mx-auto max-w-xl text-center">
               <span className="eyebrow">Simple by design</span>
               <h2 className="text-2xl font-bold text-ink">How gifting works</h2>
             </div>
-            <ol className="mt-8 grid gap-5 md:grid-cols-3">
+            <ol className="mt-6 grid gap-4 md:mt-8 md:grid-cols-3 md:gap-5">
               {GIFT_STEPS.map((step, i) => (
                 <li key={step.title} className="card-base">
                   <span className="flex h-9 w-9 items-center justify-center rounded-full bg-coral text-base font-bold text-white">
@@ -138,7 +138,7 @@ export default function GiftPage() {
             </ol>
           </div>
 
-          <div className="mt-16">
+          <div className="mt-10 md:mt-16">
             <div className="mx-auto max-w-xl text-center">
               <span className="eyebrow">What they&apos;ll build over time</span>
               <h2 className="text-2xl font-bold text-ink">A shelf that keeps growing</h2>

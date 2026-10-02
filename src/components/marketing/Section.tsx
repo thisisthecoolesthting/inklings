@@ -10,7 +10,7 @@ export function Section({
   id?: string;
 }) {
   return (
-    <section id={id} className={`py-20 ${className}`.trim()}>
+    <section id={id} className={`py-12 md:py-20 ${className}`.trim()}>
       <div className="container-ink">{children}</div>
     </section>
   );

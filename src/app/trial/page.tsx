@@ -63,7 +63,7 @@ export default async function TrialPage(props: {
               {params.error === "exists" && (
                 <>
                   {" "}
-                  <Link href="/login" className="font-semibold underline">
+                  <Link href="/login" className="tap-link font-semibold underline">
                     Sign in instead
                   </Link>
                   .
