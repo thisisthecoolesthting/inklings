@@ -29,7 +29,7 @@ export default function HowPage() {
         <div className="container-ink section">
           <div className="mx-auto max-w-3xl text-center">
             <span className="eyebrow">How {brand.name} works</span>
-            <h1 className="text-4xl font-bold tracking-tight text-ink md:text-5xl">
+            <h1 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl md:text-5xl">
               From their imagination to a real book in their hands.
             </h1>
           </div>
@@ -38,10 +38,10 @@ export default function HowPage() {
 
       <section className="section">
         <div className="container-ink mx-auto max-w-3xl">
-          <ol className="space-y-8">
+          <ol className="space-y-4 md:space-y-8">
             {STEPS.map((s) => (
-              <li key={s.n} className="flex gap-6 card-base">
-                <span className="flex h-12 w-12 flex-none items-center justify-center rounded-full bg-coral text-xl font-bold text-white">{s.n}</span>
+              <li key={s.n} className="card-base flex gap-4 !p-5 md:gap-6 md:!p-8">
+                <span className="flex h-10 w-10 flex-none items-center justify-center rounded-full bg-coral text-lg md:h-12 md:w-12 md:text-xl font-bold text-white">{s.n}</span>
                 <div>
                   <h2 className="text-xl font-bold text-ink">{s.title}</h2>
                   <p className="mt-2 text-ink-700">{s.body}</p>
@@ -57,7 +57,7 @@ export default function HowPage() {
             </PrimaryCta>
           </div>
 
-          <div className="card-base mt-12 overflow-hidden p-0">
+          <div className="card-base mt-8 overflow-hidden p-0 md:mt-12">
             <video
               controls
               autoPlay
@@ -69,23 +69,24 @@ export default function HowPage() {
               <source src="/videos/walkthrough.mp4" type="video/mp4" />
               <source src="/videos/walkthrough.webm" type="video/webm" />
             </video>
-            <div className="flex flex-wrap items-center justify-between gap-2 p-6 text-sm text-ink-500">
+            <div className="flex flex-wrap items-center justify-between gap-2 p-4 text-sm md:p-6 text-ink-500">
               <span>A 10-second tour of Inklings.</span>
-              <Link href="/watch" className="font-semibold text-coral underline underline-offset-4">
+              <Link href="/watch" className="inline-flex min-h-[44px] items-center font-semibold text-coral underline underline-offset-4">
                 Watch full-screen
               </Link>
             </div>
           </div>
 
-          <div id="printed" className="card-base mt-12 overflow-hidden p-0">
+          <div id="printed" className="card-base mt-8 scroll-mt-20 overflow-hidden p-0 md:mt-12">
             <Image
               src="/images/site/hero-storybook.jpg"
               alt="Illustrated Inklings storybook cover — the same art style that ships in print"
               width={1024}
               height={576}
+              sizes="(max-width: 768px) 100vw, 768px"
               className="h-56 w-full object-cover sm:h-72"
             />
-            <div className="p-6">
+            <div className="p-5 md:p-6">
               <h2 className="text-xl font-bold text-ink">About the printed books</h2>
               <p className="mt-3 text-ink-700">
                 Softcover, 8.5&quot; &times; 8.5&quot;, full-color throughout, one illustrated page for each

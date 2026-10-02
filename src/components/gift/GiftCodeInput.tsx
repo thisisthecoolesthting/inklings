@@ -15,6 +15,9 @@ export function GiftCodeInput({ defaultValue = "" }: { defaultValue?: string }) 
       defaultValue={defaultValue}
       placeholder="INK-XXXX-XXXX"
       autoComplete="off"
+      autoCapitalize="characters"
+      autoCorrect="off"
+      enterKeyHint="go"
       spellCheck={false}
       className="mt-1 w-full rounded-button border border-ink-100 px-4 py-3 text-center font-mono text-lg uppercase tracking-widest text-ink focus:border-coral focus:outline-none focus:ring-2 focus:ring-coral/30"
       onChange={(e) => {

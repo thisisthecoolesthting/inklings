@@ -12,7 +12,15 @@ export const metadata: Metadata = {
     "Inklings lets kids ages 4-8 build a story universe where their characters return across every story. Voice-first, parent-approved, real printed books.",
   applicationName: brand.name,
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "https://inklings.shop"),
-  icons: { icon: "/favicon.svg" },
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/icons/favicon-32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
+  appleWebApp: { capable: true, title: "Inklings", statusBarStyle: "default" },
+  formatDetection: { telephone: false },
   openGraph: {
     type: "website",
     siteName: brand.name,
@@ -35,7 +43,8 @@ export const viewport: Viewport = {
   themeColor: "#FFF6E5",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
+  viewportFit: "cover",
+  colorScheme: "light",
 };
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
@@ -43,7 +52,7 @@ const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={fraunces.variable}>
-      <body className="flex min-h-screen flex-col font-sans">
+      <body className="flex min-h-[100dvh] flex-col font-sans">
         {GA_ID && <GoogleAnalytics gaId={GA_ID} />}
         <OrganizationJsonLd />
         <SiteChrome>

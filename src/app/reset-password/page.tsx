@@ -47,10 +47,10 @@ export default async function ResetPasswordPage(props: {
                 password page.
               </p>
               <div className="flex flex-col gap-3 sm:flex-row">
-                <Link href="/forgot-password" className="btn-primary btn-large">
+                <Link href="/forgot-password" className="btn-primary btn-large w-full sm:w-auto">
                   Request reset link
                 </Link>
-                <Link href="/login" className="btn-secondary btn-large">
+                <Link href="/login" className="btn-secondary btn-large w-full sm:w-auto">
                   Sign in
                 </Link>
               </div>
@@ -85,8 +85,12 @@ export default async function ResetPasswordPage(props: {
                     id="password"
                     name="password"
                     type="password"
+                    enterKeyHint="next"
                     required
                     autoComplete="new-password"
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    spellCheck={false}
                     minLength={8}
                     className="mt-1 w-full rounded-button border-2 border-ink-100 bg-white px-4 py-3 text-base focus:border-coral focus:outline-none"
                   />
@@ -102,8 +106,12 @@ export default async function ResetPasswordPage(props: {
                     id="password_confirm"
                     name="password_confirm"
                     type="password"
+                    enterKeyHint="go"
                     required
                     autoComplete="new-password"
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    spellCheck={false}
                     minLength={8}
                     className="mt-1 w-full rounded-button border-2 border-ink-100 bg-white px-4 py-3 text-base focus:border-coral focus:outline-none"
                   />

@@ -134,7 +134,7 @@ export default async function GiftRedeemPage({
             </Link>
             <p className="mt-4 text-xs text-ink-500">
               New here?{" "}
-              <Link href="/trial" className="text-coral underline">
+              <Link href="/trial" className="tap-link text-coral-dark underline">
                 Start a free story
               </Link>{" "}
               then redeem from this page.
@@ -147,7 +147,7 @@ export default async function GiftRedeemPage({
               <p className="text-ink-700">
                 Redeeming as <strong className="text-ink">{session.email}</strong>
                 {" · "}
-                <Link href="/login?next=/gift/redeem" className="text-coral underline">
+                <Link href="/login?next=/gift/redeem" className="tap-link text-coral-dark underline">
                   Switch account
                 </Link>
               </p>
@@ -161,7 +161,7 @@ export default async function GiftRedeemPage({
                   From your gift email — usually looks like INK-XXXX-XXXX
                 </span>
               </label>
-              <button type="submit" className="btn-primary btn-full">
+              <button type="submit" className="btn-primary btn-large btn-full">
                 Redeem Premium
               </button>
             </form>
@@ -170,7 +170,7 @@ export default async function GiftRedeemPage({
 
         <p className="mt-8 text-center text-sm text-ink-500">
           Don&apos;t have a code yet?{" "}
-          <Link href="/gift" className="text-coral underline">
+          <Link href="/gift" className="tap-link text-coral-dark underline">
             Gift Premium to a family
           </Link>
         </p>

@@ -21,7 +21,7 @@ export default function NotFound() {
             The link might be old, or the page might have moved. Let&apos;s get you back to a page
             that actually exists.
           </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <div className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-center">
             <Link href="/" className="btn-primary btn-large inline-flex">
               Back to Inklings
             </Link>

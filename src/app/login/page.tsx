@@ -66,6 +66,11 @@ export default async function LoginPage(props: {
                 type="email"
                 required
                 autoComplete="email"
+                inputMode="email"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
+                enterKeyHint="next"
                 className="mt-1 w-full rounded-button border-2 border-ink-100 bg-white px-4 py-3 text-base focus:border-coral focus:outline-none"
                 placeholder="parent@example.com"
               />
@@ -75,7 +80,7 @@ export default async function LoginPage(props: {
                 <label htmlFor="password" className="block text-sm font-semibold text-ink">
                   Password
                 </label>
-                <Link href="/forgot-password" className="inline-block py-2 text-sm text-ink-600 underline">
+                <Link href="/forgot-password" className="tap-link text-sm text-ink-600 underline">
                   Forgot password?
                 </Link>
               </div>
@@ -85,6 +90,10 @@ export default async function LoginPage(props: {
                 type="password"
                 required
                 autoComplete="current-password"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
+                enterKeyHint="go"
                 minLength={8}
                 className="mt-1 w-full rounded-button border-2 border-ink-100 bg-white px-4 py-3 text-base focus:border-coral focus:outline-none"
               />
@@ -92,9 +101,9 @@ export default async function LoginPage(props: {
             <button type="submit" className="btn-primary btn-large btn-full">
               Sign in
             </button>
-            <p className="text-xs text-ink-500">
+            <p className="text-sm text-ink-600">
               New to Inklings?{" "}
-              <Link href="/trial" className="underline">
+              <Link href="/trial" className="tap-link underline">
                 Create a free account
               </Link>
               .
@@ -106,7 +115,7 @@ export default async function LoginPage(props: {
               {brand.primaryCta}
             </Link>
             <p className="text-center text-sm text-ink-700">
-              <Link href="/gift/redeem" className="inline-block py-2 font-semibold text-coral-dark underline underline-offset-2">
+              <Link href="/gift/redeem" className="tap-link font-semibold text-coral-dark underline underline-offset-2">
                 Redeeming a gift?
               </Link>
             </p>

@@ -31,8 +31,8 @@ export default async function OrdersPage({
 
   return (
     <>
-      <header className="mb-10">
-        <h1 className="text-3xl font-bold text-ink">Print orders</h1>
+      <header className="mb-6 lg:mb-10">
+        <h1 className="text-2xl font-bold text-ink sm:text-3xl">Print orders</h1>
         <p className="mt-1 text-ink-700">Real softcover keepsakes shipped to your door in 7–10 days.</p>
       </header>
 
@@ -44,12 +44,12 @@ export default async function OrdersPage({
       )}
 
       {readyToPrint.length > 0 && (
-        <section className="mb-10">
+        <section className="mb-8 lg:mb-10">
           <h2 className="text-xl font-bold text-ink">Order a printed book</h2>
           <ul className="mt-4 space-y-4">
             {readyToPrint.map((b) => (
-              <li key={b.id} className="card-base flex flex-wrap items-center justify-between gap-4">
-                <div>
+              <li key={b.id} className="card-base flex flex-col gap-4 !p-4 sm:flex-row sm:items-center sm:justify-between sm:!p-8">
+                <div className="min-w-0 break-words">
                   <h3 className="text-lg font-bold text-ink">{b.title}</h3>
                   <p className="text-sm text-ink-500">By {b.child.name} &middot; 8.5&quot; softcover &middot; $19.99</p>
                 </div>
@@ -65,15 +65,15 @@ export default async function OrdersPage({
         {orders.length === 0 ? (
           <div className="card-base mt-4 text-center">
             <p className="text-ink-700">No orders yet.</p>
-            <Link href="/portal/approvals" className="btn-secondary mt-4 inline-flex">
+            <Link href="/portal/approvals" className="btn-secondary mt-4 flex w-full sm:inline-flex sm:w-auto">
               Review approved stories
             </Link>
           </div>
         ) : (
           <ul className="mt-4 space-y-4">
             {orders.map((o) => (
-              <li key={o.id} className="card-base flex flex-wrap items-center justify-between gap-4">
-                <div>
+              <li key={o.id} className="card-base flex flex-col gap-3 !p-4 sm:flex-row sm:items-center sm:justify-between sm:!p-8">
+                <div className="min-w-0 break-words">
                   <h3 className="text-lg font-bold text-ink">{o.book.title}</h3>
                   <p className="text-sm text-ink-500">
                     {o.book.child.name} &middot; Qty {o.quantity} &middot; ${(o.unitPriceCents / 100).toFixed(2)}
@@ -82,7 +82,7 @@ export default async function OrdersPage({
                     <p className="mt-1 text-xs text-ink-400">Print job #{o.luluJobId}</p>
                   )}
                 </div>
-                <span className="rounded-full bg-mint-100 px-3 py-1 text-xs font-semibold capitalize text-mint-600">
+                <span className="self-start rounded-full bg-mint-100 px-3 py-1 text-xs font-semibold capitalize text-mint-600">
                   {o.status.replace(/_/g, " ")}
                 </span>
               </li>

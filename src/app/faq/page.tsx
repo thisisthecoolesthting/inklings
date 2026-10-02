@@ -27,7 +27,7 @@ export default function FaqPage() {
         <div className="container-ink section">
           <div className="mx-auto max-w-3xl text-center">
             <span className="eyebrow">FAQ</span>
-            <h1 className="text-4xl font-bold tracking-tight text-ink md:text-5xl">
+            <h1 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl md:text-5xl">
               Honest answers to the questions parents ask first.
             </h1>
           </div>
@@ -53,7 +53,7 @@ export default function FaqPage() {
           </div>
           <p className="mt-6 text-sm text-ink-600">
             Still have a question?{" "}
-            <Link href="/contact" className="font-semibold text-coral underline underline-offset-4">
+            <Link href="/contact" className="inline-flex min-h-[44px] items-center font-semibold text-coral underline underline-offset-4">
               Ask us
             </Link>
           </p>

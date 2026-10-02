@@ -37,13 +37,13 @@ export default function PricingPage() {
       />
       <ProductOffersJsonLd offers={PRICING_OFFERS} />
       <section className="hero-storybook">
-        <div className="container-ink section">
+        <div className="container-ink section !pb-8 md:!pb-20">
           <div className="mx-auto max-w-3xl text-center">
             <span className="eyebrow">Simple, family-friendly pricing</span>
-            <h1 className="text-4xl font-bold tracking-tight text-ink md:text-5xl">
+            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-ink md:text-5xl">
               Start free. Upgrade only if it&apos;s working.
             </h1>
-            <p className="mt-6 text-lg text-ink-700">
+            <p className="mt-4 text-base text-ink-700 md:mt-6 md:text-lg">
               Free covers most weekend story-makers. Premium is for families
               writing every week. Printed softcovers are $19.99 each — one-time,
               on any plan.
@@ -52,9 +52,9 @@ export default function PricingPage() {
         </div>
       </section>
 
-      <section className="section">
+      <section className="section !pt-6 md:!pt-20">
         <div className="container-ink">
-          <PricingTiers />
+          <PricingTiers mobileLayout="stack" />
         </div>
       </section>
 

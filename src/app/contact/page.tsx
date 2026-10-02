@@ -36,7 +36,7 @@ export default async function ContactPage({
             <p className="mt-4 max-w-2xl text-lg text-ink-700">
               For questions, support, partnerships, or to send us a story your kid made. Use the form,
               or write to us directly at{" "}
-              <a className="text-coral underline" href="mailto:hello@inklings.shop">
+              <a className="tap-link text-coral-dark underline" href="mailto:hello@inklings.shop">
                 hello@inklings.shop
               </a>
               .
@@ -65,7 +65,7 @@ export default async function ContactPage({
               <h2 className="text-xl font-bold text-ink">Prefer email?</h2>
               <p className="mt-2 text-sm text-ink-700">
                 Press, safety reports, and everything else go to the same inbox:{" "}
-                <a className="font-semibold text-coral underline" href="mailto:hello@inklings.shop">
+                <a className="tap-link font-semibold text-coral-dark underline" href="mailto:hello@inklings.shop">
                   hello@inklings.shop
                 </a>
                 .

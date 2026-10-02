@@ -60,11 +60,11 @@ export function LeadCapture() {
   }
 
   return (
-    <div id="sample-story" className="scroll-mt-24 rounded-card bg-ink-800/70 p-6 md:p-8">
-      <div className="grid gap-6 md:grid-cols-2 md:items-center">
+    <div id="sample-story" className="scroll-mt-24 rounded-card bg-ink-800/70 p-4 md:p-8">
+      <div className="grid gap-4 md:grid-cols-2 md:items-center md:gap-6">
         <div>
-          <p className="font-display text-xl font-bold text-white">Email me a sample story</p>
-          <p className="mt-2 text-sm text-cream-200">
+          <p className="font-display text-lg font-bold text-white md:text-xl">Email me a sample story</p>
+          <p className="mt-1 text-sm text-cream-200 md:mt-2">
             A link to Milo and the Moonbeam Map, our sample story. No newsletter unless you ask.
           </p>
         </div>
@@ -80,6 +80,10 @@ export function LeadCapture() {
               required
               autoComplete="email"
               inputMode="email"
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck={false}
+              enterKeyHint="send"
               placeholder="parent@example.com"
               className="h-12 min-h-[48px] w-full flex-1 rounded-button border-2 border-transparent bg-white px-4 text-base text-ink placeholder:text-ink-400"
             />
@@ -100,7 +104,7 @@ export function LeadCapture() {
             role={status === "error" ? "alert" : "status"}
             aria-live="polite"
             className={
-              "mt-3 min-h-[1.25rem] text-sm " +
+              "mt-2 min-h-[1.25rem] text-sm " +
               (status === "error" ? "font-semibold text-red-200" : "text-mint")
             }
           >

@@ -18,7 +18,7 @@ export default function AboutPage() {
         <div className="container-ink section">
           <div className="mx-auto max-w-3xl">
             <span className="eyebrow">About {brand.name}</span>
-            <h1 className="text-4xl font-bold tracking-tight text-ink md:text-5xl">
+            <h1 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl md:text-5xl">
               We make stories children keep, not feeds children scroll.
             </h1>
           </div>

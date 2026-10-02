@@ -1,13 +1,13 @@
+import { SwipeStrip } from "@/components/marketing/SwipeStrip";
+
 /**
  * Two-panel "generic chatbot vs. Sparky" comparison. Pure SVG/CSS — no new
- * image assets. Full-size on /security, and reused at `compact` size in the
- * homepage FAQ/trust section.
+ * image assets. Full-size on /security, and reused at `compact` size on the
+ * homepage, where phones get a swipe strip instead of two stacked panels.
  */
 export function SafetyComparison({ compact = false }: { compact?: boolean }) {
-  return (
-    <div className={`grid gap-5 sm:grid-cols-2 ${compact ? "max-w-3xl mx-auto" : ""}`}>
-      {/* Left: generic AI chatbot */}
-      <div className="card-base flex flex-col border-red-200/70">
+  const chatbot = (
+      <div key="chatbot" className="card-base flex h-full flex-col border-red-200/70">
         <div className="flex items-center gap-2">
           <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-red-100 text-red-700" aria-hidden>
             ✕
@@ -38,9 +38,9 @@ export function SafetyComparison({ compact = false }: { compact?: boolean }) {
           </div>
         </div>
       </div>
-
-      {/* Right: Sparky */}
-      <div className="card-base flex flex-col border-mint-400 ring-2 ring-mint-400">
+  );
+  const sparky = (
+      <div key="sparky" className="card-base flex h-full flex-col border-mint-400 ring-2 ring-mint-400">
         <div className="flex items-center gap-2">
           <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-mint-500 font-bold text-ink" aria-hidden>
             ✓
@@ -65,6 +65,23 @@ export function SafetyComparison({ compact = false }: { compact?: boolean }) {
           </div>
         </div>
       </div>
+  );
+
+  if (compact) {
+    return (
+      <div className="mx-auto max-w-3xl">
+        <SwipeStrip label="Generic chatbot versus Sparky" breakpoint="sm" gridClassName="sm:grid-cols-2 sm:gap-5">
+          {chatbot}
+          {sparky}
+        </SwipeStrip>
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid gap-5 sm:grid-cols-2">
+      {chatbot}
+      {sparky}
     </div>
   );
 }

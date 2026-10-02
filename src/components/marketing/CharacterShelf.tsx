@@ -51,11 +51,11 @@ function Spine({ spine, compact }: { spine: Spine; compact: boolean }) {
 export function CharacterShelf({ compact = false }: { compact?: boolean }) {
   return (
     <div className={compact ? "mx-auto max-w-xl" : "mx-auto max-w-2xl"}>
-      <div className="rounded-card border border-ink-100 bg-white/70 px-6 pb-8 pt-6 shadow-card">
+      <div className="rounded-card border border-ink-100 bg-white/70 px-4 pb-8 pt-6 shadow-card sm:px-6">
         <div
           role="group"
           aria-label="A bookshelf of six books, all starring the same character family"
-          className="flex items-end justify-center gap-2 overflow-x-auto pb-1"
+          className="flex items-end gap-2 overflow-x-auto pb-1 [&>*:first-child]:ml-auto [&>*:last-child]:mr-auto"
         >
           {SPINES.map((s) => (
             <Spine key={s.label} spine={s} compact={compact} />
